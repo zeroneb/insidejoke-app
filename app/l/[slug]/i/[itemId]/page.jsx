@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Avatar, ItemSketch, Halftone } from '@/components/ui';
-import { blob } from '@/lib/blob';
 import { tileInk, hostOf, firstName } from '@/components/friend-list';
 import { listBySlug, itemById, owner as ownerOf, notesFor, money } from '@/lib/lists';
 import { currentUser } from '@/lib/auth';
@@ -13,6 +12,20 @@ export const dynamic = 'force-dynamic';
 
 const DARK = ['#13286B', '#B36EE0', '#C8743A', '#807F48', '#E2452B'];
 // Eyebrow ink: a deep shade of the hero color, like the boards' #5A2A10 on orange.
+// r2: the dial's boiling blob, ported from the Option 10 Item board (120 points, wob/rough 0.06).
+function dialBlob(shape, jitter, wob = 0.06, rough = 0.06) {
+  let s = shape; const r = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  const a1 = r() * 6.28, a2 = r() * 6.28, a3 = r() * 6.28;
+  let j = jitter; const q = () => { j = (j * 7919 + 104729) % 233280; return j / 233280; };
+  const pts = [];
+  for (let i = 0; i < 120; i++) {
+    const t = i / 120 * 6.2832;
+    const k = 1 + wob * Math.sin(2 * t + a1) + wob * 0.6 * Math.sin(3 * t + a2) + wob * 0.3 * Math.sin(5 * t + a3) + (q() - 0.5) * rough;
+    pts.push((100 + k * 88 * Math.cos(t)).toFixed(1) + ' ' + (100 + k * 88 * Math.sin(t)).toFixed(1));
+  }
+  return 'M' + pts.join(' L') + ' Z';
+}
+
 // r2: "For Maya" ink per hero color (Option 10 Item / ItemQty boards).
 const FOR_INK = { '#F0895A': '#2DBE4A', '#E8642C': '#D8F75A', '#A9CDF5': '#13286B', '#F4D3EE': '#E2452B', '#96E084': '#13286B', '#93EC75': '#13286B', '#E3C552': '#13286B', '#5FC3D9': '#13286B' };
 const EYEBROW = { '#E8642C': '#5A2A10', '#F0895A': '#5A2A10', '#F4D3EE': '#8A2A1A', '#A9CDF5': '#13286B', '#96E084': '#1E4A12', '#E3C552': '#5A4410', '#5FC3D9': '#0E3A48', '#D8F75A': '#13286B' };
@@ -49,7 +62,7 @@ export default async function ItemPage({ params }) {
   const verb = it.unlimited ? 'sent one' : 'contributed';
   const dialPct = it.unlimited ? 100 : it.pct;
   const C = 2 * Math.PI * 58;
-  const [ba, bb, bc] = [blob(6, 3), blob(6, 19), blob(6, 43)];
+  const [ba, bb, bc] = [dialBlob(6, 3), dialBlob(6, 19), dialBlob(6, 43)];
   const btn = { flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontSize: 16, fontWeight: 700, height: 54, borderRadius: 999, boxSizing: 'border-box' };
 
   return (
@@ -141,7 +154,7 @@ export default async function ItemPage({ params }) {
             </div>
           );
         })}
-        {!isOwner && privateCount ? (
+        {privateCount ? (
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '14px 0', borderTop: '1px solid #000000' }}>
             <div style={{ width: 40, height: 40, flexShrink: 0, borderRadius: '50%', border: '1.5px dashed #000000', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M5 11h14v9H5z" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg></div>
             <span style={{ fontSize: 14 }}>{privateCount} private {privateCount === 1 ? 'contribution' : 'contributions'}</span>

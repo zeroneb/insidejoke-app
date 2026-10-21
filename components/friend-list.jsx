@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Blob, Avatar, ItemSketch, Halftone, treatInk, shortName } from '@/components/ui';
+import { Blob, Avatar, ItemSketch, Halftone, shortName } from '@/components/ui';
 
 export function firstName(u) {
   return ((u?.name || 'a friend').trim().split(/\s+/)[0]) || 'a friend';
@@ -28,6 +28,9 @@ function wishLabel(it) {
   if (it.pct === 0) return 'Up for grabs';
   return `${it.pct}% covered`;
 }
+
+// r2: treat tiles cycle the board's colors (bg, ink), not the item's stored color.
+const TREAT_TILES = [['#96E084', '#000000'], ['#F4D3EE', '#E2452B'], ['#A9CDF5', '#13286B'], ['#E8642C', '#FFFFFF'], ['#D4FA4F', '#1530C8'], ['#8A5A2B', '#F4D3EE']];
 
 const money0 = (c) => '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
 
@@ -74,15 +77,15 @@ export default function FriendList({ list, owner, items, me }) {
             <span style={{ fontSize: 13, fontWeight: 700 }}>Unlimited · treat anytime</span>
           </div>
           <div className="a2-nostrip" style={{ display: 'flex', gap: 10, overflowX: 'auto', padding: '0 20px 6px', scrollbarWidth: 'none' }}>
-            {treats.map((t) => {
-              const [fg] = treatInk(t.color);
+            {treats.map((t, ti) => {
+              const [bg, fg] = TREAT_TILES[ti % TREAT_TILES.length];
               return (
-                <Link key={t.id} href={`/l/${slug}/i/${t.id}/give`} aria-label={`Send ${t.name}${t.store ? ` from ${t.store}` : ''}`} style={{ position: 'relative', flex: '0 0 150px', height: 200, textDecoration: 'none', background: t.color, color: fg, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 12, boxSizing: 'border-box' }}>
+                <Link key={t.id} href={`/l/${slug}/i/${t.id}/give`} aria-label={`Send ${t.name}${t.store ? ` from ${t.store}` : ''}`} style={{ position: 'relative', flex: '0 0 150px', height: 200, textDecoration: 'none', background: bg, color: fg, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 12, boxSizing: 'border-box' }}>
                   <span style={{ position: 'relative', fontSize: 12, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.store || 'Anywhere'}</span>
                   <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', fontSize: 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{shortName(t.name)}</span>
                   <span style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: 6 }}>
                     <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}><span className="wide" style={{ fontSize: 15 }}>{money0(t.price_cents)}</span><span className="dot" style={{ fontSize: 18 }}>×{t.timesTreated}</span></span>
-                    <span style={{ background: fg, color: t.color, textAlign: 'center', fontWeight: 800, fontSize: 13, padding: '8px 0', borderRadius: 999 }}>Send a treat</span>
+                    <span style={{ background: fg, color: bg, textAlign: 'center', fontWeight: 800, fontSize: 13, padding: '8px 0', borderRadius: 999 }}>Send a treat</span>
                   </span>
                 </Link>
               );
