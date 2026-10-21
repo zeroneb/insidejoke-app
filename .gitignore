@@ -4,3 +4,4 @@ data/
 .env*.local
 .next-*
 BUILD_BRIEF.md
+BUILD_O10.md
