@@ -1,7 +1,6 @@
-// a3: weekly thank-you for treats (Option 12 WeeklyThanks).
+// r3: weekly thank-you for treats (Option 10 WeeklyThanks).
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import Nav from '@/components/nav';
 import { Avatar, Blob } from '@/components/ui';
 import { currentUser } from '@/lib/auth';
 import { weeklyTreats } from '@/lib/reminders';
@@ -17,7 +16,7 @@ export default async function WeeklyThanksPage() {
   const n = people.length;
   const first = ((me.name || 'Me').trim().split(/\s+/)[0]);
   return (
-    <main className="withnav" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden', paddingBottom: 0 }}>
+    <main className="r3-full" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
         <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>This week's treats</span>
@@ -50,7 +49,6 @@ export default async function WeeklyThanksPage() {
         <Link href="/home" style={{ alignSelf: 'flex-start', fontSize: 14, textDecoration: 'underline', textUnderlineOffset: 3, padding: '6px 0' }}>{n ? 'Skip this week' : 'Back home'}</Link>
       </section>
       <div style={{ height: 40 }} />
-      <Nav me={me} active="you" />
     </main>
   );
 }

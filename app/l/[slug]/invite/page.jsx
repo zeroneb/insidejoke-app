@@ -28,7 +28,7 @@ export default async function InvitePage({ params }) {
     .sort((a, b) => a.member - b.member);
   const name = whoFor(list);
   return (
-    <main className="a4 withnav">
+    <main className="a4 r4-pink withnav">
       <Hdr back={`/l/${slug}/collab`}>{list.title} · invite</Hdr>
       <section style={{ position: 'relative', padding: '14px 20px 0', height: 150 }}>
         <Boil seed={14} left={10} top={0} width={250} height={150} />

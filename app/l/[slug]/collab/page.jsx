@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { listBySlug } from '@/lib/lists';
-import { canEdit, teamOf, itemsWithAdder, firstName, whoFor } from '@/lib/collab';
+import { canEdit, teamOf, itemsWithAdder, firstName, whoFor, findMatch } from '@/lib/collab';
 import { appUrl } from '@/lib/texts';
 import Nav from '@/components/nav';
 import { Boil, Hdr, Band, Who, TallTitle, stat, fmtDate, RED, DEEP } from '@/components/a4';
@@ -21,7 +21,9 @@ export default async function CollabPage({ params }) {
   if (!me) redirect(`/signup?next=/l/${slug}/collab`);
   if (!(await canEdit(list, me))) redirect(`/l/${slug}/shared`);
   const team = await teamOf(list);
-  const items = await itemsWithAdder(list);
+  const all = await itemsWithAdder(list);
+  const match = findMatch(all); // r4: a pending match is sorted out on /shared
+  const items = match ? all.filter((it) => it.id !== match.dupe.id) : all;
   const others = team.filter((m) => m.id !== me.id);
   const name = whoFor(list);
   const band = ['Collab', '✦', ['You', ...others.map(firstName)].slice(0, 3).join(' + '), '✦'];
@@ -31,7 +33,7 @@ export default async function CollabPage({ params }) {
   const preview = `${firstName(me)} invited you to build a list for ${name} on insidejoke 💐 Add what ${name} would love and we'll get it together: ${appUrl().replace(/^https?:\/\//, '')}/join/${slug}`;
 
   return (
-    <main className="a4 withnav">
+    <main className="a4 r4-pink withnav">
       <Band words={band} />
       <Hdr back={`/l/${slug}`}>{head}</Hdr>
 
@@ -71,6 +73,7 @@ export default async function CollabPage({ params }) {
             <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
           </Link>
         ))}
+        {match ? <Link href={`/l/${slug}/shared`} className="a4-row" style={{ borderTopStyle: 'dashed', fontSize: 14, fontWeight: 700 }}>Looks like a match: {match.dupe.name}. Sort it out →</Link> : null}
       </section>
 
       <section aria-label="Together" style={{ padding: '22px 20px 0', display: 'flex', flexDirection: 'column' }}>

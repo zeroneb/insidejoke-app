@@ -40,9 +40,9 @@ function Gift({ size = 210 }) {
 function SignUpView({ list, people, organiser, me, token }) {
   const name = whoFor(list);
   return (
-    <main style={{ background: '#ECECEF', color: '#000', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <main className="r4-sky" style={{ background: '#A9CDF5', color: '#000', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <section style={{ position: 'relative', background: RUST, padding: '22px 20px 26px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <span className="wide" style={{ fontSize: 11, letterSpacing: '0.22em', color: '#fff', textTransform: 'none' }}>insidejoke</span>
+        <span className="wide" style={{ fontSize: 11, letterSpacing: '0.22em', color: '#fff' }}>insidejoke</span>
         <div style={{ marginTop: 10, maxWidth: '100%' }}>
           <svg role="img" aria-label="A hand-drawn gift box with its lid lifting" width="350" height="300" style={{ maxWidth: '100%', height: 'auto' }} viewBox="0 0 300 260" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="M74 132 C72 168 73 204 76 238 C124 243 178 243 226 236 C229 202 229 166 227 130" /><path d="M70 134 C120 138 182 137 231 131" />

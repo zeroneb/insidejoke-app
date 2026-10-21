@@ -2,7 +2,8 @@
 
 import { useActionState } from 'react';
 import Link from 'next/link';
-import { Blob } from '@/components/ui';
+import { tri } from '@/lib/blob';
+import { R3Boil } from '@/components/r3';
 import { PaymentPicker, usePayment, splitPayLabel } from '@/components/payment-setup';
 import { savePayment } from '@/lib/actions-a3';
 
@@ -26,10 +27,10 @@ export default function PaymentForm({ next, current }) {
         <p style={{ margin: '12px 0 0', fontSize: 16, lineHeight: 1.4 }}>After this, every gift is one tap.</p>
       </section>
       <section style={{ position: 'relative', margin: '22px 16px 0', background: '#13286B', color: '#FFFFFF', height: 210, overflow: 'hidden' }}>
-        <Blob seed={22} color="#D8F75A" style={{ left: '50%', marginLeft: -140, top: 18 }} width={280} height={175} />
+        <R3Boil paths={tri(22)} color="#D8F75A" style={{ left: '50%', marginLeft: -139, top: 18 }} width={280} height={175} />
         <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#000000', textAlign: 'center', padding: '0 70px' }}>
           <span style={{ fontSize: 13 }}>{current ? 'You give with' : 'Nothing saved yet'}</span>
-          <span className={digits ? 'dot' : ''} style={{ fontSize: digits ? 40 : 30, lineHeight: 1, fontWeight: digits ? 900 : 700 }}>{current ? (digits || brand) : 'Pick one'}</span>
+          <span className={digits ? 'dot' : ''} style={{ fontSize: digits ? 44 : 30, lineHeight: 1, fontWeight: digits ? 900 : 400 }}>{current ? (digits || brand) : 'Pick one'}</span>
           <span style={{ fontSize: 13 }}>{current && digits ? brand : 'Saved for every gift'}</span>
         </div>
         <span style={{ position: 'absolute', left: 14, bottom: 12, fontSize: 11, fontWeight: 500 }}>Only you see this</span>
@@ -43,7 +44,7 @@ export default function PaymentForm({ next, current }) {
           {pending ? 'Saving…' : pay.kind === 'apple' ? 'Use Apple Pay' : pay.kind === 'card' ? 'Save this card' : 'Link this bank'}
         </button>
       </div>
-      <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: '#3A3A3A' }}>Saved for next time. Change it anytime here. Test mode: nothing is charged.</p>
+      <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: '#3A3A3A' }}>Saved for next time. Change it anytime in settings.</p>
       <div style={{ height: 36 }} />
     </form>
   );

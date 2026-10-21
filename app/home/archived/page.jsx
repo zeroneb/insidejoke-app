@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all } from '@/lib/db';
 import { ago } from '@/lib/time';
-import Nav from '@/components/nav';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Archived · insidejoke' };
@@ -36,7 +35,6 @@ export default async function Archived() {
           <div style={{ borderTop: '1px solid #000000' }} />
         </section>
       </main>
-      <Nav me={me} active="home" />
     </>
   );
 }

@@ -24,7 +24,7 @@ export default async function JoinPage({ params, searchParams }) {
   if (!me) {
     const invite = `${firstName(organiser)} invited you to build a list for ${name} on insidejoke 💐 Add what ${name} would love and we'll get it together: ${appUrl().replace(/^https?:\/\//, '')}/join/${slug}`;
     return (
-      <main className="a4">
+      <main className="a4 r4-pink">
         <JoinSignup next={`/join/${slug}`} title={`“${list.title}”`} invite={invite}>
           <section style={{ position: 'relative', padding: '18px 20px 0', height: 170 }}>
             <Boil seed={21} left={30} top={0} width={300} height={170} />
@@ -39,7 +39,7 @@ export default async function JoinPage({ params, searchParams }) {
   const member = await isMember(list.id, me.id);
   const items = await itemsWithAdder(list);
   return (
-    <main className="a4 withnav">
+    <main className="a4 r4-pink withnav">
       <div className="a4-pop" style={{ display: 'flex', flexDirection: 'column' }}>
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px 0', minHeight: 44 }}>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>{member ? "Collab · you're in" : "Collab · you're invited"}</span>

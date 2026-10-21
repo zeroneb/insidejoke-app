@@ -4,7 +4,6 @@ import { currentUser } from '@/lib/auth';
 import { profileStats, publicListsOf } from '@/lib/lists';
 import { ListTile, tileData } from '@/components/list-tile';
 import { ProfileHero, Stats, Chevron, monthYear, spacedPhone } from '@/components/profile-hero';
-import Nav from '@/components/nav';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'You · insidejoke' };
@@ -23,6 +22,7 @@ export default async function YouPage() {
   const stats = await profileStats(me.id);
   const lists = (await publicListsOf(me.id, null)).filter((l) => l.visibility === 'public');
   const tiles = await Promise.all(lists.map((l) => tileData(l, me.id)));
+  tiles.sort((x, y) => (x.kind === 'treat') - (y.kind === 'treat')); // r1: wish lists first, as on the board
   const seen = {};
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
 
@@ -44,9 +44,9 @@ export default async function YouPage() {
         <Stats label="Your numbers" cells={[[stats.lists, stats.lists === 1 ? 'list' : 'lists'], [stats.friends, stats.friends === 1 ? 'friend' : 'friends'], [stats.covered, stats.covered === 1 ? 'thing covered' : 'things covered']]} />
 
         <section style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px 10px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
             <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 30, lineHeight: 1, whiteSpace: 'nowrap' }}>Your <span style={{ fontWeight: 600 }}>public lists</span></h2>
-            <span className="wide" style={{ fontSize: 11, letterSpacing: '0.14em', color: '#13286B', flexShrink: 0 }}>What friends see</span>
+            <span className="wide" style={{ fontSize: 11, letterSpacing: '0.14em', fontStretch: '100%', color: '#13286B', whiteSpace: 'nowrap' }}>What friends see</span>
           </div>
           {tiles.length ? (
             <>
@@ -80,7 +80,6 @@ export default async function YouPage() {
         </section>
         <div style={{ height: 24 }} />
       </main>
-      <Nav me={me} active="you" />
     </>
   );
 }

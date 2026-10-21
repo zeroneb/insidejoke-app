@@ -38,8 +38,8 @@ export default async function SurpriseSendPage({ params, searchParams }) {
   const stamp = sent ? (list.opened_at ? `Opened ${ago(list.opened_at)}` : `Sent ${ago(list.sent_at)} · not opened yet`) : list.send_at ? sendLabel(list) : 'Ready when you are';
 
   return (
-    <main className="a4 a4-blue withnav">
-      <section style={{ position: 'relative', height: 430, background: '#A9CDF5', overflow: 'hidden' }}>
+    <main className="a4 a4-blue r4-sky withnav">
+      <section style={{ position: 'relative', height: 430, background: '#A9CDF5' }}>
         <header className="a4-hdr" style={{ position: 'relative', zIndex: 2 }}>
           <Link href={`/l/${slug}/collab`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <span aria-hidden="true" style={{ width: 18, height: 18, marginRight: 14, borderRadius: '50%', background: RUST }} />
