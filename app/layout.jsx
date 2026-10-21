@@ -16,7 +16,7 @@ export default async function RootLayout({ children }) {
   const u = await currentUser().catch(() => null);
   const me = u ? { id: u.id, name: u.name, color: u.color, seed: u.seed, photo: u.photo || null } : null;
   return (
-    <html lang="en">
+    <html lang="en" data-theme={u?.theme || 'light'}>
       <body>
         <div className={me ? 'app has-nav' : 'app'}>
           {test ? (

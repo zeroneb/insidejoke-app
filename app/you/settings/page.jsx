@@ -101,6 +101,21 @@ export default async function SettingsPage({ searchParams }) {
           <p className="a1-s" style={{ margin: 0, padding: '10px 0 0', borderTop: '1px solid #000000' }}>We only text. No email, no push, never more than a few a week.</p>
         </section>
 
+        <section aria-labelledby="h-look" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
+          <h2 id="h-look" className="a1-cap" style={{ margin: '0 0 10px' }}>Appearance</h2>
+          <div style={{ borderTop: '1px solid #000000', padding: '14px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <span className="a1-t">Theme</span>
+            <form action={setSetting} role="radiogroup" aria-label="Theme" style={{ display: 'flex' }}>
+              <input type="hidden" name="key" value="theme" />
+              {[['light', 'Light'], ['dark', 'Dark'], ['auto', 'Match phone']].map(([k, label], i) => {
+                const on = (me.theme || 'light') === k;
+                return <button key={k} name="value" value={k} role="radio" aria-checked={on ? 'true' : 'false'} className={on ? 'theme-on' : ''} style={{ flex: '1 1 0', height: 44, border: '1.5px solid #000000', marginLeft: i ? -1.5 : 0, borderRadius: i === 0 ? '999px 0 0 999px' : i === 2 ? '0 999px 999px 0' : 0, background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>{label}</button>;
+              })}
+            </form>
+            <p className="a1-s" style={{ margin: '0 0 14px' }}>{me.theme === 'dark' ? 'Dark grounds, same colors on your lists. Easier on the eyes at night.' : me.theme === 'auto' ? 'Follows your phone: light by day, dark when your phone switches.' : 'The classic light gray ground.'}</p>
+          </div>
+        </section>
+
         <section aria-labelledby="h-privacy" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <h2 id="h-privacy" className="a1-cap" style={{ margin: '0 0 10px' }}>Privacy</h2>
           <div style={{ borderTop: '1px solid #000000', padding: '14px 0 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
