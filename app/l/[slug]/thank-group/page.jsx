@@ -5,6 +5,7 @@ import { get } from '@/lib/db';
 import { listBySlug, itemsFor } from '@/lib/lists';
 import { recipientsOf, firstName, whoFor } from '@/lib/collab';
 import { Avatar, shortNoun } from '@/components/ui';
+import { appUrl } from '@/lib/texts';
 import { Boil } from '@/components/a4';
 import { ThankGroupForm } from '@/components/a4-forms';
 
@@ -43,7 +44,7 @@ export default async function ThankGroupPage({ params }) {
           <span key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid #000', borderRadius: 999, padding: '3px 10px 3px 3px', fontSize: 13, fontWeight: 700 }}><Avatar user={f} size={26} />{firstName(f)}</span>
         ))}
       </section>
-      <ThankGroupForm slug={slug} count={friends.length} suggestion={suggestion} name={firstName(me)} />
+      <ThankGroupForm slug={slug} count={friends.length} suggestion={suggestion} name={firstName(me)} link={`${appUrl().replace(/^https?:\/\//, '')}/l/${slug}`} />
       <section style={{ margin: '26px 20px 0', paddingTop: 18, borderTop: '1.5px solid #000', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <p style={{ margin: 0, fontFamily: "'EB Garamond', serif", fontSize: 22, lineHeight: 1.25 }}>Your turn next time. What would <span style={{ fontStyle: 'italic' }}>you</span> love?</p>
         <Link href="/lists/new" style={{ alignSelf: 'flex-start', textDecoration: 'none', border: '1.5px solid #000', background: '#D8F75A', fontWeight: 800, fontSize: 15, padding: '12px 18px', borderRadius: 999 }}>Start your own list</Link>

@@ -6,7 +6,6 @@ import { friendsOf } from '@/lib/lists';
 import { FaceSm, Blob } from '@/components/ui';
 import { Chevron } from '@/components/profile-hero';
 import AddFriendForm from '@/components/add-friend-form';
-import Nav from '@/components/nav';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Friends · insidejoke' };
@@ -89,7 +88,6 @@ export default async function FriendsPage({ searchParams }) {
         </section>
         <div style={{ height: 24 }} />
       </main>
-      <Nav me={me} active="friends" />
     </>
   );
 }

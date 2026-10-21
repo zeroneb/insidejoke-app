@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Avatar, ItemSketch, Hl, Dial, Halftone } from '@/components/ui';
+import { Avatar, ItemSketch, Halftone } from '@/components/ui';
 import { tileInk, hostOf, firstName } from '@/components/friend-list';
 import { listBySlug, itemById, owner as ownerOf, notesFor, money } from '@/lib/lists';
 import { currentUser } from '@/lib/auth';
@@ -12,6 +12,22 @@ export const dynamic = 'force-dynamic';
 
 const DARK = ['#13286B', '#B36EE0', '#C8743A', '#807F48', '#E2452B'];
 // Eyebrow ink: a deep shade of the hero color, like the boards' #5A2A10 on orange.
+// r2: the dial's boiling blob, ported from the Option 10 Item board (120 points, wob/rough 0.06).
+function dialBlob(shape, jitter, wob = 0.06, rough = 0.06) {
+  let s = shape; const r = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  const a1 = r() * 6.28, a2 = r() * 6.28, a3 = r() * 6.28;
+  let j = jitter; const q = () => { j = (j * 7919 + 104729) % 233280; return j / 233280; };
+  const pts = [];
+  for (let i = 0; i < 120; i++) {
+    const t = i / 120 * 6.2832;
+    const k = 1 + wob * Math.sin(2 * t + a1) + wob * 0.6 * Math.sin(3 * t + a2) + wob * 0.3 * Math.sin(5 * t + a3) + (q() - 0.5) * rough;
+    pts.push((100 + k * 88 * Math.cos(t)).toFixed(1) + ' ' + (100 + k * 88 * Math.sin(t)).toFixed(1));
+  }
+  return 'M' + pts.join(' L') + ' Z';
+}
+
+// r2: "For Maya" ink per hero color (Option 10 Item / ItemQty boards).
+const FOR_INK = { '#F0895A': '#2DBE4A', '#E8642C': '#D8F75A', '#A9CDF5': '#13286B', '#F4D3EE': '#E2452B', '#96E084': '#13286B', '#93EC75': '#13286B', '#E3C552': '#13286B', '#5FC3D9': '#13286B' };
 const EYEBROW = { '#E8642C': '#5A2A10', '#F0895A': '#5A2A10', '#F4D3EE': '#8A2A1A', '#A9CDF5': '#13286B', '#96E084': '#1E4A12', '#E3C552': '#5A4410', '#5FC3D9': '#0E3A48', '#D8F75A': '#13286B' };
 
 export default async function ItemPage({ params }) {
@@ -31,19 +47,23 @@ export default async function ItemPage({ params }) {
   const dark = DARK.includes(it.color);
   const hdrInk = dark ? '#FFFFFF' : '#000000';
   const sketchInk = it.color === '#F4D3EE' ? '#E2452B' : it.color === '#D8F75A' || it.color === '#D4FA4F' ? '#13286B' : '#FFFFFF';
-  const forInk = dark ? '#D8F75A' : '#13286B';
+  const forInk = FOR_INK[it.color] || (dark ? '#D8F75A' : '#13286B');
   const store = it.store || (it.url ? hostOf(it.url) : '');
   const eyebrow = it.photo ? (it.url ? `Photo from ${store}` : `${forName}'s photo`) : store ? `From ${store}` : 'On the list';
-  const priceBit = it.unlimited || it.quantity > 1 ? <><span className="dot" style={{ fontSize: 15, color: '#000000' }}>{money(it.price_cents)}</span> each</> : <span className="dot" style={{ fontSize: 15, color: '#000000' }}>{money(it.price_cents)}</span>;
-  const headline = it.unlimited ? ['Given', 'again and again'] : it.covered ? ['All', 'covered'] : it.pct >= 75 ? ['Almost', 'there'] : it.pct >= 50 ? ['Past', 'halfway'] : it.pct > 0 ? ['On its', 'way'] : ['Up for', 'grabs'];
+  const spec = [it.quantity > 1 ? `A set of ${it.quantity}` : null, it.unlimited ? 'Unlimited' : null, store || null, it.quantity > 1 || it.unlimited ? `${money(it.price_cents)} each` : money(it.price_cents)].filter(Boolean).join(' · ');
+  const headline = it.unlimited ? ['Given', 'again and again'] : it.covered ? ['All', 'covered'] : it.pct >= 75 ? ['Almost', 'there'] : it.pct >= 50 ? ['More than', 'halfway'] : it.pct > 0 ? ['On its', 'way'] : ['Up for', 'grabs'];
+  const lead = it.covered ? 'All covered.' : it.pct >= 75 ? 'Almost there.' : it.pct >= 50 ? 'More than halfway.' : it.pct > 0 ? 'Off to a good start.' : 'Up for grabs.';
+  const fr = (n) => `${n} ${n === 1 ? 'friend' : 'friends'}`;
   const giversLine = it.unlimited
-    ? <><span className="dot" style={{ fontSize: 15 }}>{it.givers}</span> {it.givers === 1 ? 'friend has' : 'friends have'} sent one. Amounts stay private.</>
-    : it.givers
-      ? <><span className="dot" style={{ fontSize: 15 }}>{it.givers}</span> {it.givers === 1 ? 'friend has' : 'friends have'} chipped in. Amounts stay private.</>
-      : <>Nobody has chipped in yet. Get it, or start it off.</>;
+    ? `${fr(it.givers)} ${it.givers === 1 ? 'has' : 'have'} sent one. Amounts stay private.`
+    : it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'has' : 'have'} contributed. Amounts stay private.` : 'Nobody has contributed yet. Get it, or start it off.';
   const give = `/l/${slug}/i/${it.id}/give`;
   const back = `/l/${slug}`;
-  const verb = it.unlimited ? 'sent a treat' : 'chipped in';
+  const verb = it.unlimited ? 'sent one' : 'contributed';
+  const dialPct = it.unlimited ? 100 : it.pct;
+  const C = 2 * Math.PI * 58;
+  const [ba, bb, bc] = [dialBlob(6, 3), dialBlob(6, 19), dialBlob(6, 43)];
+  const btn = { flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', fontSize: 16, fontWeight: 700, height: 54, borderRadius: 999, boxSizing: 'border-box' };
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -52,94 +72,94 @@ export default async function ItemPage({ params }) {
           <Link href={back} aria-label={isOwner ? 'Back to my list' : `Back to ${forName}'s list`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           {isOwner ? (
             <Link href={`/l/${slug}/i/${it.id}/edit`} aria-label={`Edit ${it.name}`} className="iconbtn"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z" /><path d="M13 8l3 3" /></svg></Link>
-          ) : me ? (
-            <Link href={`/l/${slug}/share`} aria-label="Share this list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+          ) : me && list.visibility !== 'private' ? (
+            <Link href={`/l/${slug}/share`} aria-label="Share item" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
-        <span className="wide" style={{ position: 'absolute', left: 20, top: 68, fontSize: 11, letterSpacing: '0.18em', color: dark ? '#FFFFFF' : EYEBROW[it.color] || '#000000', zIndex: 1 }}>{eyebrow}</span>
-        <div style={{ position: 'absolute', left: '50%', top: it.photo ? 92 : 78, marginLeft: it.photo ? -115 : -130, width: it.photo ? 230 : 260, height: it.photo ? 230 : 260, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ position: 'absolute', left: 14, top: 64, fontWeight: 500, fontSize: 12, color: dark ? '#FFFFFF' : EYEBROW[it.color] || '#000000', zIndex: 1 }}>{eyebrow}</span>
+        <div className="bob" style={{ position: 'absolute', left: '50%', top: it.photo ? 92 : 70, marginLeft: it.photo ? -115 : -130, width: it.photo ? 230 : 260, height: it.photo ? 230 : 260, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {it.photo ? <Halftone src={it.photo} ink={dark ? '#D8F75A' : '#13286B'} size={230} dot={4} /> : <ItemSketch name={it.name} size={260} ink={sketchInk} unlimited={it.unlimited} strokeWidth={1.5} />}
         </div>
-        <span style={{ position: 'absolute', right: 20, bottom: 16, fontWeight: 700, fontSize: 30, letterSpacing: '-0.04em', color: forInk }}>For {forName}</span>
+        <span style={{ position: 'absolute', right: 14, bottom: 14, fontWeight: 700, fontSize: 30, letterSpacing: '-0.05em', color: forInk }}>For {isOwner ? 'you' : forName}</span>
       </section>
 
-      <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <h1 style={{ margin: 0, fontWeight: 400, fontSize: 32, lineHeight: 1.02, letterSpacing: '-0.035em' }}>{it.name}</h1>
-        <span style={{ fontWeight: 500, fontSize: 14, color: '#4A4A4A' }}>
-          {it.quantity > 1 ? `Set of ${it.quantity} · ` : it.unlimited ? 'Unlimited · ' : ''}{priceBit}{store ? ` at ${store}` : ''}
-        </span>
-        {!isOwner ? (
-          <div aria-label="Give" style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            {!it.unlimited ? (
-              <>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}><div style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? '#2E9B47' : '#13286B' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
-                <span style={{ fontSize: 14, color: '#4A4A4A' }}><b style={{ color: '#000' }}>{it.covered ? 'All covered.' : it.pct >= 75 ? 'Almost there.' : it.pct >= 50 ? 'More than halfway.' : it.pct > 0 ? 'Off to a good start.' : 'Up for grabs.'}</b> {it.covered ? 'Thank you, everyone.' : it.givers ? `${it.givers} ${it.givers === 1 ? 'friend is' : 'friends are'} in. Join them.` : 'Be the first to give.'}</span>
-              </>
-            ) : (
-              <span style={{ fontSize: 14, color: '#4A4A4A' }}><b style={{ color: '#000' }}>Treated ×{it.timesTreated}.</b> Send one anytime, again and again.</span>
-            )}
-            <div style={{ display: 'flex', gap: 10 }}>
-          {it.unlimited ? (
-            <Link href={give} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Send a treat</Link>
-          ) : it.covered ? (
-            <span aria-disabled="true" style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2E9B47', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>All covered</span>
-          ) : (
+      <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        <h1 style={{ margin: 0, fontWeight: 400, fontSize: 32, lineHeight: 1.02, letterSpacing: '-0.035em' }}>{it.name}{it.quantity > 1 ? <> <span className="dot" style={{ fontSize: 30 }}>×{it.quantity}</span></> : null}</h1>
+        <span style={{ fontWeight: 500, fontSize: 13 }}>{spec}</span>
+        <div aria-label="Give" style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {!it.unlimited ? (
             <>
-              <Link href={give} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Contribute</Link>
-              <Link href={`${give}?mode=rest`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', border: '1.5px solid #000000', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999, boxSizing: 'border-box', color: '#000' }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? '#2E9B47' : '#5546A0' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
+              <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>{lead}</b> {it.covered ? 'Thank you, everyone.' : it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'is' : 'are'} in.${isOwner ? '' : ' Join them.'}` : isOwner ? 'Share it so friends can start.' : 'Be the first to give.'}</span>
             </>
+          ) : (
+            <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>Given ×{it.timesTreated}.</b> {isOwner ? 'Friends can send it again and again.' : 'Send one anytime, again and again.'}</span>
           )}
+          {!isOwner ? (
+            <div style={{ display: 'flex', gap: 10 }}>
+              {it.unlimited ? (
+                <Link href={give} style={{ ...btn, background: '#000000', color: '#FFFFFF' }}>Send a treat</Link>
+              ) : it.covered ? (
+                <span aria-disabled="true" style={{ ...btn, background: '#2E9B47', color: '#FFFFFF' }}>All covered</span>
+              ) : (
+                <>
+                  <Link href={give} style={{ ...btn, background: '#000000', color: '#FFFFFF' }}>Contribute</Link>
+                  <Link href={`${give}?mode=rest`} style={{ ...btn, border: '1.5px solid #000000', color: '#000000' }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
+                </>
+              )}
             </div>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
         {it.url ? (
-          <a href={/^https?:/i.test(it.url) ? it.url : 'https://' + it.url} target="_blank" rel="noopener" style={{ alignSelf: 'flex-start', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8, height: 44, textDecoration: 'underline', textUnderlineOffset: 3, fontWeight: 700, fontSize: 15, padding: 0, boxSizing: 'border-box', color: '#000' }}>See it at {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
+          <a href={/^https?:/i.test(it.url) ? it.url : 'https://' + it.url} target="_blank" rel="noopener" style={{ alignSelf: 'flex-start', marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'underline', textUnderlineOffset: 3, fontSize: 15, fontWeight: 700, padding: '10px 0', color: '#000000' }}>See it on {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
         ) : null}
       </section>
 
       {it.note ? (
-        <section aria-label={`${forName}'s note`} style={{ margin: '24px 20px 0', background: '#D8F75A', padding: '16px 16px 18px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em', color: '#13286B' }}>{isOwner ? 'You said' : `${forName} says`}</span>
-          <p className="serif" style={{ margin: 0, fontSize: 22, lineHeight: 1.55 }}><Hl pad="3px 8px" style={{ fontWeight: 400 }}>{it.note}</Hl></p>
+        <section aria-label={`${forName}'s note`} style={{ padding: '22px 20px 0' }}>
+          <p style={{ margin: 0, fontWeight: 500, fontSize: 14, lineHeight: 1.7, color: '#3C5A1E' }}><span style={{ background: '#F2FA6A', padding: '2px 4px', borderRadius: 6, WebkitBoxDecorationBreak: 'clone', boxDecorationBreak: 'clone' }}>{isOwner ? 'You' : forName}: "{it.note}"</span></p>
         </section>
       ) : null}
 
-      <section aria-label={it.unlimited ? `Given ${it.timesTreated} times` : `${it.pct} percent covered`} style={{ margin: '24px 20px 0', background: '#B36EE0', color: '#FFFFFF', padding: '22px 18px', display: 'flex', alignItems: 'center', gap: 18 }}>
-        <Dial pct={it.unlimited ? 100 : it.pct} label={it.unlimited ? `×${it.timesTreated}` : undefined} />
+      <section aria-label={it.unlimited ? `Given ${it.timesTreated} times` : `${it.pct} percent covered`} style={{ margin: '24px 16px 0', background: '#5546A0', color: '#FFFFFF', padding: '22px 18px', display: 'flex', alignItems: 'center', gap: 18 }}>
+        <div style={{ position: 'relative', width: 132, height: 132, flexShrink: 0 }}>
+          <svg aria-hidden="true" style={{ position: 'absolute', inset: 0, transform: 'rotate(-90deg)' }} width="132" height="132" viewBox="0 0 132 132"><circle cx="66" cy="66" r="58" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="12" /><circle className="ip-dialarc" cx="66" cy="66" r="58" fill="none" stroke="#D8F75A" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${(C * dialPct / 100).toFixed(1)} 1000`} /></svg>
+          <svg aria-hidden="true" style={{ position: 'absolute', left: 22, top: 22 }} width="88" height="88" viewBox="0 0 200 200"><path className="b1" d={ba} fill="#D8F75A" /><path className="b2" d={bb} fill="#D8F75A" /><path className="b3" d={bc} fill="#D8F75A" /></svg>
+          <span className="dot" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: '#000000' }}>{it.unlimited ? `×${it.timesTreated}` : `${it.pct}%`}</span>
+        </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
-          <span className="serif" style={{ fontSize: 28, lineHeight: 1 }}>{headline[0]} <span style={{ fontStyle: 'italic' }}>{headline[1]}</span></span>
-          <span style={{ fontSize: 14, lineHeight: 1.4 }}>{giversLine}</span>
+          <span className="serif" style={{ fontSize: 28, lineHeight: 1 }}>{headline[0]} <span style={{ fontWeight: 600 }}>{headline[1]}</span></span>
+          <span style={{ fontSize: 14, lineHeight: 1.4, color: '#E4DEFA' }}>{giversLine}</span>
         </div>
       </section>
 
-      <section style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column' }}>
-        <h2 style={{ margin: '0 0 8px', fontWeight: 400, fontSize: 26, letterSpacing: '-0.03em', lineHeight: 1 }}>Notes for <span className="serif" style={{ fontStyle: 'italic', fontSize: 30 }}>{isOwner ? 'you' : forName}</span></h2>
-        {notes.length === 0 && !(privateCount && !isOwner) ? <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid #000000', fontSize: 14, color: '#4A4A4A' }}>No notes yet. Leave the first one when you give.</p> : null}
+      <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column' }}>
+        <h2 className="serif" style={{ margin: '0 0 6px', fontWeight: 400, fontSize: 30 }}>Notes for <span style={{ fontWeight: 600 }}>{isOwner ? 'you' : forName}</span></h2>
+        {notes.length === 0 && !(privateCount && !isOwner) ? <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid #000000', fontSize: 14, color: '#3A3A3A' }}>No notes yet. Leave the first one when you give.</p> : null}
         {notes.map((n) => {
           const on = liked.has(n.id);
           return (
             <div key={n.id} style={{ display: 'flex', gap: 12, padding: '14px 0', borderTop: '1px solid #000000' }}>
               <Link href={`/u/${n.giver_id}`} aria-label={`${n.name}'s profile`} style={{ flexShrink: 0, textDecoration: 'none', height: 40 }}><Avatar user={n} size={40} /></Link>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 14 }}><span style={{ fontWeight: 700 }}>{n.name || 'A friend'}</span> <span style={{ color: '#4A4A4A' }}>{verb} · {ago(n.created_at)}{n.visibility === 'private' ? ' · private' : ''}</span></span>
+                <span style={{ fontSize: 14 }}>{n.name || 'A friend'} <span style={{ color: '#3A3A3A' }}>{verb} · {ago(n.created_at)}{n.visibility === 'private' ? ' · private' : ''}</span></span>
                 {n.note ? <span className="serif" style={{ fontStyle: 'italic', fontSize: 18, lineHeight: 1.2 }}>"{n.note}"</span> : null}
               </div>
               {me ? (
                 <form action={toggleLike} style={{ alignSelf: 'center', flexShrink: 0 }}>
                   <input type="hidden" name="contributionId" value={n.id} /><input type="hidden" name="path" value={`/l/${slug}/i/${it.id}`} />
-                  <button aria-label={`Like ${n.name}'s note`} aria-pressed={on} style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill={on ? '#E2452B' : 'none'} stroke="#E2452B" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg></button>
+                  <button aria-label={`React to ${n.name}'s note`} aria-pressed={on} style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, fontSize: 18, cursor: 'pointer', opacity: on ? 1 : 0.5 }}><span className="wig">❤️</span></button>
                 </form>
               ) : null}
             </div>
           );
         })}
-        {!isOwner && privateCount ? (
+        {privateCount ? (
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '14px 0', borderTop: '1px solid #000000' }}>
             <div style={{ width: 40, height: 40, flexShrink: 0, borderRadius: '50%', border: '1.5px dashed #000000', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M5 11h14v9H5z" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg></div>
-            <span style={{ fontSize: 14 }}><span className="dot" style={{ fontSize: 15 }}>{privateCount}</span> private {privateCount === 1 ? 'gift' : 'gifts'}. Only {forName} knows who.</span>
+            <span style={{ fontSize: 14 }}>{privateCount} private {privateCount === 1 ? 'contribution' : 'contributions'}</span>
           </div>
         ) : null}
-        <div style={{ borderTop: '1px solid #000000' }} />
       </section>
 
       <div style={{ height: 32 }} />

@@ -43,8 +43,21 @@ export default async function BlastPage({ params, searchParams }) {
   const shown = blast || last;
   const head = [list.occasion, fmtDate(list.date)].filter(Boolean).join(' · ') || list.title;
 
+  const listRows = items.length ? (
+    <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column' }}>
+      <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 14, letterSpacing: '0.14em' }}>On the list</h2>
+      {items.map((it) => (
+        <div key={it.id} className="a4-row">
+          <Who user={{ id: it.adder_id, name: it.adder_name, color: it.adder_color, seed: it.adder_seed }} me={me} size={36} />
+          <span style={{ flexGrow: 1, minWidth: 0, fontWeight: 800, fontSize: 15, color: '#000' }}>{it.name}</span>
+          <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
+        </div>
+      ))}
+    </section>
+  ) : null;
+
   return (
-    <main className="a4 withnav">
+    <main className="a4 r4-pink withnav">
       <Hdr back={list.for_who === 'other' ? `/l/${slug}/collab` : `/l/${slug}`}>{sent ? head : `Organizer · ${list.title}`}</Hdr>
       {!sent ? (
         <>
@@ -53,7 +66,7 @@ export default async function BlastPage({ params, searchParams }) {
             <h1 className="tall" style={{ position: 'relative', margin: '26px 0 0', textAlign: 'center', fontSize: 76, lineHeight: 0.84 }}>Text<br />blast</h1>
           </div>
           <p style={{ margin: '14px 24px 0', textAlign: 'center', fontSize: 15, lineHeight: 1.4, color: DEEP }}>One message to everyone on “{list.title}.” It goes out by text and stays pinned on the list.</p>
-          <BlastForm slug={slug} suggestion={suggestion} count={people.length} people={peopleLine}>
+          <BlastForm slug={slug} suggestion={suggestion} count={people.length} people={peopleLine} list={listRows} prefix={`From ${firstName(me)}, on “${list.title}”:`} link={link}>
             <span style={{ display: 'flex', paddingLeft: 6 }}>{faces.map((u) => <span key={u.id} style={{ marginLeft: -6 }}><Avatar user={u} size={28} /></span>)}</span>
           </BlastForm>
         </>
@@ -78,22 +91,13 @@ export default async function BlastPage({ params, searchParams }) {
           ) : (
             <p className="pop" style={{ margin: '18px 20px 0', fontSize: 14, color: DEEP }}>{sp.unpinned ? 'Unpinned. ' : 'Not pinned. '}The text already went out to {shown?.recipients ?? sp.sent} {Number(shown?.recipients ?? sp.sent) === 1 ? 'person' : 'people'}.</p>
           )}
-          <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column' }}>
-            <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 14, letterSpacing: '0.14em' }}>On the list</h2>
-            {items.map((it) => (
-              <div key={it.id} className="a4-row">
-                <Who user={{ id: it.adder_id, name: it.adder_name, color: it.adder_color, seed: it.adder_seed }} me={me} size={36} />
-                <span style={{ flexGrow: 1, minWidth: 0, fontWeight: 800, fontSize: 15, color: '#000' }}>{it.name}</span>
-                <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
-              </div>
-            ))}
-          </section>
+          {listRows}
           {shown ? (
             <section style={{ margin: '22px 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
               <h2 className="wide" style={{ margin: 0, fontSize: 13, letterSpacing: '0.16em' }}>What people get</h2>
-              <div style={{ background: '#fff', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6, color: '#000' }}>
+              <div style={{ background: '#ECECEC', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6, color: '#000' }}>
                 <span style={{ textAlign: 'center', fontSize: 11, color: '#6A6A6A' }}>Text message · insidejoke</span>
-                <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: '#ECECEC', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4 }}>From {firstName(me)}, on “{list.title}”: {shown.body} {link}</div>
+                <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: '#FFFFFF', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4 }}>From {firstName(me)}, on “{list.title}”: {shown.body} {link}</div>
                 <span style={{ alignSelf: 'flex-start', fontSize: 11, color: '#6A6A6A' }}>Reply STOP to opt out</span>
               </div>
             </section>

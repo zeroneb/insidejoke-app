@@ -5,28 +5,39 @@ import Link from 'next/link';
 import { react } from '@/lib/actions';
 import { replyToGiver } from '@/lib/actions-a1';
 
-// a1: the Lately row's buttons (Option 13 Home): heart (react ❤️), reply by text, See item / See list.
-// Reply opens a small form under the row; the text goes to the friend through sendText.
-export default function LatelyActions({ cid, hearts = 0, mine = false, href, see = 'See item', toName = 'them' }) {
+// r1: the Lately row's buttons (Option 10 Home): emoji reaction (smiley + top emoji + count),
+// reply by text, See item / See list. Tapping the smiley opens a small emoji row; picking the
+// same emoji again takes the reaction back.
+const EMOJI = ['❤️', '😋', '🎉', '🙌', '🥹', '👀'];
+const PILL = { border: '1.5px solid #000000', background: 'transparent', height: 34, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontFamily: 'inherit', color: '#000000' };
+const Smile = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2" /><path d="M9 9.5h.01" /><path d="M15 9.5h.01" /></svg>;
+
+export default function LatelyActions({ cid, top = null, count = 0, mine = null, href, see = 'See item', toName = 'them', delay = 0 }) {
+  const [pick, setPick] = useState(false);
   const [open, setOpen] = useState(false);
   const [state, act, pending] = useActionState(replyToGiver, null);
   const sent = state?.ok && !pending;
   return (
     <>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
-        <form action={react}>
-          <input type="hidden" name="contributionId" value={cid} />
-          <input type="hidden" name="emoji" value="❤️" />
-          <button className="a1-heart" aria-label={hearts ? `Like, ${hearts} so far` : 'Like'} aria-pressed={mine ? 'true' : 'false'}>
-            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill={mine ? '#000000' : 'none'} stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" /></svg>
-            {hearts ? <span className="dot" style={{ fontSize: 14 }}>{hearts}</span> : null}
-          </button>
-        </form>
-        <button type="button" className="a1-reply" aria-label={`Reply to ${toName} by text`} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)}>
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={open ? '#FFFFFF' : '#000000'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
+        <button type="button" onClick={() => setPick(!pick)} aria-expanded={pick ? 'true' : 'false'} aria-label={count ? `React with an emoji, ${count} so far` : 'React with an emoji'} style={{ ...PILL, padding: '0 10px', gap: 6, fontSize: 14, background: pick ? '#D4FA4F' : 'transparent' }}>
+          <Smile />
+          {top ? <span className="wig" style={{ animationDelay: `${-delay * 0.35}s` }}>{top}</span> : null}
+          {count ? <span>{count}</span> : null}
         </button>
-        <Link href={href} className="a1-see">{see}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></Link>
+        <button type="button" aria-label={`Reply to ${toName} by text`} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)} style={{ ...PILL, width: 40, padding: 0, background: open ? '#000000' : 'transparent' }}>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={open ? '#FFFFFF' : '#000000'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
+        </button>
+        <Link href={href} style={{ marginLeft: 2, display: 'flex', alignItems: 'center', gap: 4, height: 34, padding: '0 12px', borderRadius: 999, background: '#000000', color: '#FFFFFF', textDecoration: 'none', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap' }}>{see}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></Link>
       </div>
+      {pick ? (
+        <form action={react} onSubmit={() => setPick(false)} className="a1up" role="group" aria-label="Pick a reaction" style={{ display: 'flex', gap: 4, marginTop: 4, flexWrap: 'wrap' }}>
+          <input type="hidden" name="contributionId" value={cid} />
+          {EMOJI.map((e) => (
+            <button key={e} name="emoji" value={e} aria-pressed={mine === e ? 'true' : 'false'} aria-label={`React ${e}`} style={{ width: 44, height: 40, borderRadius: 999, border: '1.5px solid #000000', background: mine === e ? '#D4FA4F' : '#FFFFFF', fontSize: 18, cursor: 'pointer', padding: 0 }}>{e}</button>
+          ))}
+        </form>
+      ) : null}
       {open ? (
         sent ? (
           <p className="a1up" role="status" style={{ margin: '4px 0 0', fontSize: 13 }}><span style={{ background: '#D4FA4F', padding: '3px 8px' }}>Texted to {state.to}.</span></p>

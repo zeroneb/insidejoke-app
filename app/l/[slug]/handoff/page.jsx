@@ -25,7 +25,7 @@ export default async function HandoffPage({ params }) {
   const together = others.length === 0 ? 'You decide.' : `You and ${others.length === 1 ? others[0] : `${others.slice(0, -1).join(', ')} and ${others[others.length - 1]}`} decide together. Any of you can pick, the others get a text.`;
   const members = [...team.filter((m) => m.id === me.id), ...team.filter((m) => m.id !== me.id)].map((m) => ({ id: m.id, first: firstName(m), avatar: <Avatar user={m} size={28} owner={m.id === me.id} /> }));
   return (
-    <main className="a4 withnav">
+    <main className="a4 r4-pink withnav">
       <Hdr back={`/l/${slug}/collab`}>{list.title} · {p.pct}% covered</Hdr>
       <section style={{ position: 'relative', padding: '10px 20px 0', height: 160 }}>
         <Boil seed={23} left={20} top={0} width={300} height={160} />

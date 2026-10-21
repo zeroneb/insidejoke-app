@@ -110,6 +110,8 @@ export function CodeBoxes({ name = 'code', border = '#000', accent = RED, height
 }
 
 // /join/[slug] when signed out: name + number, then the code.
+// r4: (917) 555-0148 instead of +19175550148
+const prettyPhone = (p = '') => { const d = String(p).replace(/\D/g, '').slice(-10); return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : p; };
 export function JoinSignup({ next, title, invite, children }) {
   const [s1, act1, p1] = useActionState(requestCode, { next });
   const [s2, act2, p2] = useActionState(confirmCode, null);
@@ -124,7 +126,7 @@ export function JoinSignup({ next, title, invite, children }) {
       {codeStep ? (
         <form action={act2} style={{ display: 'flex', flexDirection: 'column' }}>
           <input type="hidden" name="phone" value={s1.phone} /><input type="hidden" name="name" value={s1.name || ''} /><input type="hidden" name="next" value={next} />
-          <p style={{ margin: '14px 28px 0', textAlign: 'center', fontSize: 15, lineHeight: 1.4, color: '#000' }}>Enter the code we just texted to {s1.phone}. That's it, you're in.</p>
+          <p style={{ margin: '14px 28px 0', textAlign: 'center', fontSize: 15, lineHeight: 1.4, color: '#000' }}>Enter the code we just texted to {prettyPhone(s1.phone)}. That's it, you're in.</p>
           <div style={{ margin: '20px 20px 0' }}><CodeBoxes /></div>
           {s2?.error ? <div className="err" style={{ margin: '12px 20px 0' }}>{s2.error}</div> : null}
           {s1.testCode ? <p style={{ margin: '12px 20px 0', fontSize: 14, padding: '10px 12px', background: '#D8F75A', color: '#000' }}>Test mode, nothing was really texted. Your code is <span className="dot" style={{ fontSize: 18 }}>{s1.testCode}</span></p> : null}
@@ -148,14 +150,15 @@ export function JoinSignup({ next, title, invite, children }) {
   );
 }
 
-export function BlastForm({ slug, suggestion, count, people, children }) {
+export function BlastForm({ slug, suggestion, count, people, children, list, prefix, link }) {
   const [state, action, pending] = useActionState(sendBlast, null);
+  const [body, setBody] = useState(suggestion); // r4: live "What people get" preview
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column' }}>
       <input type="hidden" name="slug" value={slug} />
       <section style={{ margin: '22px 16px 0', background: '#fff', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, color: '#000' }}>
         <label htmlFor="blast" className="wide" style={{ fontSize: 12, letterSpacing: '0.16em', color: RED }}>Your message</label>
-        <textarea id="blast" name="body" rows={4} maxLength={320} defaultValue={suggestion} required style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #000', background: '#fff', resize: 'none', fontFamily: "'EB Garamond', serif", fontSize: 20, lineHeight: 1.3, padding: '12px 14px', color: '#000', borderRadius: 0 }} />
+        <textarea id="blast" name="body" rows={4} maxLength={320} value={body} onChange={(e) => setBody(e.target.value)} required style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #000', background: '#fff', resize: 'none', fontFamily: "'EB Garamond', serif", fontSize: 20, lineHeight: 1.3, padding: '12px 14px', color: '#000', borderRadius: 0 }} />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingTop: 4 }}>
           <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 15 }}>{people}</span><span style={{ fontSize: 12, color: '#4A4A4A' }}>By text · people who already gave get it too</span></span>
           {children}
@@ -170,6 +173,18 @@ export function BlastForm({ slug, suggestion, count, people, children }) {
       <div style={{ padding: '20px 16px 34px' }}>
         <button className="a4-btn" disabled={pending || count === 0}>{pending ? 'Sending…' : count === 0 ? 'Nobody to text yet' : `Send blast to ${count}`}</button>
       </div>
+      {list}
+      {prefix ? (
+        <section style={{ margin: '22px 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <h2 className="wide" style={{ margin: 0, fontSize: 13, letterSpacing: '0.16em' }}>What people get</h2>
+          <div style={{ background: '#ECECEC', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6, color: '#000' }}>
+            <span style={{ textAlign: 'center', fontSize: 11, color: '#6A6A6A' }}>Text message · insidejoke</span>
+            <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: '#FFFFFF', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4, overflowWrap: 'anywhere' }}>{prefix} {body} {link}</div>
+            <span style={{ alignSelf: 'flex-start', fontSize: 11, color: '#6A6A6A' }}>Reply STOP to opt out</span>
+          </div>
+        </section>
+      ) : null}
+      {prefix ? <div style={{ height: 36 }} /> : null}
     </form>
   );
 }
@@ -300,7 +315,7 @@ export function RevealSignup({ phone, name, next, masked, auto }) {
 }
 
 // The receiver thanks the whole group: one message (and an optional photo), texted to everyone.
-export function ThankGroupForm({ slug, count, suggestion, name }) {
+export function ThankGroupForm({ slug, count, suggestion, name, link }) {
   const [state, action, pending] = useActionState(thankGroup, null);
   const [photo, setPhoto] = useState('');
   const [editing, setEditing] = useState(true);
@@ -310,7 +325,7 @@ export function ThankGroupForm({ slug, count, suggestion, name }) {
     return (
       <section className="a4-up" style={{ margin: '22px 16px 0', background: '#13286B', color: '#fff', padding: '22px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         <span className="dot" style={{ fontSize: 40, color: '#D8F75A' }}>{state.count}/{count}</span>
-        <p style={{ margin: 0, fontSize: 20, lineHeight: 1.25 }}>Thank-you sent. Each friend gets it by text{state.photo ? ', photo and all' : ''}.</p>
+        <p style={{ margin: 0, fontSize: 20, lineHeight: 1.25 }}>Thank-you sent. Each friend opens it in insidejoke{state.photo ? ', photo and all' : ''}.</p>
         <button type="button" onClick={() => setEditing('again')} style={{ alignSelf: 'flex-start', border: '1.5px solid #fff', background: 'transparent', color: '#fff', fontFamily: 'inherit', fontWeight: 700, fontSize: 14, padding: '8px 14px', borderRadius: 999, cursor: 'pointer' }}>See what you sent</button>
       </section>
     );
@@ -335,7 +350,7 @@ export function ThankGroupForm({ slug, count, suggestion, name }) {
         <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em' }}>Each friend gets</span>
         <div style={{ background: '#fff', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <span style={{ textAlign: 'center', fontSize: 11, color: '#6A6A6A' }}>Text message</span>
-          <div style={{ alignSelf: 'flex-start', maxWidth: '86%', background: '#E9E9EB', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4 }}>{name} sent you a thank-you for the surprise 💛 “…”</div>
+          <div style={{ alignSelf: 'flex-start', maxWidth: '86%', background: '#E9E9EB', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4 }}>{name} sent you a thank-you for the surprise 💛 Open it: {link}</div>
         </div>
       </section>
       {state?.error ? <div className="err" style={{ margin: '12px 16px 0' }}>{state.error}</div> : null}

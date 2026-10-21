@@ -43,7 +43,7 @@ export default async function RemindersPage({ params }) {
   ];
   const dateLabel = at ? new Date(at).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }) + ' · 6 pm' : '';
   return (
-    <main className="a4 withnav">
+    <main className="a4 r4-pink withnav">
       <Hdr back={list.for_who === 'other' ? `/l/${slug}/collab` : `/l/${slug}`}>{list.title} · settings</Hdr>
       <section style={{ position: 'relative', padding: '10px 20px 0', height: 150 }}>
         <Boil seed={17} left={10} top={0} width={260} height={150} />

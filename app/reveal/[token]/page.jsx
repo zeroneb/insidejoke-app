@@ -16,7 +16,8 @@ export const metadata = { title: 'A surprise for you · insidejoke' };
 
 const CANDLE = 'M34 44 L44 44 L44 88 L34 88 Z M56 44 L66 44 L66 88 L56 88 Z M39 34 Q34 26 39 18 Q44 26 39 34 Z M61 34 Q56 26 61 18 Q66 26 61 34 Z';
 const GIFT_BG = [['#E8642C', '#FFFFFF'], ['#8A5A2B', '#F4D3EE'], ['#96E084', '#000000'], ['#13286B', '#D8F75A'], ['#B36EE0', '#FFFFFF']];
-const HEAT = 'radial-gradient(circle at 30% 20%, #FFE34D 0%, rgba(255,227,77,0) 40%), radial-gradient(circle at 70% 60%, #FF8A3D 0%, rgba(255,138,61,0) 45%), linear-gradient(160deg, #B53CF0 0%, #E85BD8 40%, #FF9A3C 75%, #FFE34D 100%)';
+// r4: the board's visible heat: yellow at the top, warm pink in the middle, orange at the foot. No purple.
+const HEAT = 'radial-gradient(circle at 50% 4%, #FFE34D 0%, rgba(255,227,77,0) 30%), radial-gradient(circle at 80% 92%, #FF8A3D 0%, rgba(255,138,61,0) 40%), linear-gradient(180deg, #FAD66A 0%, #F4AE98 30%, #F08C9C 60%, #FA9070 85%, #FF9A3C 100%)';
 
 function forWhat(list) {
   const m = /'s\s+(.+)$/i.exec(list.title || '');
@@ -40,9 +41,9 @@ function Gift({ size = 210 }) {
 function SignUpView({ list, people, organiser, me, token }) {
   const name = whoFor(list);
   return (
-    <main style={{ background: '#ECECEF', color: '#000', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <main className="r4-sky" style={{ background: '#A9CDF5', color: '#000', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <section style={{ position: 'relative', background: RUST, padding: '22px 20px 26px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <span className="wide" style={{ fontSize: 11, letterSpacing: '0.22em', color: '#fff', textTransform: 'none' }}>insidejoke</span>
+        <span className="wide" style={{ fontSize: 11, letterSpacing: '0.22em', color: '#fff' }}>insidejoke</span>
         <div style={{ marginTop: 10, maxWidth: '100%' }}>
           <svg role="img" aria-label="A hand-drawn gift box with its lid lifting" width="350" height="300" style={{ maxWidth: '100%', height: 'auto' }} viewBox="0 0 300 260" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="M74 132 C72 168 73 204 76 238 C124 243 178 243 226 236 C229 202 229 166 227 130" /><path d="M70 134 C120 138 182 137 231 131" />
@@ -104,7 +105,7 @@ export default async function RevealPage({ params, searchParams }) {
   const confetti = Array.from({ length: 22 }, (_, i) => { const k = i % 3; return { x: (i * 53 + 9) % 380, w: k === 0 ? 12 : 7, h: k === 0 ? 12 : 18, r: k === 0 ? '50%' : 2, c: ['#000', '#fff', '#FFE34D', '#13286B', '#96E084'][i % 5], d: `${(-(i * 0.45) % 6).toFixed(2)}s`, dur: `${(5 + (i % 4) * 0.7).toFixed(1)}s` }; });
 
   return (
-    <main className="a4-heat" style={{ position: 'relative', minHeight: '100vh', color: '#000', overflow: 'hidden', backgroundImage: HEAT }}>
+    <main className="a4-heat r4-heat" style={{ position: 'relative', minHeight: '100vh', color: '#000', overflow: 'hidden', backgroundImage: HEAT }}>
       <svg aria-hidden="true" style={{ position: 'absolute', inset: 0, mixBlendMode: 'overlay', opacity: 0.45, pointerEvents: 'none' }} width="100%" height="100%"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="100%" height="100%" filter="url(#g)" /></svg>
       {opened ? confetti.map((c, i) => <div key={i} aria-hidden="true" className="a4-fall" style={{ position: 'absolute', left: c.x, top: 0, width: c.w, height: c.h, borderRadius: c.r, background: c.c, animationDelay: c.d, animationDuration: c.dur, pointerEvents: 'none' }} />) : null}
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
@@ -112,7 +113,7 @@ export default async function RevealPage({ params, searchParams }) {
           <span><span className="wide" style={{ fontSize: 14, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 17 }}>joke</span></span>
           <span>{appUrl().replace(/^https?:\/\//, '')}/reveal</span>
         </header>
-        <h1 style={{ margin: '60px 0 0', padding: '0 22px', fontWeight: 400, fontSize: 60, lineHeight: 0.92, letterSpacing: '-0.035em' }}>Your friends have a <span style={{ fontFamily: "'EB Garamond', serif", fontStyle: 'italic', fontSize: 66 }}>surprise</span> for you</h1>
+        <h1 className="serif" style={{ margin: '60px 0 0', padding: '0 22px', fontWeight: 400, fontSize: 64, lineHeight: 0.92, letterSpacing: '-0.02em' }}>Your friends have a <span style={{ fontStyle: 'italic' }}>surprise</span> for you</h1>
         <div style={{ margin: '26px 22px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
           <span style={{ background: '#000', color: '#fff', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line1}</span>
           <span style={{ background: '#000', color: '#fff', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line2}</span>

@@ -78,7 +78,8 @@ export default function Recorder({ slug, name, initialMode = 'card', me }) {
 
   const steps = mode === 'card' ? ['Write', 'Add a photo', 'Add to card'] : [`Allow ${video ? 'camera' : 'mic'}`, 'Record', 'Add to card'];
   const at = mode === 'card' ? 0 : ['ask', 'rec', 'done'].indexOf(step);
-  const M = [['card', 'Note'], ['voice', 'Voice note'], ['video', 'Video']];
+  // r4: Option 10 board offers voice and video; the note tab shows only when asked for (?mode=card).
+  const M = initialMode === 'card' ? [['card', 'Note'], ['voice', 'Voice note'], ['video', 'Video']] : [['voice', 'Voice note'], ['video', 'Video']];
 
   return (
     <>

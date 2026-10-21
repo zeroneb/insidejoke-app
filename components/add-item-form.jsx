@@ -12,13 +12,13 @@ const hostOf = (u) => { try { return new URL(/^https?:/i.test(u) ? u : 'https://
 
 export function Fields({ v, set, treat, n }) {
   return (
-    <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="name" style={LBL}>Exact name</label><input id="name" name="name" className="a2-input" value={v.name} onChange={(e) => set({ name: e.target.value })} placeholder="Brand, model, color, size" /></div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="price" style={LBL}>{treat || n > 1 ? 'Price each' : 'About'}</label><input id="price" name="price" className="a2-input dot" value={v.price} onChange={(e) => set({ price: e.target.value })} placeholder="$" inputMode="decimal" /></div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="where" style={LBL}>Where it's from</label><input id="where" name="store" className="a2-input" value={v.store} onChange={(e) => set({ store: e.target.value })} placeholder="Store or place" /></div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="where" style={LBL}>Where</label><input id="where" name="store" className="a2-input" value={v.store} onChange={(e) => set({ store: e.target.value })} placeholder="Store or place" /></div>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="note" style={LBL}>Note for friends <span style={{ fontWeight: 400, color: '#4A4A4A' }}>optional</span></label><input id="note" name="note" className="a2-input" value={v.note} onChange={(e) => set({ note: e.target.value })} placeholder="The black ones, not the brown" /></div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="note" style={LBL}>Note for friends</label><input id="note" name="note" className="a2-input" value={v.note} onChange={(e) => set({ note: e.target.value })} placeholder="The black ones, not the brown" /></div>
     </section>
   );
 }
@@ -27,7 +27,7 @@ export function Qty({ n, setN, treat, setTreat }) {
   const help = treat ? 'Unlimited makes it a treat. Friends can give it again and again, and you see a running count.' : n === 1 ? 'Just one. Tap + if you want more of the same thing.' : `One listing for ${n}. Friends see it as one item and fill it toward the total.`;
   const step = { width: 48, height: 48, border: 0, background: 'transparent', fontFamily: 'inherit', fontSize: 22, cursor: 'pointer', color: '#000' };
   return (
-    <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <span id="qtylabel" style={LBL}>How many?</span>
       <input type="hidden" name="quantity" value={n} />
       {treat ? <input type="hidden" name="unlimited" value="1" /> : null}
@@ -39,7 +39,7 @@ export function Qty({ n, setN, treat, setTreat }) {
         </div>
         <button type="button" aria-pressed={treat} onClick={() => setTreat(!treat)} style={{ height: 52, border: '2px solid #000000', background: treat ? '#96E084' : 'transparent', color: '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '0 18px', borderRadius: 999, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><span className="dot" style={{ fontSize: 22, lineHeight: 1 }}>∞</span>Unlimited</button>
       </div>
-      <span style={{ fontSize: 13, lineHeight: 1.4, color: '#4A4A4A' }}>{help}</span>
+      <span style={{ fontSize: 13, lineHeight: 1.4 }}>{help}</span>
     </section>
   );
 }
@@ -99,7 +99,7 @@ export default function AddItemForm({ slug, initialTreat = false }) {
   const canPull = (empty || blocked) && link.trim();
   const readingHost = hostOf(link) || 'the page';
   const cta = treat ? 'Add to my list, unlimited' : n > 1 ? `Add ${n} to my list` : 'Add to my list';
-  const tabs = [['link', 'Paste a link'], ['photo', 'No link? Use a photo']];
+  const tabs = [['link', 'Paste a link'], ['photo', 'No link? Upload a photo']];
 
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -107,17 +107,17 @@ export default function AddItemForm({ slug, initialTreat = false }) {
       {isLink && link ? <input type="hidden" name="url" value={link} /> : null}
       {isLink && filled && pulledPhoto && !own.file ? <input type="hidden" name="photoData" value={pulledPhoto} /> : null}
 
-      <section style={{ padding: '12px 20px 0' }}>
+      <section style={{ padding: '16px 20px 0' }}>
         <div style={{ position: 'relative', height: 170 }}>
           <Blob seed={5} width={300} height={170} style={{ left: -10, top: 0 }} />
           <h1 style={{ position: 'absolute', left: 22, right: 60, top: 36, margin: 0, fontWeight: 400, fontSize: 44, lineHeight: 0.96, letterSpacing: '-0.04em' }}>What would you <span className="serif" style={{ fontStyle: 'italic', fontSize: 50 }}>love?</span></h1>
         </div>
       </section>
 
-      <section role="tablist" aria-label="Source" style={{ margin: '20px 20px 0', display: 'flex', borderBottom: '2px solid #000000' }}>
+      <section role="tablist" aria-label="Source" style={{ margin: '22px 20px 0', display: 'flex', borderBottom: '2px solid #000000' }}>
         {tabs.map(([k, l]) => {
           const on = src === k;
-          return <button key={k} type="button" role="tab" aria-selected={on} onClick={() => setSrc(k)} style={{ flex: '1 1 0', border: 0, background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, minHeight: 46, padding: '0 6px', cursor: 'pointer' }}>{l}</button>;
+          return <button key={k} type="button" role="tab" aria-selected={on} onClick={() => setSrc(k)} style={{ flex: '1 1 0', border: 0, background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, minHeight: 44, padding: '12px 6px', cursor: 'pointer', borderRadius: 0 }}>{l}</button>;
         })}
       </section>
 
@@ -136,7 +136,7 @@ export default function AddItemForm({ slug, initialTreat = false }) {
         </section>
       ) : null}
 
-      {empty ? <section style={{ padding: '8px 20px 0' }}><span style={{ fontSize: 13, color: '#4A4A4A' }}>{pv?.error || "We'll pull the photo, name and price for you."}</span></section> : null}
+      {empty ? <section style={{ padding: '8px 20px 0' }}><span style={{ fontSize: 13 }}>{pv?.error || "We'll pull the photo and price for you."}</span></section> : null}
 
       {isReading ? (
         <section className="pop" role="status" aria-live="polite" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 20px 0' }}>
@@ -169,10 +169,10 @@ export default function AddItemForm({ slug, initialTreat = false }) {
       {!isLink ? (
         <section className="pop" style={{ padding: '16px 20px 0', display: 'flex', gap: 12, alignItems: 'stretch' }}>
           {own.url ? <PhotoTile src={own.url} tag={own.file.name} bg="#A9CDF5" /> : null}
-          <label style={{ flexGrow: 1, cursor: 'pointer', minHeight: 150 }}>
+          <label style={{ flexGrow: 1, cursor: 'pointer', minHeight: 150, display: 'block' }}>
             <span style={{ display: 'flex', height: '100%', boxSizing: 'border-box', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, border: '2px dashed #000000', padding: 10, fontWeight: 800, fontSize: 14, textAlign: 'center' }}>
               <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4" /><path d="M7 9l5-5 5 5" /><path d="M4 20h16" /></svg>
-              {own.file ? 'Use another photo' : 'Add a photo'}
+              {own.file ? 'Add another photo' : 'Add a photo'}
             </span>
             <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
           </label>
@@ -184,8 +184,14 @@ export default function AddItemForm({ slug, initialTreat = false }) {
         <Qty n={n} setN={setN} treat={treat} setTreat={setTreat} />
       </div>
 
+      {treat ? (
+        <section className="pop" style={{ margin: '18px 20px 0', position: 'relative', background: '#96E084', padding: 16, overflow: 'hidden' }}>
+          <div aria-hidden="true" className="dia" style={{ position: 'absolute', right: -30, top: -30, width: 90, height: 90, background: '#E8642C' }} />
+          <p style={{ position: 'relative', margin: 0, fontWeight: 800, fontSize: 16, lineHeight: 1.3 }}>Unlimited treat: friends can treat you to this as many times as they like, at exactly <span className="dot" style={{ fontSize: 18 }}>{v.price || '$'}</span> each.</p>
+        </section>
+      ) : null}
       {state?.error ? <div className="err" style={{ margin: '20px 20px 0' }}>{state.error}</div> : null}
-      <div style={{ marginTop: 'auto', padding: '28px 20px 28px' }}>
+      <div style={{ padding: '22px 16px 32px' }}>
         <button className="btn" disabled={pending || isReading} style={{ height: 56, padding: 0 }}>{pending ? 'Adding…' : cta}</button>
       </div>
     </form>

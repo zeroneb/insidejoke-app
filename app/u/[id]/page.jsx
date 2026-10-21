@@ -4,10 +4,9 @@ import { currentUser } from '@/lib/auth';
 import { get } from '@/lib/db';
 import { publicListsOf, between } from '@/lib/lists';
 import { ListTile, tileData } from '@/components/list-tile';
-import { ProfileHero, Stats, monthYear } from '@/components/profile-hero';
+import { PhotoBlob } from '@/components/ui';
 import { addFriend, unfriend } from '@/lib/actions-a1';
 import TextFriendForm from '@/components/text-friend-form';
-import Nav from '@/components/nav';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,9 +22,9 @@ const shortDate = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'sho
 
 const Check = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg>;
 const Plus = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
-const PILL = { marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid #000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: '#000', textDecoration: 'none', boxSizing: 'border-box' };
+const PILL = { marginTop: 6, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid #000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: '#000', textDecoration: 'none', boxSizing: 'border-box' };
 
-// a1: a friend's profile, Option 13 FriendProfile.
+// a1/r1: a friend's profile, Option 10 FriendProfile.
 export default async function FriendProfile({ params }) {
   const { id } = await params;
   const them = await get('SELECT * FROM users WHERE id = ?', id);
@@ -39,6 +38,7 @@ export default async function FriendProfile({ params }) {
   const locked = !self && !friend && them.profile_public === 0;
   const lists = locked ? [] : await publicListsOf(them.id, friend || self ? me.id : null);
   const tiles = await Promise.all(lists.map((l) => tileData(l, me?.id)));
+  tiles.sort((x, y) => (x.kind === 'treat') - (y.kind === 'treat')); // r1: wish lists first, as on the board
   const seen = {};
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
   const gifts = me && !self ? await between(me.id, them.id) : [];
@@ -53,7 +53,6 @@ export default async function FriendProfile({ params }) {
       : (treat ? `${name} treated you to ${g.item_name}${from}` : `${name} put money toward your ${g.item_name}`);
     return { id: g.id, text, when: shortDate(g.created_at), color: mine ? '#B36EE0' : them.color };
   });
-  const ring = friend ? `friends since ${monthYear(fr.created_at)}` : `insidejoke since ${monthYear(them.created_at)}`;
 
   return (
     <>
@@ -66,7 +65,10 @@ export default async function FriendProfile({ params }) {
           ) : <span style={{ width: 44 }} />}
         </header>
 
-        <ProfileHero user={them} owner={self} ring={ring} uid="them">
+        <section style={{ position: 'relative', padding: '18px 20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10 }}>
+          <PhotoBlob user={them} owner={self} size={150} pad={22} uid="them" fontSize={74} />
+          <h1 style={{ margin: '6px 0 0', fontWeight: 400, fontSize: 34, letterSpacing: '-0.02em', lineHeight: 1 }}>{(them.name || 'Someone').trim().split(/\s+/)[0]}{(them.name || '').trim().split(/\s+/).length > 1 ? <> <span className="serif" style={{ fontStyle: 'italic' }}>{them.name.trim().split(/\s+/).slice(1).join(' ')}</span></> : null}</h1>
+          {them.bio ? <span style={{ fontSize: 15 }}>{them.bio}</span> : null}
           {self ? (
             <>
               <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit in settings</Link>
@@ -75,7 +77,7 @@ export default async function FriendProfile({ params }) {
           ) : friend ? (
             <>
               <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: '#D4FA4F' }}><Check />Friends<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
-              <span style={{ fontSize: 12, color: '#4A4A4A' }}>You see each other’s lists and show up in each other’s Lately.</span>
+              <span style={{ fontSize: 12, color: '#4A4A4A' }}>From your contacts</span>
             </>
           ) : me ? (
             <>
@@ -88,7 +90,7 @@ export default async function FriendProfile({ params }) {
               <span style={{ fontSize: 12, color: '#4A4A4A' }}>Sign up with your number to be friends with {name}.</span>
             </>
           )}
-        </ProfileHero>
+        </section>
 
         {friend ? (
           <section id="text" className="a1-target" style={{ margin: '20px 20px 0' }}>
@@ -96,18 +98,18 @@ export default async function FriendProfile({ params }) {
           </section>
         ) : null}
 
-        <Stats label={`${name} and you`} cells={me && !self
-          ? [[tiles.length, tiles.length === 1 ? 'list' : 'lists'], [fromThem, `from ${name} to you`], [toThem, `from you to ${name}`]]
-          : [[tiles.length, tiles.length === 1 ? 'list' : 'lists'], [0, 'from you'], [0, 'to you']]} />
+        {me && !self ? (
+          <section aria-label={`${name} and you`} style={{ margin: '24px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', borderTop: '1.5px solid #000000', borderBottom: '1.5px solid #000000' }}>
+            <div style={{ padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 2, borderRight: '1.5px solid #000000' }}><span className="dot" style={{ fontSize: 30, color: '#E8642C' }}>{fromThem}</span><span style={{ fontSize: 13 }}>{fromThem === 1 ? 'gift' : 'gifts'} {possessive(name)} sent you</span></div>
+            <div style={{ padding: '14px 0 14px 16px', display: 'flex', flexDirection: 'column', gap: 2 }}><span className="dot" style={{ fontSize: 30, color: '#13286B' }}>{toThem}</span><span style={{ fontSize: 13 }}>you’ve sent {name}</span></div>
+          </section>
+        ) : null}
 
-        <section style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'baseline', gap: '6px 10px' }}>
-            <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 30, lineHeight: 1, whiteSpace: 'nowrap' }}>{possessive(name)} <span style={{ fontWeight: 600 }}>lists</span></h2>
-            {tiles.length ? <span className="wide" style={{ fontSize: 11, letterSpacing: '0.14em', color: '#13286B' }}>Tap to give</span> : null}
-          </div>
+        <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 30, lineHeight: 1 }}>{possessive(name)} <span style={{ fontWeight: 600 }}>lists</span></h2>
           {tiles.length ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-              {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} big={false} foot={t.kind === 'treat' ? ['treats', String(t.count)] : undefined} />)}
+              {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
             </div>
           ) : (
             <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>{locked ? `${name} shares their profile with friends only.` : `${name} has no public lists right now.`}</p>
@@ -116,19 +118,14 @@ export default async function FriendProfile({ params }) {
         </section>
 
         {timeline.length ? (
-          <section style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
-            <h2 className="wide" style={{ margin: '0 0 14px', fontSize: 11, letterSpacing: '0.18em', color: '#13286B' }}>Between you two</h2>
-            <ol aria-label="Between you two" style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column' }}>
-              {timeline.map((b, k) => (
-                <li key={b.id} style={{ display: 'flex', gap: 14, alignItems: 'stretch' }}>
-                  <span aria-hidden="true" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: 14, flexShrink: 0, paddingTop: 4 }}>
-                    <span style={{ width: 12, height: 12, borderRadius: '50%', background: b.color, flexShrink: 0 }} />
-                    {k < timeline.length - 1 ? <span style={{ flexGrow: 1, width: 0, borderLeft: '2px dotted #13286B', margin: '4px 0' }} /> : null}
-                  </span>
-                  <span style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexGrow: 1, paddingBottom: 20, minWidth: 0 }}><span style={{ fontSize: 15, lineHeight: 1.35 }}>{b.text}</span><span className="dot" style={{ flexShrink: 0, fontSize: 13, color: '#4A4A4A' }}>{b.when}</span></span>
-                </li>
-              ))}
-            </ol>
+          <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column' }}>
+            <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 15, letterSpacing: '0.12em' }}>Between you two</h2>
+            {timeline.map((b) => (
+              <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid #000000' }}>
+                <span style={{ fontSize: 14, lineHeight: 1.35 }}>{b.text}</span>
+                <span style={{ flexShrink: 0, fontSize: 12, color: '#4A4A4A' }}>{b.when}</span>
+              </div>
+            ))}
           </section>
         ) : null}
         <div style={{ height: 24 }} />
@@ -146,7 +143,6 @@ export default async function FriendProfile({ params }) {
           </div>
         ) : null}
       </main>
-      {me ? <Nav me={me} active="friends" /> : null}
     </>
   );
 }
