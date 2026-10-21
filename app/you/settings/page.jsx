@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
-import { setSetting, logOut, deleteAccount } from '@/lib/actions';
+import { setSetting, logOut, deleteAccount, switchAccount } from '@/lib/actions';
 import { paymentMethod } from '@/lib/payments';
 import { payoutMethod } from '@/lib/wallet';
 import { spacedPhone, Chevron } from '@/components/profile-hero';
@@ -132,6 +132,7 @@ export default async function SettingsPage({ searchParams }) {
 
         <section style={{ padding: '40px 20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 22 }}>
           <form action={logOut} style={{ width: '100%' }}><button className="a1-ghost" style={{ width: '100%', height: 52, fontSize: 16 }}>Log out</button></form>
+          <form action={switchAccount} style={{ width: '100%', marginTop: -10 }}><button style={{ width: '100%', height: 44, border: 0, background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer', color: 'inherit' }}>Log in with another number</button></form>
           <details className="a1-del" style={{ width: '100%' }}>
             <summary><span className="a1-del-closed">Delete account</span><span className="a1-del-open">Keep my account</span></summary>
             <form action={deleteAccount} className="a1up" role="group" aria-label="Delete account" style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #E2452B', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>

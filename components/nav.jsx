@@ -28,14 +28,20 @@ function activeFor(path) {
   return 'home';
 }
 
+const PUBLIC_ONLY = ['/', '/menu', '/about', '/privacy', '/terms', '/signup', '/login'];
+
 export function GlobalNav({ me }) {
   const path = usePathname() || '/';
+  if (!me) {
+    // Signed out: no bar on the marketing and sign-up pages; elsewhere the bar shows, and You means log in.
+    if (PUBLIC_ONLY.includes(path) || path.startsWith('/reveal') || path.startsWith('/join') || path.startsWith('/dev')) return null;
+  }
   const m = path.match(/^\/l\/([^/]+)/);
   const addHref = m ? `/l/${m[1]}/add` : '/lists/new';
-  return <NavBar me={me} active={activeFor(path)} addHref={addHref} />;
+  return <NavBar me={me} path={path} active={me ? activeFor(path) : ''} addHref={addHref} />;
 }
 
-function NavBar({ me, active = '', addHref = '/lists/new' }) {
+function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
   const ink = (k) => (active === k ? NAVY : W);
   return (
     <nav aria-label="Main" className="nav">
@@ -51,9 +57,11 @@ function NavBar({ me, active = '', addHref = '/lists/new' }) {
       <Tab href="/wallet" label="Wallet" active={active === 'wallet'}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('wallet')} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3z" /><path d="M3 7l12-4v4" /><circle cx="16" cy="13.5" r="1.4" /></svg>
       </Tab>
-      <Link href="/you" aria-label="You" aria-current={active === 'you' ? 'page' : undefined} className="navtab">
+      <Link href={me ? '/you' : `/login?next=${encodeURIComponent(path)}`} aria-label={me ? 'You' : 'Log in'} aria-current={active === 'you' ? 'page' : undefined} className="navtab">
         <span style={{ width: 42, height: 42, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {me?.photo ? <img src={me.photo} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={30} owner />}
+          {!me ? (
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.9" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
+          ) : me.photo ? <img src={me.photo} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={30} owner />}
         </span>
       </Link>
     </nav>

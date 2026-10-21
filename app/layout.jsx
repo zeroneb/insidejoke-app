@@ -18,13 +18,13 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" data-theme={u?.theme || 'light'}>
       <body>
-        <div className={me ? 'app has-nav' : 'app'}>
+        <div className="app has-nav">
           {test ? (
             <div className="testbar"><span>Test mode: texts and payments are simulated</span><Link href="/dev/texts">Outbox</Link></div>
           ) : null}
           {children}
         </div>
-        {me ? <GlobalNav me={me} /> : null}
+        <GlobalNav me={me} />
       </body>
     </html>
   );
