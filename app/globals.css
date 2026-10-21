@@ -598,3 +598,6 @@ form:has(#cMove:checked) .r4-if-move { display: flex; }
 .r3-full { margin-bottom: -104px; padding-bottom: 104px; box-sizing: border-box; }
 /* r1: full-screen steps (sign up photo) hide the floating bar */
 body:has(.r1-nonav) .nav { display: none !important; }
+/* r4: the reveal's heat gradient runs under the floating bar */
+.app.has-nav:has(> main.r4-heat) { padding-bottom: 0; }
+main.r4-heat { padding-bottom: 104px; }

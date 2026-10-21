@@ -133,7 +133,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     if (v === 'friend') {
       return (
         <Link href={href} aria-label={`${t.title}, ${vis}, unlimited, ${t.count} treats`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
-          <div aria-hidden="true" className="dia" style={{ position: 'absolute', left: 40, top: 46, width: 84, height: 84, background: c.dia, transform: 'rotate(45deg)' }} />
+          <div aria-hidden="true" style={{ position: 'absolute', left: 40, top: 46, width: 84, height: 84, background: c.dia, transform: 'rotate(45deg)' }} />
           <span style={plainCap}>{vis} · unlimited</span>
           <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color: c.title, fontSize: 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
           <span style={plainCap}>{foot ? foot[0] : `${t.count} ${t.count === 1 ? 'treat' : 'treats'}`}</span>

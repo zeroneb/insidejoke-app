@@ -110,6 +110,8 @@ export function CodeBoxes({ name = 'code', border = '#000', accent = RED, height
 }
 
 // /join/[slug] when signed out: name + number, then the code.
+// r4: (917) 555-0148 instead of +19175550148
+const prettyPhone = (p = '') => { const d = String(p).replace(/\D/g, '').slice(-10); return d.length === 10 ? `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}` : p; };
 export function JoinSignup({ next, title, invite, children }) {
   const [s1, act1, p1] = useActionState(requestCode, { next });
   const [s2, act2, p2] = useActionState(confirmCode, null);
@@ -124,7 +126,7 @@ export function JoinSignup({ next, title, invite, children }) {
       {codeStep ? (
         <form action={act2} style={{ display: 'flex', flexDirection: 'column' }}>
           <input type="hidden" name="phone" value={s1.phone} /><input type="hidden" name="name" value={s1.name || ''} /><input type="hidden" name="next" value={next} />
-          <p style={{ margin: '14px 28px 0', textAlign: 'center', fontSize: 15, lineHeight: 1.4, color: '#000' }}>Enter the code we just texted to {s1.phone}. That's it, you're in.</p>
+          <p style={{ margin: '14px 28px 0', textAlign: 'center', fontSize: 15, lineHeight: 1.4, color: '#000' }}>Enter the code we just texted to {prettyPhone(s1.phone)}. That's it, you're in.</p>
           <div style={{ margin: '20px 20px 0' }}><CodeBoxes /></div>
           {s2?.error ? <div className="err" style={{ margin: '12px 20px 0' }}>{s2.error}</div> : null}
           {s1.testCode ? <p style={{ margin: '12px 20px 0', fontSize: 14, padding: '10px 12px', background: '#D8F75A', color: '#000' }}>Test mode, nothing was really texted. Your code is <span className="dot" style={{ fontSize: 18 }}>{s1.testCode}</span></p> : null}

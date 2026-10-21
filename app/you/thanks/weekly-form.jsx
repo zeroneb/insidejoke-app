@@ -3,7 +3,9 @@
 import { useActionState, useState } from 'react';
 import { sendWeeklyThanks } from '@/lib/actions-a3';
 
-export default function WeeklyForm({ count, first }) {
+const SAMPLE = 'Bagels, lattes and flowers all week. Thank you for celebrating me on a random Tuesday.';
+
+export default function WeeklyForm({ count, first, link }) {
   const [state, action, pending] = useActionState(sendWeeklyThanks, null);
   const [msg, setMsg] = useState('');
   const [photo, setPhoto] = useState(null);
@@ -36,7 +38,7 @@ export default function WeeklyForm({ count, first }) {
         <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em' }}>Each friend gets</span>
         <div style={{ background: '#FFFFFF', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <span style={{ textAlign: 'center', fontSize: 11, color: '#6A6A6A' }}>Text message</span>
-          <div style={{ alignSelf: 'flex-start', maxWidth: '86%', background: '#E9E9EB', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4, wordBreak: 'break-word' }}>{first} sent you a thank-you for this week’s treats 💛 “{msg || '…'}”{photo ? ' (with a photo)' : ''}</div>
+          <div style={{ alignSelf: 'flex-start', maxWidth: '86%', background: '#E9E9EB', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4, wordBreak: 'break-word' }}>{first} sent you a thank-you for this week’s treats 💛 “{msg.trim() || SAMPLE}”{photo ? ' (with a photo)' : ''} Open it: {link.replace(/^https?:\/\//, '')}</div>
         </div>
       </section>
       {state?.error ? <p className="err" style={{ margin: '14px 16px 0' }}>{state.error}</p> : null}

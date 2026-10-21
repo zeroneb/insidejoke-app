@@ -38,6 +38,7 @@ export default async function FriendProfile({ params }) {
   const locked = !self && !friend && them.profile_public === 0;
   const lists = locked ? [] : await publicListsOf(them.id, friend || self ? me.id : null);
   const tiles = await Promise.all(lists.map((l) => tileData(l, me?.id)));
+  tiles.sort((x, y) => (x.kind === 'treat') - (y.kind === 'treat')); // r1: wish lists first, as on the board
   const seen = {};
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
   const gifts = me && !self ? await between(me.id, them.id) : [];

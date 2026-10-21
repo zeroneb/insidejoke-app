@@ -5,6 +5,7 @@ import { Avatar, Blob } from '@/components/ui';
 import { currentUser } from '@/lib/auth';
 import { weeklyTreats } from '@/lib/reminders';
 import WeeklyForm from './weekly-form';
+import { appUrl } from '@/lib/texts';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: "This week's treats · insidejoke" };
@@ -41,7 +42,7 @@ export default async function WeeklyThanksPage() {
             ))}
             <div style={{ borderTop: '1px solid #000000' }} />
           </section>
-          <WeeklyForm count={n} first={first} />
+          <WeeklyForm count={n} first={first} link={`${appUrl()}/u/${me.id}`} />
         </>
       ) : null}
       <section style={{ margin: '26px 20px 0', paddingTop: 16, borderTop: '1.5px solid #000000', display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -104,7 +104,7 @@ export default async function RevealPage({ params, searchParams }) {
   const confetti = Array.from({ length: 22 }, (_, i) => { const k = i % 3; return { x: (i * 53 + 9) % 380, w: k === 0 ? 12 : 7, h: k === 0 ? 12 : 18, r: k === 0 ? '50%' : 2, c: ['#000', '#fff', '#FFE34D', '#13286B', '#96E084'][i % 5], d: `${(-(i * 0.45) % 6).toFixed(2)}s`, dur: `${(5 + (i % 4) * 0.7).toFixed(1)}s` }; });
 
   return (
-    <main className="a4-heat" style={{ position: 'relative', minHeight: '100vh', color: '#000', overflow: 'hidden', backgroundImage: HEAT }}>
+    <main className="a4-heat r4-heat" style={{ position: 'relative', minHeight: '100vh', color: '#000', overflow: 'hidden', backgroundImage: HEAT }}>
       <svg aria-hidden="true" style={{ position: 'absolute', inset: 0, mixBlendMode: 'overlay', opacity: 0.45, pointerEvents: 'none' }} width="100%" height="100%"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="100%" height="100%" filter="url(#g)" /></svg>
       {opened ? confetti.map((c, i) => <div key={i} aria-hidden="true" className="a4-fall" style={{ position: 'absolute', left: c.x, top: 0, width: c.w, height: c.h, borderRadius: c.r, background: c.c, animationDelay: c.d, animationDuration: c.dur, pointerEvents: 'none' }} />) : null}
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
