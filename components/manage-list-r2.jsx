@@ -72,9 +72,11 @@ export default function ManageRows({ slug, active, archived }) {
       </section>
 
       {toast ? (
-        <div className="pop" role="status" style={{ position: 'fixed', left: '50%', transform: 'translateX(-50%)', width: 'calc(min(430px, 100vw) - 32px)', bottom: 100, zIndex: 40, background: '#000000', color: '#FFFFFF', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, boxSizing: 'border-box' }}>
+        <div style={{ position: 'fixed', left: 0, right: 0, bottom: 100, zIndex: 40, display: 'flex', justifyContent: 'center', padding: '0 16px', pointerEvents: 'none' }}>
+        <div className="pop" role="status" style={{ width: '100%', maxWidth: 398, pointerEvents: 'auto', background: '#000000', color: '#FFFFFF', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, boxSizing: 'border-box' }}>
           <span style={{ fontSize: 14, fontWeight: 700 }}>{toast.msg}</span>
           {toast.undo ? <button type="button" onClick={toast.undo} style={{ border: 0, background: 'transparent', color: '#D4FA4F', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, textDecoration: 'underline', cursor: 'pointer', padding: 6 }}>Undo</button> : <button type="button" onClick={() => setToast(null)} style={{ border: 0, background: 'transparent', color: '#D4FA4F', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', padding: 6 }}>OK</button>}
+        </div>
         </div>
       ) : null}
     </>
