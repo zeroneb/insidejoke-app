@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Avatar } from '@/components/ui';
 
 // Bottom bar from the Option 10 Home board, plus a fifth tab: you.
@@ -13,7 +16,26 @@ function Tab({ href, label, active, children }) {
   );
 }
 
-export default function Nav({ me, active = '', addHref = '/lists/new' }) {
+// Pages used to render <Nav /> themselves. The bar now lives once in the root layout (GlobalNav),
+// floating over every signed-in screen, so the per-page one renders nothing.
+export default function Nav() { return null; }
+
+function activeFor(path) {
+  if (path.startsWith('/wallet')) return 'wallet';
+  if (path.startsWith('/you')) return 'you';
+  if (path.startsWith('/friends') || path.startsWith('/u/')) return 'friends';
+  if (path.startsWith('/lists/new') || /\/add$/.test(path)) return 'add';
+  return 'home';
+}
+
+export function GlobalNav({ me }) {
+  const path = usePathname() || '/';
+  const m = path.match(/^\/l\/([^/]+)/);
+  const addHref = m ? `/l/${m[1]}/add` : '/lists/new';
+  return <NavBar me={me} active={activeFor(path)} addHref={addHref} />;
+}
+
+function NavBar({ me, active = '', addHref = '/lists/new' }) {
   const ink = (k) => (active === k ? NAVY : W);
   return (
     <nav aria-label="Main" className="nav">

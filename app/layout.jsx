@@ -1,6 +1,8 @@
 import './globals.css';
 import Link from 'next/link';
 import { isTestMode } from '@/lib/texts';
+import { currentUser } from '@/lib/auth';
+import { GlobalNav } from '@/components/nav';
 
 export const metadata = {
   title: 'insidejoke',
@@ -9,17 +11,20 @@ export const metadata = {
 
 export const viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
   const test = isTestMode();
+  const u = await currentUser().catch(() => null);
+  const me = u ? { id: u.id, name: u.name, color: u.color, seed: u.seed, photo: u.photo || null } : null;
   return (
     <html lang="en">
       <body>
-        <div className="app">
+        <div className={me ? 'app has-nav' : 'app'}>
           {test ? (
             <div className="testbar"><span>Test mode: texts and payments are simulated</span><Link href="/dev/texts">Outbox</Link></div>
           ) : null}
           {children}
         </div>
+        {me ? <GlobalNav me={me} /> : null}
       </body>
     </html>
   );

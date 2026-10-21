@@ -146,7 +146,7 @@ export default async function ItemPage({ params }) {
 
       {isOwner && it.covered && !it.unlimited ? (
         /* a3: owner of a covered wish says thanks (Option 13 Covered) */
-        <div style={{ position: 'sticky', bottom: 0, marginTop: 'auto', padding: '14px 20px 24px', background: '#ECECEF', borderTop: '1px solid #000000', display: 'flex', gap: 10, zIndex: 5 }}>
+        <div style={{ position: 'sticky', bottom: 96, marginTop: 'auto', padding: '14px 20px 14px', background: '#ECECEF', borderTop: '1px solid #000000', display: 'flex', gap: 10, zIndex: 5 }}>
           {(await get('SELECT 1 FROM contributions WHERE item_id = ? AND thanked_at IS NULL AND giver_id <> ?', it.id, owner.id)) ? (
             <Link href={`/l/${slug}/i/${it.id}/thanks`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Say thanks</Link>
           ) : (
