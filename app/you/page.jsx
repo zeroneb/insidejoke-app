@@ -37,7 +37,7 @@ export default async function YouPage() {
 
         <ProfileHero user={me} owner ring={`insidejoke since ${monthYear(me.created_at)}`} uid="you">
           <span className="dot" style={{ fontSize: 16, letterSpacing: '0.04em' }}>{spacedPhone(me.phone)}</span>
-          <Link href="/you/settings" style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid #000000', background: 'transparent', textDecoration: 'none', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', boxSizing: 'border-box', borderRadius: 999 }}><Gear />Settings</Link>
+          <Link href="/you/settings" style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid #000000', background: 'transparent', textDecoration: 'none', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', boxSizing: 'border-box', borderRadius: 999 }}><Gear />Edit profile &amp; settings</Link>
           <span style={{ fontSize: 12, color: '#4A4A4A' }}>Friends see your name, bio and public lists. Only you see your number.</span>
         </ProfileHero>
 
@@ -75,7 +75,7 @@ export default async function YouPage() {
         </section>
 
         <section style={{ margin: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
-          <Link href="/you/settings" className="a1-link" style={{ borderTop: '1.5px solid #000000', minHeight: 56 }}><span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>Settings</span><span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>Photo, number, payouts, texts</span></span><Chevron /></Link>
+          <Link href="/you/settings" className="a1-link" style={{ borderTop: '1.5px solid #000000', minHeight: 56 }}><span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>Settings</span><span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>Name, bio, photo, dark mode, payouts, texts</span></span><Chevron /></Link>
           <Link href="/wallet/history" className="a1-link" style={{ borderTop: '1px solid #000000', borderBottom: '1.5px solid #000000', minHeight: 56 }}><span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>History</span><span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>Given, received, cash-outs. Only you see this.</span></span><Chevron /></Link>
         </section>
         <div style={{ height: 24 }} />
