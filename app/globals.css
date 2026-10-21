@@ -1,3 +1,10 @@
+@font-face{font-family:'Inter Tight';font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/inter-tight-latin-wght-normal.woff2) format('woff2')}
+@font-face{font-family:'Inter Tight';font-style:italic;font-weight:100 900;font-display:swap;src:url(/fonts/inter-tight-latin-wght-italic.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-style:normal;font-weight:400;font-display:swap;src:url(/fonts/eb-garamond-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-style:normal;font-weight:600;font-display:swap;src:url(/fonts/eb-garamond-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'EB Garamond';font-style:italic;font-weight:400;font-display:swap;src:url(/fonts/eb-garamond-latin-400-italic.woff2) format('woff2')}
+@font-face{font-family:'Archivo';font-style:normal;font-weight:100 900;font-stretch:62% 125%;font-display:swap;src:url(/fonts/archivo-latin-standard-normal.woff2) format('woff2-variations')}
+@font-face{font-family:'Doto';font-style:normal;font-weight:100 900;font-display:swap;src:url(/fonts/doto-latin-wght-normal.woff2) format('woff2')}
 :root {
   --bg: #ECECEF; --ink: #000000; --navy: #13286B; --lime: #D8F75A; --lime2: #D4FA4F;
   --orange: #E8642C; --pink: #F4D3EE; --red: #E2452B; --green: #96E084; --sky: #A9CDF5;
@@ -221,3 +228,8 @@ form:has(#amtcustom:checked) .if-custom { display: flex; }
 .react { display: inline-flex; align-items: center; gap: 3px; min-width: 36px; height: 32px; padding: 0 8px; border: 1px solid #000; border-radius: 999px; font: inherit; font-size: 15px; cursor: pointer; }
 @keyframes drawg { from { stroke-dashoffset: 900 } to { stroke-dashoffset: 0 } }
 .draw-g path { stroke-dasharray: 900; animation: drawg 2.6s ease-out backwards }
+
+/* Bottom bar (Option 10 Home board) */
+.nav { position: sticky; bottom: 0; z-index: 20; margin-top: auto; height: 72px; background: #13286B; display: flex; justify-content: space-around; align-items: center; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom); }
+.navtab { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; }
+.withnav { padding-bottom: 24px; }
