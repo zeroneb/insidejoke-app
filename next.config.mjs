@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  serverExternalPackages: ['better-sqlite3'],
+  serverExternalPackages: ['@electric-sql/pglite', 'postgres'],
   experimental: { serverActions: { bodySizeLimit: '6mb' } }
 };
 export default nextConfig;

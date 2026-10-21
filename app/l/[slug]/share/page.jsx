@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function SharePage({ params }) {
   const { slug } = await params;
-  const list = listBySlug(slug);
+  const list = await listBySlug(slug);
   if (!list) notFound();
   const me = await currentUser();
   if (!me) redirect(`/signup?next=/l/${slug}/share`);

@@ -4,7 +4,7 @@ import { Blob, Avatar, Header, ItemSketch } from '@/components/ui';
 import { tileInk, hostOf } from '@/components/friend-list';
 import { listBySlug, itemById, owner as ownerOf, notesFor, money } from '@/lib/lists';
 import { currentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { get } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,16 +12,16 @@ function firstName(u) { return ((u?.name || 'a friend').trim().split(/\s+/)[0]) 
 
 export default async function ItemPage({ params }) {
   const { slug, itemId } = await params;
-  const list = listBySlug(slug);
+  const list = await listBySlug(slug);
   if (!list) notFound();
-  const it = itemById(itemId);
+  const it = await itemById(itemId);
   if (!it || it.list_id !== list.id) notFound();
-  const owner = ownerOf(list);
+  const owner = await ownerOf(list);
   const me = await currentUser();
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const isOwner = me && me.id === owner.id;
-  const notes = notesFor(it.id, !!isOwner);
-  const privateCount = db().prepare("SELECT COUNT(*) AS n FROM contributions WHERE item_id = ? AND visibility = 'private'").get(it.id).n;
+  const notes = await notesFor(it.id, !!isOwner);
+  const privateCount = (await get("SELECT COUNT(*) AS n FROM contributions WHERE item_id = ? AND visibility = 'private'", it.id)).n;
   const ink = tileInk(it.color);
   const r = 58, C = 2 * Math.PI * r;
   const dash = (C * Math.min(100, it.pct) / 100).toFixed(1);

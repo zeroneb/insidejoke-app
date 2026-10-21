@@ -11,12 +11,12 @@ function firstName(u) { return ((u?.name || 'a friend').trim().split(/\s+/)[0]) 
 export default async function GivePage({ params, searchParams }) {
   const { slug, itemId } = await params;
   const sp = await searchParams;
-  const list = listBySlug(slug);
+  const list = await listBySlug(slug);
   if (!list) notFound();
-  const it = itemById(itemId);
+  const it = await itemById(itemId);
   if (!it || it.list_id !== list.id) notFound();
   if (it.covered) redirect(`/l/${slug}/i/${it.id}`);
-  const owner = ownerOf(list);
+  const owner = await ownerOf(list);
   const me = await currentUser();
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const item = { id: it.id, name: it.name, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, remaining: it.remaining, pct: it.pct, color: it.color, store: it.store };
@@ -26,7 +26,7 @@ export default async function GivePage({ params, searchParams }) {
       item={item}
       forName={forName}
       signedIn={!!me}
-      hasPayment={!!(me && paymentMethod(me.id))}
+      hasPayment={!!(me && (await paymentMethod(me.id)))}
       initialMode={sp?.mode === 'rest' ? 'rest' : 'amount'}
     />
   );

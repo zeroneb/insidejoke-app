@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { all, get } from '@/lib/db';
 import { listsOwnedBy, itemsFor, lately } from '@/lib/lists';
 import { logOut, react } from '@/lib/actions';
 import { ago } from '@/lib/time';
@@ -13,10 +13,9 @@ const CARD = ['#13286B', '#E8642C', '#96E084', '#F4D3EE', '#A9CDF5', '#B36EE0'];
 const INK = ['#FFFFFF', '#FFFFFF', '#000000', '#E2452B', '#13286B', '#D8F75A'];
 const EMOJI = ['❤️', '🎉', '🥹', '👀'];
 
-function reactionsFor(ids) {
+async function reactionsFor(ids) {
   if (!ids.length) return {};
-  db().exec(`CREATE TABLE IF NOT EXISTS reactions (contribution_id TEXT NOT NULL, user_id TEXT NOT NULL, emoji TEXT NOT NULL, PRIMARY KEY (contribution_id, user_id))`);
-  const rows = db().prepare(`SELECT contribution_id, emoji, COUNT(*) AS n FROM reactions WHERE contribution_id IN (${ids.map(() => '?').join(',')}) GROUP BY contribution_id, emoji`).all(...ids);
+  const rows = await all(`SELECT contribution_id, emoji, COUNT(*) AS n FROM reactions WHERE contribution_id IN (${ids.map(() => '?').join(',')}) GROUP BY contribution_id, emoji`, ...ids);
   const out = {};
   for (const r of rows) (out[r.contribution_id] ||= []).push(r);
   return out;
@@ -25,15 +24,13 @@ function reactionsFor(ids) {
 export default async function HomePage() {
   const me = await currentUser();
   if (!me) redirect('/signup?next=/home');
-  const lists = listsOwnedBy(me.id).map((l) => ({ ...l, items: itemsFor(l.id) }));
-  const feed = lately(me.id).map((f) => {
+  const lists = await Promise.all((await listsOwnedBy(me.id)).map(async (l) => ({ ...l, items: await itemsFor(l.id) })));
+  const feed = await Promise.all((await lately(me.id)).map(async (f) => {
     if (f.quantity === 0) return f;
-    const it = db().prepare('SELECT id, price_cents, quantity FROM items WHERE list_id = ? AND name = ? LIMIT 1').get(db().prepare('SELECT id FROM lists WHERE slug = ?').get(f.slug)?.id, f.item_name);
-    if (!it) return f;
-    const raised = db().prepare('SELECT COALESCE(SUM(amount_cents),0) AS c FROM contributions WHERE item_id = ?').get(it.id).c;
-    return { ...f, pct: Math.min(100, Math.floor((raised / Math.max(1, it.price_cents * it.quantity)) * 100)) };
-  });
-  const rx = reactionsFor(feed.map((f) => f.id));
+    const raised = (await get('SELECT COALESCE(SUM(amount_cents),0) AS c FROM contributions WHERE item_id = ?', f.item_id)).c;
+    return { ...f, pct: Math.min(100, Math.floor((raised / Math.max(1, f.price_cents * f.quantity)) * 100)) };
+  }));
+  const rx = await reactionsFor(feed.map((f) => f.id));
   const first = (me.name || '').split(' ')[0] || 'you';
 
   return (

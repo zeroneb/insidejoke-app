@@ -4,7 +4,7 @@ import { Blob, Avatar, ItemSketch } from '@/components/ui';
 import { tileInk } from '@/components/friend-list';
 import { listBySlug, itemById, owner as ownerOf, money } from '@/lib/lists';
 import { currentUser } from '@/lib/auth';
-import { db } from '@/lib/db';
+import { get } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -25,16 +25,16 @@ function confetti() {
 
 export default async function SentPage({ params }) {
   const { slug, cid } = await params;
-  const list = listBySlug(slug);
+  const list = await listBySlug(slug);
   if (!list) notFound();
-  const c = db().prepare('SELECT * FROM contributions WHERE id = ? AND list_id = ?').get(cid, list.id);
+  const c = await get('SELECT * FROM contributions WHERE id = ? AND list_id = ?', cid, list.id);
   if (!c) notFound();
   const me = await currentUser();
   if (!me || (me.id !== c.giver_id && me.id !== list.owner_id)) redirect(`/l/${slug}`);
-  const it = itemById(c.item_id);
+  const it = await itemById(c.item_id);
   if (!it) notFound();
-  const owner = ownerOf(list);
-  const giver = db().prepare('SELECT * FROM users WHERE id = ?').get(c.giver_id);
+  const owner = await ownerOf(list);
+  const giver = await get('SELECT * FROM users WHERE id = ?', c.giver_id);
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const ink = tileInk(it.color);
   const before = it.unlimited ? 0 : Math.max(0, Math.min(100, Math.floor(((it.raised - c.amount_cents) / Math.max(1, it.target)) * 100)));

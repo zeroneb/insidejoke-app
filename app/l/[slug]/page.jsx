@@ -8,10 +8,10 @@ export const dynamic = 'force-dynamic';
 
 export default async function ListPage({ params }) {
   const { slug } = await params;
-  const list = listBySlug(slug);
+  const list = await listBySlug(slug);
   if (!list) notFound();
   const me = await currentUser();
-  const items = itemsFor(list.id);
+  const items = await itemsFor(list.id);
   if (me && me.id === list.owner_id) return <OwnerList list={list} items={items} me={me} />;
-  return <FriendList list={list} owner={owner(list)} items={items} me={me} />;
+  return <FriendList list={list} owner={await owner(list)} items={items} me={me} />;
 }

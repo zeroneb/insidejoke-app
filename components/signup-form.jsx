@@ -22,7 +22,7 @@ export default function SignupForm({ next = '/home', testMode = false, title = '
           <input id="code" name="code" className="input code" inputMode="numeric" autoComplete="one-time-code" maxLength={6} autoFocus required />
         </div>
         {state?.error ? <div className="err">{state.error}</div> : null}
-        {testMode ? <p className="muted" style={{ margin: 0, fontSize: 13 }}>Test mode: your code is in the <Link href="/dev/texts">Outbox</Link>.</p> : null}
+        {s1?.testCode ? <p style={{ margin: 0, fontSize: 14, padding: '10px 12px', background: '#D8F75A' }}>Test mode, nothing was really texted. Your code is <span className="dot" style={{ fontSize: 18 }}>{s1.testCode}</span></p> : testMode ? <p className="muted" style={{ margin: 0, fontSize: 13 }}>Test mode: your code is in the <Link href="/dev/texts">Outbox</Link>.</p> : null}
         <button className="btn" disabled={p2}>{p2 ? 'Checking…' : 'Confirm'}</button>
         <p className="muted" style={{ margin: 0, fontSize: 13 }}>No password. Your number is your account.</p>
       </form>

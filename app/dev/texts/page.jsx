@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { db } from '@/lib/db';
+import { all } from '@/lib/db';
 import { isTestMode } from '@/lib/texts';
 import { Header } from '@/components/ui';
 import { clearTexts } from '../actions';
@@ -14,8 +14,8 @@ function linkify(body) {
 
 const when = (t) => new Date(t).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
-export default function Outbox() {
-  const rows = db().prepare('SELECT * FROM texts ORDER BY created_at DESC LIMIT 200').all();
+export default async function Outbox() {
+  const rows = await all('SELECT * FROM texts ORDER BY created_at DESC LIMIT 200');
   const test = isTestMode();
   return (
     <main>

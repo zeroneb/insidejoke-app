@@ -1,4 +1,4 @@
 node_modules
 .next
-data/*.db*
+data/
 .env*.local

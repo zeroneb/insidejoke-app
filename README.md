@@ -8,17 +8,16 @@ insidejoke is a wishlist app where friends chip in. You make a list of things yo
 
 ```
 npm i
-npm run seed     # demo data: Maya's birthday list and five friends
 npm run dev      # http://localhost:3000
 ```
 
-Then open `/dev/login` to act as any seeded user (Maya owns the list; Sam, Priya, Lina, Dev and Kofi are friends).
+Then open `/dev/login`, press **Load the demo**, and act as any demo user (Maya owns the list; Sam, Priya, Lina, Dev and Kofi are friends).
 
 ## Test mode vs live
 
 With no keys set, the app runs in **test mode**: texts are not sent (they land in `/dev/texts`, the Outbox) and payments are simulated. A bar at the top of every page says so.
 
-Copy `.env.example` to `.env.local` and fill in Twilio (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`) to really send texts, and `STRIPE_SECRET_KEY` to really charge. `APP_URL` is the public base URL used in text links. The database is SQLite at `data/insidejoke.db` (set `DB_PATH` to move it).
+Copy `.env.example` to `.env.local` and fill in Twilio (`TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM_NUMBER`) to really send texts, and `STRIPE_SECRET_KEY` to really charge. `APP_URL` is the public base URL used in text links. The database is Postgres: set `DATABASE_URL` (Neon, Supabase, Vercel Postgres all work). With no URL the app runs a local Postgres in-process (PGlite) under `data/pglite`, so nothing needs installing to try it. On Vercel without `DATABASE_URL` the data lives in `/tmp` and resets on every deploy.
 
 ## Phases
 
@@ -41,6 +40,5 @@ Copy `.env.example` to `.env.local` and fill in Twilio (`TWILIO_ACCOUNT_SID`, `T
 ```
 app/            routes (App Router): landing, signup, home, lists, l/[slug], menu, dev/*
 components/     Blob, Logo, Header, Avatar and friends
-lib/            db (SQLite), auth, lists, texts, payments, actions (server actions), blob
-scripts/seed.mjs demo data
+lib/            db (Postgres), auth, lists, texts, payments, wallet, seed (demo data), actions (server actions), blob
 ```
