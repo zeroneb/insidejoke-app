@@ -1,84 +1,260 @@
 'use client';
 
-import { useActionState, useState } from 'react';
-import { addItem } from '@/lib/actions';
-import { Blob } from '@/components/ui';
+import { useActionState, useEffect, useState } from 'react';
+import { addItem, updateItem, previewLink } from '@/lib/actions';
+import { removeItemAndReturn as removeAndBack } from '@/lib/actions-a2';
+import { Blob, Halftone, ItemSketch } from '@/components/ui';
 
-export default function AddItemForm({ slug, listTitle }) {
+// Shared by Add item and Edit item (Option 13 boards). `item` present = edit mode.
+const LBL = { fontWeight: 800, fontSize: 14 };
+const camera = <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3" /></svg>;
+const hostOf = (u) => { try { return new URL(/^https?:/i.test(u) ? u : 'https://' + u).hostname.replace(/^www\./, ''); } catch { return ''; } };
+
+export function Fields({ v, set, treat, n }) {
+  return (
+    <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="name" style={LBL}>Exact name</label><input id="name" name="name" className="a2-input" value={v.name} onChange={(e) => set({ name: e.target.value })} placeholder="Brand, model, color, size" /></div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="price" style={LBL}>{treat || n > 1 ? 'Price each' : 'About'}</label><input id="price" name="price" className="a2-input dot" value={v.price} onChange={(e) => set({ price: e.target.value })} placeholder="$" inputMode="decimal" /></div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="where" style={LBL}>Where it's from</label><input id="where" name="store" className="a2-input" value={v.store} onChange={(e) => set({ store: e.target.value })} placeholder="Store or place" /></div>
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}><label htmlFor="note" style={LBL}>Note for friends <span style={{ fontWeight: 400, color: '#4A4A4A' }}>optional</span></label><input id="note" name="note" className="a2-input" value={v.note} onChange={(e) => set({ note: e.target.value })} placeholder="The black ones, not the brown" /></div>
+    </section>
+  );
+}
+
+export function Qty({ n, setN, treat, setTreat }) {
+  const help = treat ? 'Unlimited makes it a treat. Friends can give it again and again, and you see a running count.' : n === 1 ? 'Just one. Tap + if you want more of the same thing.' : `One listing for ${n}. Friends see it as one item and fill it toward the total.`;
+  const step = { width: 48, height: 48, border: 0, background: 'transparent', fontFamily: 'inherit', fontSize: 22, cursor: 'pointer', color: '#000' };
+  return (
+    <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <span id="qtylabel" style={LBL}>How many?</span>
+      <input type="hidden" name="quantity" value={n} />
+      {treat ? <input type="hidden" name="unlimited" value="1" /> : null}
+      <div role="group" aria-labelledby="qtylabel" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #000000', background: treat ? '#D7D7DC' : '#FFFFFF', borderRadius: 999 }}>
+          <button type="button" aria-label="One fewer" onClick={() => { setTreat(false); setN(Math.max(1, n - 1)); }} style={step}>−</button>
+          <span className="dot" aria-live="polite" style={{ minWidth: 44, textAlign: 'center', fontSize: 24 }}>{treat ? '∞' : n}</span>
+          <button type="button" aria-label="One more" onClick={() => { setTreat(false); setN(Math.min(99, n + 1)); }} style={step}>+</button>
+        </div>
+        <button type="button" aria-pressed={treat} onClick={() => setTreat(!treat)} style={{ height: 52, border: '2px solid #000000', background: treat ? '#96E084' : 'transparent', color: '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '0 18px', borderRadius: 999, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><span className="dot" style={{ fontSize: 22, lineHeight: 1 }}>∞</span>Unlimited</button>
+      </div>
+      <span style={{ fontSize: 13, lineHeight: 1.4, color: '#4A4A4A' }}>{help}</span>
+    </section>
+  );
+}
+
+// 150px photo tile: a pulled/uploaded photo as halftone on the tile color, tagged bottom-left.
+export function PhotoTile({ src, tag, bg = '#F0895A', name }) {
+  return (
+    <div style={{ position: 'relative', width: 150, height: 150, flexShrink: 0, background: bg, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {src ? <Halftone src={src} size={150} dot={3.4} /> : <ItemSketch name={name} size={110} />}
+      {tag ? <span style={{ position: 'absolute', left: 6, bottom: 6, background: '#000000', color: '#FFFFFF', fontSize: 11, fontWeight: 700, padding: '3px 6px', maxWidth: 138, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{tag}</span> : null}
+    </div>
+  );
+}
+
+export function useFilePreview() {
+  const [file, setFile] = useState(null);
+  const [url, setUrl] = useState(null);
+  useEffect(() => { if (!file) { setUrl(null); return; } const u = URL.createObjectURL(file); setUrl(u); return () => URL.revokeObjectURL(u); }, [file]);
+  return { file, url, setFile };
+}
+
+export default function AddItemForm({ slug, initialTreat = false }) {
   const [state, action, pending] = useActionState(addItem, null);
+  const [pv, pull, reading] = useActionState(previewLink, null);
+  const [src, setSrc] = useState('link');
+  const [phase, setPhase] = useState('empty'); // empty | filled | blocked
+  const [link, setLink] = useState('');
+  const [v, setV] = useState({ name: '', price: '', store: '', note: '' });
+  const set = (o) => setV((x) => ({ ...x, ...o }));
   const [n, setN] = useState(1);
-  const [unl, setUnl] = useState(false);
-  const [price, setPrice] = useState('');
-  const cta = unl ? 'Add to my list, unlimited' : n > 1 ? `Add ${n} to my list` : 'Add to my list';
-  const help = unl ? 'Unlimited makes it a treat. Friends can give it again and again, and you see a running count.' : n === 1 ? 'Just one. Tap + if you want more of the same thing.' : `One listing for ${n}. Friends see it as one item and fill it toward the total.`;
+  const [treat, setTreat] = useState(initialTreat);
+  const own = useFilePreview();
+  const [pulledPhoto, setPulledPhoto] = useState(null);
+  const [host, setHost] = useState('');
+
+  useEffect(() => {
+    if (!pv) return;
+    if (pv.error) { setPhase('empty'); return; }
+    setHost(pv.host || hostOf(pv.url || link));
+    if (pv.url) setLink(pv.url);
+    if (pv.ok) {
+      setPhase('filled');
+      setPulledPhoto(pv.photo || null);
+      setV((x) => ({ ...x, name: pv.name || x.name, price: pv.price ? '$' + String(pv.price).replace(/\.00$/, '') : x.price, store: pv.store || x.store }));
+    } else {
+      setPhase('blocked');
+      setPulledPhoto(null);
+      setV((x) => ({ ...x, store: x.store || pv.store || '' }));
+    }
+  }, [pv]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const isLink = src === 'link';
+  const isReading = isLink && reading;
+  const filled = isLink && !reading && phase === 'filled';
+  const blocked = isLink && !reading && phase === 'blocked';
+  const empty = isLink && !reading && phase === 'empty';
+  const canPull = (empty || blocked) && link.trim();
+  const readingHost = hostOf(link) || 'the page';
+  const cta = treat ? 'Add to my list, unlimited' : n > 1 ? `Add ${n} to my list` : 'Add to my list';
+  const tabs = [['link', 'Paste a link'], ['photo', 'No link? Use a photo']];
 
   return (
-    <form action={action} encType="multipart/form-data" style={{ display: 'flex', flexDirection: 'column' }}>
+    <form action={action} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <input type="hidden" name="slug" value={slug} />
-      <section style={{ padding: '16px 20px 0' }}>
+      {isLink && link ? <input type="hidden" name="url" value={link} /> : null}
+      {isLink && filled && pulledPhoto && !own.file ? <input type="hidden" name="photoData" value={pulledPhoto} /> : null}
+
+      <section style={{ padding: '12px 20px 0' }}>
         <div style={{ position: 'relative', height: 170 }}>
           <Blob seed={5} width={300} height={170} style={{ left: -10, top: 0 }} />
-          <h1 style={{ position: 'absolute', left: 22, right: 60, top: 36, margin: 0, fontWeight: 400, fontSize: 44, lineHeight: 0.96, letterSpacing: '-0.04em' }}>What would you <span className="it" style={{ fontSize: 50 }}>love?</span></h1>
+          <h1 style={{ position: 'absolute', left: 22, right: 60, top: 36, margin: 0, fontWeight: 400, fontSize: 44, lineHeight: 0.96, letterSpacing: '-0.04em' }}>What would you <span className="serif" style={{ fontStyle: 'italic', fontSize: 50 }}>love?</span></h1>
         </div>
       </section>
 
-      <section role="tablist" style={{ margin: '22px 20px 0', display: 'flex', borderBottom: '2px solid #000' }}>
-        <label className="tab"><input type="radio" name="src" id="srclink" value="link" />Paste a link</label>
-        <label className="tab"><input type="radio" name="src" id="srcphoto" value="photo" defaultChecked />No link? Upload a photo</label>
+      <section role="tablist" aria-label="Source" style={{ margin: '20px 20px 0', display: 'flex', borderBottom: '2px solid #000000' }}>
+        {tabs.map(([k, l]) => {
+          const on = src === k;
+          return <button key={k} type="button" role="tab" aria-selected={on} onClick={() => setSrc(k)} style={{ flex: '1 1 0', border: 0, background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, minHeight: 46, padding: '0 6px', cursor: 'pointer' }}>{l}</button>;
+        })}
       </section>
 
-      <section className="reveal if-link pop" style={{ padding: '16px 20px 0', flexDirection: 'column', gap: 8 }}>
-        <label htmlFor="url" className="lbl">Link from any store</label>
-        <input id="url" name="url" type="url" className="input" placeholder="https://" />
-        <span style={{ fontSize: 13 }}>Paste it and we'll keep the link on the item for friends.</span>
-      </section>
-
-      <section className="reveal if-photo pop" style={{ padding: '16px 20px 0', flexDirection: 'column', gap: 8 }}>
-        <label htmlFor="photo" className="lbl">A photo of it</label>
-        <label htmlFor="photo" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, border: '2px dashed #000', padding: 22, fontWeight: 800, fontSize: 14, textAlign: 'center', cursor: 'pointer' }}>
-          <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4" /><path d="M7 9l5-5 5 5" /><path d="M4 20h16" /></svg>
-          Add a photo
-          <input id="photo" name="photo" type="file" accept="image/*" className="sr" />
-        </label>
-      </section>
-
-      <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <div className="field"><label htmlFor="name">Exact name</label><input id="name" name="name" className="input" placeholder="The blue vase from the flea market" required /></div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-          <div className="field"><label htmlFor="price">{unl || n > 1 ? 'Price each' : 'About'}</label><input id="price" name="price" className="input dot" style={{ fontSize: 20 }} inputMode="decimal" placeholder="$140" value={price} onChange={(e) => setPrice(e.target.value)} required /></div>
-          <div className="field"><label htmlFor="store">Where</label><input id="store" name="store" className="input" placeholder="Brooklyn Flea, stall 12" /></div>
-        </div>
-        <div className="field"><label htmlFor="note">Note for friends</label><input id="note" name="note" className="input" placeholder="Ask for Rami, the owner holds them" /></div>
-      </section>
-
-      <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <span className="lbl">How many?</span>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #000', background: unl ? '#D7D7DC' : '#fff', borderRadius: 999 }}>
-            <button type="button" aria-label="One fewer" onClick={() => { setUnl(false); setN((v) => Math.max(1, v - 1)); }} style={{ width: 48, height: 48, border: 0, background: 'transparent', font: 'inherit', fontSize: 22, cursor: 'pointer' }}>−</button>
-            <span className="dot" aria-live="polite" style={{ minWidth: 44, textAlign: 'center', fontSize: 24 }}>{unl ? '∞' : n}</span>
-            <button type="button" aria-label="One more" onClick={() => { setUnl(false); setN((v) => Math.min(99, v + 1)); }} style={{ width: 48, height: 48, border: 0, background: 'transparent', font: 'inherit', fontSize: 22, cursor: 'pointer' }}>+</button>
+      {isLink ? (
+        <section style={{ padding: '16px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <label htmlFor="link" style={LBL}>Link from any store</label>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input id="link" value={link} onChange={(e) => { setLink(e.target.value); if (phase !== 'empty') setPhase('empty'); }} placeholder="Paste a link" inputMode="url" className="a2-input" style={{ flex: '1 1 0', minWidth: 0 }}
+              onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (canPull) e.currentTarget.form.querySelector('#pullbtn').click(); } }} />
+            <button id="pullbtn" type="submit" formAction={pull} aria-disabled={!canPull} disabled={!canPull && !filled}
+              onClick={(e) => { if (!canPull) e.preventDefault(); }}
+              style={{ flexShrink: 0, height: 50, border: '2px solid #000000', background: (empty || blocked) ? '#000000' : 'transparent', color: (empty || blocked) ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '0 16px', borderRadius: 999, cursor: 'pointer', opacity: isReading ? 0.5 : 1 }}>
+              {isReading ? 'Reading…' : filled ? 'Pulled' : 'Pull details'}
+            </button>
           </div>
-          <input type="hidden" name="quantity" value={n} />
-          <label className="pill" style={{ height: 52, fontWeight: 800, fontSize: 15, padding: '0 18px', background: unl ? '#96E084' : 'transparent' }}>
-            <input type="checkbox" id="unlimited" name="unlimited" className="sr" checked={unl} onChange={(e) => setUnl(e.target.checked)} />
-            <span className="dot" style={{ fontSize: 22, lineHeight: 1 }}>∞</span>Unlimited
-          </label>
-        </div>
-        <span style={{ fontSize: 13, lineHeight: 1.4 }}>{help}</span>
-      </section>
-
-      {unl ? (
-        <section className="pop" style={{ margin: '18px 20px 0', position: 'relative', background: '#96E084', padding: 16, overflow: 'hidden' }}>
-          <div aria-hidden="true" style={{ position: 'absolute', right: -30, top: -30, width: 90, height: 90, background: '#E8642C', transform: 'rotate(45deg)' }} />
-          <p style={{ position: 'relative', margin: 0, fontWeight: 800, fontSize: 16, lineHeight: 1.3 }}>Unlimited treat: friends can treat you to this as many times as they like, at exactly <span className="dot" style={{ fontSize: 18 }}>{price || '$—'}</span> each.</p>
         </section>
       ) : null}
 
-      {state?.error ? <div className="err" style={{ margin: '18px 20px 0' }}>{state.error}</div> : null}
-      <div style={{ padding: '22px 16px 32px' }}>
-        <button className="btn" disabled={pending}>{pending ? 'Adding…' : cta}</button>
+      {empty ? <section style={{ padding: '8px 20px 0' }}><span style={{ fontSize: 13, color: '#4A4A4A' }}>{pv?.error || "We'll pull the photo, name and price for you."}</span></section> : null}
+
+      {isReading ? (
+        <section className="pop" role="status" aria-live="polite" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 20px 0' }}>
+          <svg aria-hidden="true" width="60" height="4" viewBox="0 0 60 4"><line className="dash" x1="0" y1="2" x2="60" y2="2" stroke="#13286B" strokeWidth="3" strokeDasharray="10 10" strokeLinecap="round" /></svg>
+          <span style={{ fontSize: 14, color: '#13286B', fontWeight: 500 }}>Reading {readingHost}…</span>
+        </section>
+      ) : null}
+
+      {blocked ? (
+        <section className="pop" role="alert" style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '8px 0 0', borderTop: '1.5px solid #E2452B', margin: '12px 20px 0' }}>
+          <span style={{ fontWeight: 700, fontSize: 14, color: '#E2452B' }}>We couldn't read that page. Add the details yourself.</span>
+          <span style={{ fontSize: 13, color: '#4A4A4A' }}>Some stores block this. The link still goes on your list, so friends can open it.</span>
+        </section>
+      ) : null}
+
+      {filled ? (
+        <section className="pop" style={{ display: 'flex', gap: 12, alignItems: 'stretch', padding: '18px 20px 0' }}>
+          <PhotoTile src={own.url || pulledPhoto} tag={own.file ? own.file.name : host} name={v.name} />
+          <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 8 }}>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, display: 'flex', gap: 8, alignItems: 'flex-start' }}><svg aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9B47" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L19 7" /></svg><span>Pulled from {host}. Check it and fix anything.</span></p>
+            <label style={{ height: 44, border: '1.5px dashed #000000', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              {camera}{own.file ? 'Change my photo' : 'Use my own photo'}
+              <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
+            </label>
+            <button type="button" onClick={() => { setPhase('empty'); setLink(''); setPulledPhoto(null); own.setFile(null); }} style={{ height: 36, border: 0, background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer', padding: 0, textAlign: 'left', color: '#000' }}>Paste a different link</button>
+          </div>
+        </section>
+      ) : null}
+
+      {!isLink ? (
+        <section className="pop" style={{ padding: '16px 20px 0', display: 'flex', gap: 12, alignItems: 'stretch' }}>
+          {own.url ? <PhotoTile src={own.url} tag={own.file.name} bg="#A9CDF5" /> : null}
+          <label style={{ flexGrow: 1, cursor: 'pointer', minHeight: 150 }}>
+            <span style={{ display: 'flex', height: '100%', boxSizing: 'border-box', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, border: '2px dashed #000000', padding: 10, fontWeight: 800, fontSize: 14, textAlign: 'center' }}>
+              <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4" /><path d="M7 9l5-5 5 5" /><path d="M4 20h16" /></svg>
+              {own.file ? 'Use another photo' : 'Add a photo'}
+            </span>
+            <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
+          </label>
+        </section>
+      ) : null}
+
+      <div style={{ opacity: isReading ? 0.35 : 1, transition: 'opacity .3s' }}>
+        <Fields v={v} set={set} treat={treat} n={n} />
+        <Qty n={n} setN={setN} treat={treat} setTreat={setTreat} />
+      </div>
+
+      {state?.error ? <div className="err" style={{ margin: '20px 20px 0' }}>{state.error}</div> : null}
+      <div style={{ marginTop: 'auto', padding: '28px 20px 28px' }}>
+        <button className="btn" disabled={pending || isReading} style={{ height: 56, padding: 0 }}>{pending ? 'Adding…' : cta}</button>
       </div>
     </form>
   );
 }
+
+// ---------- Edit item ----------
+export function EditItemForm({ slug, item, listTitle, contributed }) {
+  const [state, action, pending] = useActionState(updateItem, null);
+  const [v, setV] = useState({ name: item.name || '', price: '$' + (item.price_cents / 100).toFixed(item.price_cents % 100 ? 2 : 0), store: item.store || '', note: item.note || '' });
+  const set = (o) => setV((x) => ({ ...x, ...o }));
+  const [n, setN] = useState(Math.max(1, item.quantity || 1));
+  const [treat, setTreat] = useState(item.quantity === 0);
+  const own = useFilePreview();
+  const [removing, setRemoving] = useState(false);
+  const host = item.url ? hostOf(item.url) : '';
+  const photoLine = item.photo ? (host ? `Photo pulled from ${host}.` : 'Your photo.') : 'No photo yet. Add one so friends know the exact thing.';
+  return (
+    <>
+      <form action={action} style={{ display: 'flex', flexDirection: 'column' }}>
+        <input type="hidden" name="slug" value={slug} />
+        <input type="hidden" name="itemId" value={item.id} />
+        <input type="hidden" name="url" value={item.url || ''} />
+        {item.photo ? <input type="hidden" name="keepPhoto" value="1" /> : null}
+        <section style={{ padding: '20px 20px 0', display: 'flex', gap: 12, alignItems: 'stretch' }}>
+          <PhotoTile src={own.url || item.photo} tag={own.file ? own.file.name : (item.photo ? host || 'your photo' : '')} bg={item.color} name={item.name} />
+          <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 8 }}>
+            <span style={{ fontSize: 14, lineHeight: 1.4, color: '#4A4A4A' }}>{own.file ? 'New photo. Save to use it.' : photoLine}</span>
+            <label style={{ height: 44, border: '1.5px dashed #000000', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              {camera}{item.photo || own.file ? 'Change photo' : 'Add a photo'}
+              <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
+            </label>
+            {item.url ? (
+              <a href={/^https?:/i.test(item.url) ? item.url : 'https://' + item.url} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 6, height: 36, fontWeight: 700, fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, color: '#000' }}>Open the link <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
+            ) : <span style={{ height: 36 }} />}
+          </div>
+        </section>
+        <Fields v={v} set={set} treat={treat} n={n} />
+        <Qty n={n} setN={setN} treat={treat} setTreat={setTreat} />
+        {state?.error ? <div className="err" style={{ margin: '20px 20px 0' }}>{state.error}</div> : null}
+        <div style={{ padding: '28px 20px 0' }}>
+          <button className="btn" disabled={pending} style={{ height: 56, padding: 0 }}>{pending ? 'Saving…' : 'Save'}</button>
+        </div>
+      </form>
+      <RemoveBlock slug={slug} item={item} contributed={contributed} removing={removing} setRemoving={setRemoving} />
+    </>
+  );
+}
+
+function RemoveBlock({ slug, item, contributed, removing, setRemoving }) {
+  const short = item.name.split(/[,(]/)[0].trim().split(/\s+/).slice(-1)[0].toLowerCase();
+  return (
+    <div style={{ padding: '12px 20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {!removing ? (
+        <button type="button" onClick={() => setRemoving(true)} style={{ height: 52, border: '1.5px solid #000000', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, borderRadius: 999, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: '#000' }}>
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M9 7V4h6v3" /><path d="M6 7l1 13h10l1-13" /></svg>Remove from list
+        </button>
+      ) : (
+        <div className="pop" role="alertdialog" aria-labelledby="rmtitle" style={{ border: '1.5px solid #E2452B', padding: '18px 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <span id="rmtitle" style={{ fontSize: 22, lineHeight: 1.1, letterSpacing: '-0.02em' }}>Remove the {short} from <span className="serif" style={{ fontStyle: 'italic' }}>your list?</span></span>
+          <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5, color: '#4A4A4A' }}>{contributed ? 'Friends have already chipped in. Removing keeps their gifts in your wallet.' : 'Nobody has given toward it yet. Friends will not see it anymore.'}</p>
+          <form action={removeAndBack} style={{ display: 'flex', gap: 8, marginTop: 6 }}>
+            <input type="hidden" name="slug" value={slug} /><input type="hidden" name="itemId" value={item.id} />
+            <button type="button" onClick={() => setRemoving(false)} style={{ flex: '1 1 0', height: 50, border: '1.5px solid #000000', background: 'transparent', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, borderRadius: 999, cursor: 'pointer', color: '#000' }}>Keep it</button>
+            <button style={{ flex: '1 1 0', border: 0, background: '#E2452B', color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, height: 50, borderRadius: 999, cursor: 'pointer' }}>Yes, remove</button>
+          </form>
+        </div>
+      )}
+    </div>
+  );
+}
+

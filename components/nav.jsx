@@ -29,9 +29,11 @@ export default function Nav({ me, active = '', addHref = '/lists/new' }) {
       <Tab href="/wallet" label="Wallet" active={active === 'wallet'}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('wallet')} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3z" /><path d="M3 7l12-4v4" /><circle cx="16" cy="13.5" r="1.4" /></svg>
       </Tab>
-      <Tab href="/you" label="You" active={active === 'you'}>
-        {me?.photo ? <img src={me.photo} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={30} owner />}
-      </Tab>
+      <Link href="/you" aria-label="You" aria-current={active === 'you' ? 'page' : undefined} className="navtab">
+        <span style={{ width: 42, height: 42, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {me?.photo ? <img src={me.photo} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={30} owner />}
+        </span>
+      </Link>
     </nav>
   );
 }

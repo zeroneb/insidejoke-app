@@ -233,3 +233,129 @@ form:has(#amtcustom:checked) .if-custom { display: flex; }
 .nav { position: sticky; bottom: 0; z-index: 20; margin-top: auto; height: 72px; background: #13286B; display: flex; justify-content: space-around; align-items: center; flex-shrink: 0; padding-bottom: env(safe-area-inset-bottom); }
 .navtab { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; }
 .withnav { padding-bottom: 24px; }
+
+/* ---- a2: list screens (Option 13): treat diamond, link reading line, share sheet rise ---- */
+@keyframes a2spin { to { transform: rotate(405deg) } } .dia { animation: a2spin 14s linear infinite; }
+@keyframes a2dash { to { stroke-dashoffset: -40 } } .dash { animation: a2dash 1.2s linear infinite; }
+@keyframes a2rise { from { transform: translateY(40px) } to { transform: none } } .rise { animation: a2rise .35s cubic-bezier(.2,.7,.2,1) both; }
+.a2-input { height: 50px; border: 2px solid #000; background: #fff; font: inherit; font-size: 15px; padding: 0 14px; width: 100%; border-radius: 0; color: #000; }
+.a2-input::placeholder { color: #8A8A8A; }
+.a2-input.dot { font-family: 'Doto', monospace; font-weight: 900; font-size: 20px; }
+.a2-nostrip::-webkit-scrollbar { display: none; }
+
+/* ---- a1: sign up, home, you, settings, friends, profiles ---- */
+@keyframes caret { 0%,100% { opacity: 1 } 50% { opacity: 0 } } .caret { animation: caret 1s steps(1) infinite }
+.hi { background: #13286B; color: #FFFFFF; padding: 2px 7px; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1.55 }
+.duo { mix-blend-mode: multiply; filter: grayscale(1) contrast(1.35) brightness(1.05) }
+@keyframes spin405 { to { transform: rotate(405deg) } } .spin405 { animation: spin405 40s linear infinite }
+@keyframes a1up { from { transform: translateY(8px); opacity: 0 } to { transform: none; opacity: 1 } } .a1up { animation: a1up .25s ease-out both }
+@keyframes a1sheet { from { transform: translateY(40px); opacity: 0 } to { transform: none; opacity: 1 } } .a1sheet { animation: a1sheet .35s cubic-bezier(.2,.7,.2,1) both }
+.a1-cap { font-family: 'Archivo', sans-serif; font-stretch: 125%; font-weight: 800; text-transform: uppercase; font-size: 11px; letter-spacing: .18em; color: #13286B }
+.a1-row { display: flex; justify-content: space-between; align-items: center; gap: 14px; min-height: 60px; padding: 10px 0; border-top: 1px solid #000000 }
+.a1-lab { display: flex; flex-direction: column; gap: 3px; min-width: 0 }
+.a1-t { font-size: 16px; font-weight: 700; line-height: 1.2 }
+.a1-s { font-size: 13px; line-height: 1.4; color: #4A4A4A }
+.a1-sw { position: relative; flex-shrink: 0; width: 52px; height: 30px; border-radius: 999px; border: 1.5px solid #000000; background: transparent; padding: 0; cursor: pointer; box-sizing: border-box }
+.a1-sw span { position: absolute; top: 4px; left: 4px; width: 19px; height: 19px; border-radius: 50%; background: #000000; transition: left .15s }
+.a1-sw[aria-checked="true"] { background: #D4FA4F }
+.a1-sw[aria-checked="true"] span { left: 26px }
+.a1-ghost { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; height: 40px; padding: 0 16px; border: 1.5px solid #000000; border-radius: 999px; background: transparent; font-family: inherit; font-weight: 800; font-size: 14px; color: #000000; text-decoration: none; cursor: pointer; box-sizing: border-box }
+.a1-field { display: flex; flex-direction: column; gap: 6px; padding: 14px 0 12px; border-top: 1px solid #000000 }
+.a1-field input { border: 0; background: transparent; font-family: inherit; font-size: 18px; letter-spacing: -0.01em; color: #000000; padding: 4px 0; min-height: 36px; outline: none; width: 100% }
+.a1-field input::placeholder { color: #8A8A8A }
+.a1-link { display: flex; justify-content: space-between; align-items: center; text-decoration: none; min-height: 52px; font-weight: 700; font-size: 15px; color: #000 }
+.a1-heart { border: 1.5px solid #000000; background: transparent; height: 36px; border-radius: 999px; display: flex; align-items: center; gap: 6px; padding: 0 12px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 700; color: #000 }
+.a1-heart[aria-pressed="true"] { background: #D4FA4F }
+.a1-reply { border: 1.5px solid #000000; background: transparent; width: 44px; height: 36px; border-radius: 999px; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0 }
+.a1-reply[aria-expanded="true"] { background: #000 }
+.a1-see { margin-left: auto; display: flex; align-items: center; gap: 4px; height: 36px; padding: 0 14px; border-radius: 999px; background: #000000; color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 13px; white-space: nowrap }
+.a1-tile { position: relative; height: 230px; text-decoration: none; overflow: hidden; display: flex; flex-direction: column; padding: 12px; box-sizing: border-box }
+.a1-nav-you { position: relative; width: 42px; height: 42px; border-radius: 50%; border: 2px solid #D4FA4F; box-sizing: border-box; display: flex; align-items: center; justify-content: center }
+
+/* ---- a3: give, sent, thanks, wallet, history, payout ---- */
+@keyframes a3spin { from { transform: rotate(45deg) } to { transform: rotate(405deg) } } .a3-dia { animation: a3spin 40s linear infinite; }
+@keyframes a3tick { 0% { transform: translateY(6px); opacity: 0 } 100% { transform: none; opacity: 1 } } .a3-tick { animation: a3tick .35s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes a3drop { 0% { transform: translateY(-260px) rotate(0); opacity: 1 } 100% { transform: translateY(0) rotate(var(--r)); opacity: 1 } } .a3-conf { position: absolute; animation: a3drop 1.3s cubic-bezier(.2,.7,.25,1) both; }
+@keyframes a3tickin { 0% { transform: scale(1.5); opacity: 0 } 100% { transform: none; opacity: 1 } } .a3-tickin { display: inline-block; transform-origin: left center; animation: a3tickin .5s cubic-bezier(.2,.7,.2,1) 1s both; }
+@keyframes a3fill { from { width: var(--from) } to { width: var(--to) } } .a3-fill { height: 100%; border-radius: 999px; width: var(--to); animation: a3fill 1.4s cubic-bezier(.2,.7,.2,1) .6s both; }
+@keyframes a3grow { from { transform: scaleX(0) } to { transform: scaleX(1) } } .a3-grow { transform-origin: left; animation: a3grow .9s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes a3pop { 0% { transform: translateY(8px); opacity: 0 } 100% { transform: none; opacity: 1 } } .a3-pop { animation: a3pop .35s ease-out both; }
+@keyframes a3draw { from { stroke-dashoffset: 600 } to { stroke-dashoffset: 0 } } .a3-draw { stroke-dasharray: 600; animation: a3draw 2.4s ease-out backwards; }
+.a3-marq { display: inline-block; animation: marq 30s linear infinite; }
+.a3-photo { position: relative; }
+.a3-photo input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .a3-conf { animation: none !important } }
+
+/* ---- a4: collab, blast, handoff, surprises, reminders, texts ---- */
+.a4 { display: flex; flex-direction: column; background: #ECECEF; color: #E2452B; min-height: 100vh; }
+.a4-blue { color: #000; }
+.a4-band { border-bottom: 1.5px solid #E2452B; overflow: hidden; padding: 9px 0; }
+.a4-bandin { display: flex; width: max-content; gap: 16px; font-style: italic; font-family: 'Archivo', sans-serif; font-stretch: 112%; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; white-space: nowrap; }
+.a4-hdr { display: flex; justify-content: space-between; align-items: center; padding: 12px 12px 0 8px; }
+.a4-back { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; }
+.a4-chip { border: 2px solid #E2452B; border-radius: 999px; padding: 10px 22px; font-weight: 800; font-size: 17px; text-decoration: none; color: inherit; white-space: nowrap; }
+.a4-row { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-top: 1.5px solid #E2452B; text-decoration: none; color: inherit; }
+.a4-btn { display: block; width: 100%; text-align: center; text-decoration: none; border: 0; background: #E2452B; color: #fff; font-family: inherit; font-weight: 800; font-size: 17px; padding: 17px 0; border-radius: 999px; cursor: pointer; }
+.a4-btn:disabled { opacity: .5; cursor: default; }
+.a4-ghost { display: block; width: 100%; text-align: center; text-decoration: none; border: 2px solid #E2452B; background: transparent; color: #E2452B; font-family: inherit; font-weight: 800; font-size: 15px; padding: 14px 0; border-radius: 999px; cursor: pointer; }
+.a4-sw { position: relative; width: 56px; height: 32px; flex-shrink: 0; }
+.a4-sw input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+.a4-sw span { position: absolute; inset: 0; border-radius: 999px; border: 2px solid #E2452B; background: transparent; }
+.a4-sw span::after { content: ''; position: absolute; top: calc(50% - 11px); left: 3px; width: 22px; height: 22px; border-radius: 50%; background: #E2452B; transition: left .15s; }
+.a4-sw input:checked + span { background: #E2452B; }
+.a4-sw input:checked + span::after { left: calc(100% - 25px); background: #ECECEF; }
+.a4-pick { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-top: 1.5px solid #E2452B; cursor: pointer; color: #000; position: relative; }
+.a4-pick input { position: absolute; opacity: 0; pointer-events: none; }
+.a4-tick { width: 28px; height: 28px; flex-shrink: 0; border-radius: 50%; border: 2px solid #E2452B; display: flex; align-items: center; justify-content: center; }
+.a4-tick svg { stroke: transparent; }
+.a4-pick:has(input:checked) .a4-tick { background: #E2452B; }
+.a4-pick:has(input:checked) .a4-tick svg { stroke: #fff; }
+.a4-pick:has(input:focus-visible) .a4-tick { outline: 2px solid #13286B; outline-offset: 2px; }
+.a4-opt { position: relative; text-align: left; border: 2px solid #E2452B; background: #fff; color: #000; padding: 18px 16px; display: flex; flex-direction: column; gap: 6px; cursor: pointer; }
+.a4-opt input { position: absolute; opacity: 0; pointer-events: none; }
+.a4-opt:has(input:checked) { background: #E2452B; color: #fff; }
+.a4-if { display: none; }
+form:has(#pickCash:checked) .a4-if-cash { display: flex; }
+form:has(#pickSurprise:checked) .a4-if-surprise { display: flex; }
+form:has(#whenDate:checked) .a4-if-date { display: flex; }
+form:has(#dateOn:checked) .a4-if-dateon { display: flex; }
+.a4-who { flex: 1 1 0; display: flex; align-items: center; justify-content: center; gap: 8px; border: 2px solid #E2452B; color: #000; font-weight: 800; font-size: 15px; padding: 10px 0; border-radius: 999px; cursor: pointer; position: relative; }
+.a4-who input { position: absolute; opacity: 0; pointer-events: none; }
+.a4-who:has(input:checked) { background: #fff; box-shadow: inset 0 0 0 2px #E2452B; }
+.a4-radio { text-align: left; border: 2px solid #000; color: #000; padding: 16px; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; position: relative; }
+.a4-radio input { position: absolute; opacity: 0; pointer-events: none; }
+.a4-radio .a4-dot { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; border-radius: 50%; border: 2px solid currentColor; display: flex; align-items: center; justify-content: center; }
+.a4-radio .a4-dot::after { content: ''; width: 10px; height: 10px; border-radius: 50%; background: transparent; }
+.a4-radio:has(input:checked) { background: #000; color: #fff; }
+.a4-radio:has(input:checked) .a4-dot::after { background: #D8F75A; }
+@keyframes a4typing { 0%,100% { opacity: .2 } 50% { opacity: 1 } }
+.a4-t1 { animation: a4typing 1s infinite } .a4-t2 { animation: a4typing 1s .2s infinite } .a4-t3 { animation: a4typing 1s .4s infinite }
+@keyframes a4slide { from { transform: translateX(40px); opacity: 0 } to { transform: none; opacity: 1 } } .a4-slide { animation: a4slide .6s ease-out .3s both; }
+@keyframes a4up { from { transform: translateY(16px); opacity: 0 } to { transform: none; opacity: 1 } } .a4-up { animation: a4up .35s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes a4wave { 0%,100% { transform: scaleY(.35) } 50% { transform: scaleY(1) } } .a4-w { transform-origin: center; animation: a4wave 1s ease-in-out infinite; }
+@keyframes a4blink { 50% { opacity: .2 } } .a4-blink { animation: a4blink 1s steps(1) infinite; }
+@keyframes a4pulse { 0% { transform: scale(1); opacity: .5 } 100% { transform: scale(1.6); opacity: 0 } } .a4-pulse { transform-origin: center; animation: a4pulse 1.6s ease-out infinite; }
+@keyframes a4breathe { 0%,100% { transform: scale(1) } 50% { transform: scale(1.05) } } .a4-breathe { transform-origin: center; animation: a4breathe 5s ease-in-out infinite; }
+@keyframes a4lift { 0%,100% { transform: translateY(0) rotate(0) } 50% { transform: translateY(-8px) rotate(-2deg) } } .a4-lift { transform-origin: 150px 110px; animation: a4lift 3.2s ease-in-out infinite; }
+@keyframes a4tw { 0%,100% { opacity: .2 } 50% { opacity: 1 } } .a4-tw { animation: a4tw 2.4s ease-in-out infinite } .a4-tw2 { animation: a4tw 2.4s ease-in-out .8s infinite }
+@keyframes a4heat { 0%,100% { background-position: 0% 30% } 50% { background-position: 100% 70% } } .a4-heat { background-size: 220% 220%; animation: a4heat 9s ease-in-out infinite; }
+@keyframes a4shake { 0%,100% { transform: rotate(0) } 20% { transform: rotate(-6deg) } 40% { transform: rotate(6deg) } 60% { transform: rotate(-3deg) } 80% { transform: rotate(3deg) } } .a4-shake { animation: a4shake 1.2s ease-in-out infinite; }
+@keyframes a4fall { 0% { transform: translateY(-40px) rotate(0) } 100% { transform: translateY(1800px) rotate(540deg) } } .a4-fall { animation: a4fall 6s linear infinite; }
+@keyframes a4pop { 0% { transform: scale(.6); opacity: 0 } 70% { transform: scale(1.06) } 100% { transform: scale(1); opacity: 1 } } .a4-pop { animation: a4pop .6s cubic-bezier(.34,1.56,.64,1) both; }
+@keyframes a4spin { to { transform: rotate(360deg) } } .a4-spin { transform-origin: center; animation: a4spin 26s linear infinite; }
+.a4-digits { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px; position: relative; }
+.a4-digits span { height: 58px; background: #fff; border: 2px solid #000; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #000; font-family: 'Doto', monospace; font-weight: 900; }
+.a4-digits input { position: absolute; inset: 0; opacity: 0; width: 100%; font-size: 16px; }
+.a4-digits:focus-within span.cur { border-color: #E2452B; }
+@media (prefers-reduced-motion: reduce) { .a4-fall { display: none } }
+.a1-others { display: none }
+.a1-chk:checked ~ .a1-others { display: flex }
+.a1-del > summary { list-style: none; text-align: center; font-size: 13px; color: #4A4A4A; text-decoration: underline; text-underline-offset: 3px; min-height: 44px; line-height: 44px; cursor: pointer }
+.a1-del > summary::-webkit-details-marker { display: none }
+.a1-del .a1-del-open { display: none }
+.a1-del[open] .a1-del-open { display: inline } .a1-del[open] .a1-del-closed { display: none }
+.a1-del[open] > summary { margin-bottom: 12px }
+.a1-target { display: none } .a1-target:target { display: block }
+.a1-sheetwrap { display: none; position: fixed; inset: 0; z-index: 40; max-width: 430px; margin: 0 auto }
+.a1-sheetwrap:target { display: block }
+form:has(#cAsis:checked) .a4-if-asis, form:has(#cWait:checked) .a4-if-wait { display: block; }

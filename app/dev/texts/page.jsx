@@ -3,6 +3,8 @@ import { all } from '@/lib/db';
 import { isTestMode } from '@/lib/texts';
 import { Header } from '@/components/ui';
 import { clearTexts } from '../actions';
+import { runRemindersNow } from '@/lib/actions-a4'; // a4
+import { runSundayDigest } from '@/lib/actions-a3'; // a3
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Outbox · insidejoke' };
@@ -29,6 +31,19 @@ export default async function Outbox() {
           <form action={clearTexts}><button className="pill" type="submit">Clear</button></form>
           <Link href="/dev/login" className="pill">Switch user</Link>
         </div>
+        {test ? (
+          <form action={runRemindersNow} style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+            {/* a4: send due reminders + weekly digest now; "as if due" sends every unsent reminder */}
+            <button className="pill" type="submit">Run reminders</button>
+            <label style={{ display: 'flex', gap: 6, alignItems: 'center', fontSize: 13 }}><input type="checkbox" name="force" value="1" /> as if all are due</label>
+          </form>
+        ) : null}
+        {test ? (
+          <form action={runSundayDigest}>
+            {/* a3: weekly treat thank-you nudge (owners with weekly_thanks on) */}
+            <button className="pill" type="submit">Run Sunday digest</button>
+          </form>
+        ) : null}
         <div style={{ display: 'flex', flexDirection: 'column', marginTop: 6 }}>
           {rows.length === 0 ? <p className="muted">No texts yet.</p> : null}
           {rows.map((r) => (

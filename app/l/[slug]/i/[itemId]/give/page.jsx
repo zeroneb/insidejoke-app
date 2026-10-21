@@ -19,14 +19,15 @@ export default async function GivePage({ params, searchParams }) {
   const owner = await ownerOf(list);
   const me = await currentUser();
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
-  const item = { id: it.id, name: it.name, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, remaining: it.remaining, pct: it.pct, color: it.color, store: it.store };
+  const pm = me ? await paymentMethod(me.id) : null;
+  const item = { id: it.id, name: it.name, note: it.note, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, remaining: it.remaining, pct: it.pct, color: it.color, store: it.store, givers: it.givers, timesTreated: it.timesTreated };
   return (
     <GiveForm
       slug={slug}
       item={item}
       forName={forName}
       signedIn={!!me}
-      hasPayment={!!(me && (await paymentMethod(me.id)))}
+      payLabel={pm ? pm.label : null}
       initialMode={sp?.mode === 'rest' ? 'rest' : 'amount'}
     />
   );
