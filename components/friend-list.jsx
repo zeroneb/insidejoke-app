@@ -105,7 +105,8 @@ export default function FriendList({ list, owner, items, me }) {
         {wishes.map((it, i) => {
           const ink = tileInk(it.color);
           return (
-            <Link key={it.id} href={`/l/${slug}/i/${it.id}`} style={{ textDecoration: 'none', display: 'flex', gap: 14, padding: '14px 0', borderTop: '1.5px solid #000000', color: '#000' }}>
+            <div key={it.id} style={{ borderTop: '1.5px solid #000000', padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <Link href={`/l/${slug}/i/${it.id}`} style={{ textDecoration: 'none', display: 'flex', gap: 14, color: '#000' }}>
               <div style={{ position: 'relative', width: 92, height: 92, flexShrink: 0, background: it.color, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {it.photo ? (
                   <>
@@ -123,6 +124,13 @@ export default function FriendList({ list, owner, items, me }) {
                 </div>
               </div>
             </Link>
+            {!it.covered ? (
+              <div style={{ display: 'flex', gap: 8, paddingLeft: 106 }}>
+                <Link href={`/l/${slug}/i/${it.id}/give`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 44, borderRadius: 999, background: '#000000', color: '#FFFFFF', textDecoration: 'none', fontWeight: 800, fontSize: 14 }}>Contribute</Link>
+                <Link href={`/l/${slug}/i/${it.id}/give?mode=rest`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 44, borderRadius: 999, border: '1.5px solid #000000', boxSizing: 'border-box', color: '#000000', textDecoration: 'none', fontWeight: 800, fontSize: 14 }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
+              </div>
+            ) : null}
+            </div>
           );
         })}
       </section>

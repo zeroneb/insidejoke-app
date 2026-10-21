@@ -68,8 +68,32 @@ export default async function ItemPage({ params }) {
         <span style={{ fontWeight: 500, fontSize: 14, color: '#4A4A4A' }}>
           {it.quantity > 1 ? `Set of ${it.quantity} · ` : it.unlimited ? 'Unlimited · ' : ''}{priceBit}{store ? ` at ${store}` : ''}
         </span>
+        {!isOwner ? (
+          <div aria-label="Give" style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {!it.unlimited ? (
+              <>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}><div style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? '#2E9B47' : '#13286B' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
+                <span style={{ fontSize: 14, color: '#4A4A4A' }}><b style={{ color: '#000' }}>{it.covered ? 'All covered.' : it.pct >= 75 ? 'Almost there.' : it.pct >= 50 ? 'More than halfway.' : it.pct > 0 ? 'Off to a good start.' : 'Up for grabs.'}</b> {it.covered ? 'Thank you, everyone.' : it.givers ? `${it.givers} ${it.givers === 1 ? 'friend is' : 'friends are'} in. Join them.` : 'Be the first to give.'}</span>
+              </>
+            ) : (
+              <span style={{ fontSize: 14, color: '#4A4A4A' }}><b style={{ color: '#000' }}>Treated ×{it.timesTreated}.</b> Send one anytime, again and again.</span>
+            )}
+            <div style={{ display: 'flex', gap: 10 }}>
+          {it.unlimited ? (
+            <Link href={give} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Send a treat</Link>
+          ) : it.covered ? (
+            <span aria-disabled="true" style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2E9B47', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>All covered</span>
+          ) : (
+            <>
+              <Link href={give} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Contribute</Link>
+              <Link href={`${give}?mode=rest`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', border: '1.5px solid #000000', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999, boxSizing: 'border-box', color: '#000' }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
+            </>
+          )}
+            </div>
+          </div>
+        ) : null}
         {it.url ? (
-          <a href={/^https?:/i.test(it.url) ? it.url : 'https://' + it.url} target="_blank" rel="noopener" style={{ alignSelf: 'flex-start', marginTop: 6, display: 'flex', alignItems: 'center', gap: 8, height: 44, border: '1.5px solid #000000', textDecoration: 'none', fontWeight: 700, fontSize: 15, padding: '0 16px', borderRadius: 999, boxSizing: 'border-box', color: '#000' }}>See it at {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
+          <a href={/^https?:/i.test(it.url) ? it.url : 'https://' + it.url} target="_blank" rel="noopener" style={{ alignSelf: 'flex-start', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8, height: 44, textDecoration: 'underline', textUnderlineOffset: 3, fontWeight: 700, fontSize: 15, padding: 0, boxSizing: 'border-box', color: '#000' }}>See it at {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
         ) : null}
       </section>
 
@@ -120,20 +144,7 @@ export default async function ItemPage({ params }) {
 
       <div style={{ height: 32 }} />
 
-      {!isOwner ? (
-        <div style={{ position: 'sticky', bottom: 0, marginTop: 'auto', padding: '14px 20px 24px', background: '#ECECEF', borderTop: '1px solid #000000', display: 'flex', gap: 10, zIndex: 5 }}>
-          {it.unlimited ? (
-            <Link href={give} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Send a treat</Link>
-          ) : it.covered ? (
-            <span aria-disabled="true" style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2E9B47', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>All covered</span>
-          ) : (
-            <>
-              <Link href={`${give}?mode=rest`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', border: '1.5px solid #000000', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999, boxSizing: 'border-box', color: '#000' }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
-              <Link href={give} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 16, height: 54, borderRadius: 999 }}>Contribute</Link>
-            </>
-          )}
-        </div>
-      ) : it.covered && !it.unlimited ? (
+      {isOwner && it.covered && !it.unlimited ? (
         /* a3: owner of a covered wish says thanks (Option 13 Covered) */
         <div style={{ position: 'sticky', bottom: 0, marginTop: 'auto', padding: '14px 20px 24px', background: '#ECECEF', borderTop: '1px solid #000000', display: 'flex', gap: 10, zIndex: 5 }}>
           {(await get('SELECT 1 FROM contributions WHERE item_id = ? AND thanked_at IS NULL AND giver_id <> ?', it.id, owner.id)) ? (
