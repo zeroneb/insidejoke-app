@@ -16,7 +16,8 @@ export const metadata = { title: 'A surprise for you · insidejoke' };
 
 const CANDLE = 'M34 44 L44 44 L44 88 L34 88 Z M56 44 L66 44 L66 88 L56 88 Z M39 34 Q34 26 39 18 Q44 26 39 34 Z M61 34 Q56 26 61 18 Q66 26 61 34 Z';
 const GIFT_BG = [['#E8642C', '#FFFFFF'], ['#8A5A2B', '#F4D3EE'], ['#96E084', '#000000'], ['#13286B', '#D8F75A'], ['#B36EE0', '#FFFFFF']];
-const HEAT = 'radial-gradient(circle at 30% 20%, #FFE34D 0%, rgba(255,227,77,0) 40%), radial-gradient(circle at 70% 60%, #FF8A3D 0%, rgba(255,138,61,0) 45%), linear-gradient(160deg, #B53CF0 0%, #E85BD8 40%, #FF9A3C 75%, #FFE34D 100%)';
+// r4: the board's visible heat: yellow at the top, warm pink in the middle, orange at the foot. No purple.
+const HEAT = 'radial-gradient(circle at 50% 4%, #FFE34D 0%, rgba(255,227,77,0) 30%), radial-gradient(circle at 80% 92%, #FF8A3D 0%, rgba(255,138,61,0) 40%), linear-gradient(180deg, #FAD66A 0%, #F4AE98 30%, #F08C9C 60%, #FA9070 85%, #FF9A3C 100%)';
 
 function forWhat(list) {
   const m = /'s\s+(.+)$/i.exec(list.title || '');
@@ -112,7 +113,7 @@ export default async function RevealPage({ params, searchParams }) {
           <span><span className="wide" style={{ fontSize: 14, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 17 }}>joke</span></span>
           <span>{appUrl().replace(/^https?:\/\//, '')}/reveal</span>
         </header>
-        <h1 style={{ margin: '60px 0 0', padding: '0 22px', fontWeight: 400, fontSize: 60, lineHeight: 0.92, letterSpacing: '-0.035em' }}>Your friends have a <span style={{ fontFamily: "'EB Garamond', serif", fontStyle: 'italic', fontSize: 66 }}>surprise</span> for you</h1>
+        <h1 className="serif" style={{ margin: '60px 0 0', padding: '0 22px', fontWeight: 400, fontSize: 64, lineHeight: 0.92, letterSpacing: '-0.02em' }}>Your friends have a <span style={{ fontStyle: 'italic' }}>surprise</span> for you</h1>
         <div style={{ margin: '26px 22px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
           <span style={{ background: '#000', color: '#fff', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line1}</span>
           <span style={{ background: '#000', color: '#fff', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line2}</span>
