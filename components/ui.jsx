@@ -174,7 +174,8 @@ export function PosterSketch({ name = '', unlimited = false, seed = 7 }) {
 // The person's blob with their initial, or their photo as a duotone halftone clipped to the blob.
 // `boil` uses the three-frame boiling blob; otherwise one still shape. `uid` keeps svg ids unique per page.
 export function PhotoBlob({ user, size = 170, owner = false, boil = true, uid = 'pb', fontSize, pad = 16 }) {
-  let color = owner ? '#B36EE0' : user?.color || '#D8F75A';
+  // With a photo, the tint is the person's own color (they pick it in Settings), for owner views too.
+  let color = owner && !user?.photo ? '#B36EE0' : user?.color || '#D8F75A';
   const seed = user?.seed || 7;
   const [a, b, c] = boil ? tri(seed) : [blob(seed, 4), null, null];
   const initial = ((user?.name || '?').trim()[0] || '?').toUpperCase();

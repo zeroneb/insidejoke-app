@@ -6,19 +6,22 @@ import { startPhoneChange, confirmPhoneChange } from '@/lib/actions-a1';
 import { PhotoBlob } from '@/components/ui';
 import CodeBoxes from '@/components/code-boxes';
 
+const SWATCHES = ['#B36EE0', '#F0895A', '#E8642C', '#E3C552', '#D8F75A', '#93EC75', '#5FC3D9', '#A9CDF5', '#AAB4EC', '#F4D3EE', '#C8743A'];
+
 // a1: Settings, profile section (photo + name + bio) from Option 13 Settings.
 export function ProfileForm({ me }) {
   const [state, act, pending] = useActionState(updateProfile, null);
   const [preview, setPreview] = useState(null);
   const [remove, setRemove] = useState(false);
-  const shown = { ...me, photo: remove ? null : preview || me.photo };
+  const [color, setColor] = useState(me.color || '#B36EE0');
+  const shown = { ...me, color, photo: remove ? null : preview || me.photo };
   return (
     <form action={act} style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#D4FA4F', padding: '14px 16px', margin: '0 -20px' }}>
         <PhotoBlob user={shown} owner size={56} pad={6} uid="setme" fontSize={28} />
         <span className="a1-lab" style={{ flexGrow: 1 }}>
           <span className="a1-t">Photo</span>
-          <span className="a1-s" style={{ color: '#13286B' }}>{remove ? 'Removed when you save.' : preview ? 'Looks good? Save profile.' : 'Shown as a duotone in your color.'}</span>
+          <span className="a1-s" style={{ color: '#13286B' }}>{remove ? 'Removed when you save.' : preview ? 'Looks good? Save profile.' : 'Shown washed in your color, below.'}</span>
           {(me.photo || preview) && !remove ? <button type="button" onClick={() => { setRemove(true); setPreview(null); }} style={{ alignSelf: 'flex-start', border: 0, background: 'transparent', padding: '4px 0', fontFamily: 'inherit', fontSize: 12, fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: 3, color: '#13286B', cursor: 'pointer' }}>Remove photo</button> : null}
         </span>
         <label className="a1-ghost" style={{ position: 'relative' }}>
@@ -28,6 +31,19 @@ export function ProfileForm({ me }) {
         </label>
       </div>
       {remove ? <input type="hidden" name="removePhoto" value="1" /> : null}
+      {shown.photo ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, paddingTop: 16 }}>
+          <span className="a1-cap" style={{ fontSize: 10 }}>Photo color</span>
+          <input type="hidden" name="color" value={color} />
+          <div role="radiogroup" aria-label="Photo color" style={{ display: 'flex', flexWrap: 'wrap', gap: 10 }}>
+            {SWATCHES.map((c) => (
+              <button key={c} type="button" role="radio" aria-checked={color === c} aria-label={`Color ${c}`} onClick={() => setColor(c)}
+                style={{ width: 36, height: 36, borderRadius: '50%', background: c, border: color === c ? '3px solid #000000' : '1.5px solid rgba(0,0,0,.25)', boxShadow: color === c ? 'inset 0 0 0 3px #FFFFFF' : 'none', cursor: 'pointer', padding: 0 }} />
+            ))}
+          </div>
+          <span className="a1-s">Friends see your photo washed in this color.</span>
+        </div>
+      ) : null}
       <label className="a1-field" style={{ borderTop: 0, paddingTop: 18 }}><span className="a1-cap" style={{ fontSize: 10 }}>Name</span><input type="text" name="name" defaultValue={me.name} autoComplete="name" maxLength={60} required /></label>
       <label className="a1-field"><span className="a1-cap" style={{ fontSize: 10 }}>Bio · one line</span><input type="text" name="bio" defaultValue={me.bio || ''} maxLength={60} placeholder="ceramics, natural wine, long walks" /><span className="a1-s">Friends see this under your name.</span></label>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12, paddingTop: 4, borderTop: '1px solid #000000' }}>
