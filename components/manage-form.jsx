@@ -39,7 +39,11 @@ export default function ManageForm({ slug, title, visibility, date, surprise }) 
         <span style={{ fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>{surprise ? 'It goes out at midnight their time.' : d ? 'Reminders go out a week after sharing and 2 hours before.' : 'No date: one reminder goes out a week after you share it.'}</span>
       </div>
       {state?.error ? <div className="err">{state.error}</div> : null}
-      <button className="btn" disabled={pending || !dirty} style={{ height: 54, padding: 0 }}>{pending ? 'Saving…' : state?.ok && !dirty ? 'Saved' : 'Save changes'}</button>
+      {dirty ? (
+        <button className="btn" disabled={pending} style={{ height: 54, padding: 0 }}>{pending ? 'Saving…' : 'Save changes'}</button>
+      ) : (
+        <a href={`/l/${slug}`} className="btn" style={{ height: 54, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}>Done</a>
+      )}
     </form>
   );
 }
