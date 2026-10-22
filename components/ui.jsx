@@ -106,15 +106,11 @@ export function Dial({ pct = 0, size = 132, label, seed = 6 }) {
   );
 }
 
-// A real photo shown as a duotone halftone on the tile color (ink dots over the image).
-export function Halftone({ src, ink = '#13286B', size = 92, dot = 3.6 }) {
+// The item photo exactly as the store shows it: no filters, on white, whole product visible.
+export function Halftone({ src, fit = 'contain' }) {
   return (
-    <span aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'block' }}>
-      <img src={src} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'grayscale(1) contrast(1.25) brightness(1.05)', mixBlendMode: 'multiply', opacity: 0.85 }} />
-      <svg style={{ position: 'absolute', inset: 0 }} width="100%" height="100%">
-        <defs><pattern id={`ht${size}`} width={dot} height={dot} patternUnits="userSpaceOnUse"><circle cx={dot / 2} cy={dot / 2} r={dot * 0.28} fill={ink} /></pattern></defs>
-        <rect width="100%" height="100%" fill={`url(#ht${size})`} opacity="0.45" />
-      </svg>
+    <span aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'block', background: '#FFFFFF' }}>
+      <img src={src} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: fit, display: 'block' }} />
     </span>
   );
 }

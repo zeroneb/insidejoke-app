@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Blob, Avatar, shortNoun } from '@/components/ui';
+import { Blob, Avatar, shortNoun, Halftone } from '@/components/ui';
 import { tileInk, hostOf } from '@/components/friend-list';
 import { unpinBlastAction } from '@/lib/actions-a4';
 import { dismissNudge } from '@/lib/actions';
@@ -21,7 +21,7 @@ export function ItemRow({ it, sub, href, right, children, border = true }) {
   const tag = tileTag(it.name);
   const inner = (
     <>
-      <span style={{ width: 54, height: 54, flexShrink: 0, background: it.color, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span className="dot" style={{ fontSize: tag.length > 6 ? 11 : 13, color: tileInk(it.color), textAlign: 'center', lineHeight: 1 }}>{tag}</span></span>
+      <span style={{ position: 'relative', width: 54, height: 54, flexShrink: 0, background: it.color, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>{it.photo ? <Halftone src={it.photo} /> : null}<span className="dot" style={{ fontSize: tag.length > 6 ? 11 : 13, color: tileInk(it.color), textAlign: 'center', lineHeight: 1 }}>{tag}</span></span>
       <span style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}><span style={{ fontWeight: 800, fontSize: 15 }}>{it.name}</span><span style={{ fontSize: 12 }}>{sub}</span></span>
       <span className="dot" style={{ fontSize: 16, flexShrink: 0 }}>{it.unlimited ? `×${it.timesTreated}` : it.covered ? 'DONE' : `${it.pct}%`}</span>
     </>

@@ -17,6 +17,7 @@ export default async function RootLayout({ children }) {
   const me = u ? { id: u.id, name: u.name, color: u.color, seed: u.seed, photo: u.photo || null } : null;
   return (
     <html lang="en" data-theme={u?.theme || 'light'}>
+      <head><link rel="preload" href="/fonts/inter-tight-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="" /><link rel="preload" href="/fonts/eb-garamond-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="" /><link rel="preload" href="/fonts/eb-garamond-latin-600-normal.woff2" as="font" type="font/woff2" crossOrigin="" /><link rel="preload" href="/fonts/archivo-latin-standard-normal.woff2" as="font" type="font/woff2" crossOrigin="" /><link rel="preload" href="/fonts/doto-latin-wght-normal.woff2" as="font" type="font/woff2" crossOrigin="" /></head>
       <body>
         <div className="app has-nav">
           {test ? (
