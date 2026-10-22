@@ -22,10 +22,12 @@ export default function Nav() { return null; }
 
 function activeFor(path) {
   if (path.startsWith('/wallet')) return 'wallet';
-  if (path.startsWith('/you')) return 'you';
+  // Switched: the avatar (bottom right) opens Home, which is your profile with your lists; the first tab opens /you.
+  if (path.startsWith('/you')) return 'home';
+  if (path.startsWith('/home')) return 'you';
   if (path.startsWith('/friends') || path.startsWith('/u/')) return 'friends';
   if (path.startsWith('/lists/new') || /\/add$/.test(path)) return 'add';
-  return 'home';
+  return '';
 }
 
 const PUBLIC_ONLY = ['/', '/menu', '/about', '/privacy', '/terms', '/signup', '/login'];
@@ -45,7 +47,7 @@ function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
   const ink = (k) => (active === k ? NAVY : W);
   return (
     <nav aria-label="Main" className="nav">
-      <Tab href="/home" label="Home" active={active === 'home'}>
+      <Tab href="/you" label="Profile and settings" active={active === 'home'}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('home')} strokeWidth="2" strokeLinecap="round"><path d="M5 7h14" /><path d="M5 12h14" /><path d="M5 17h9" /></svg>
       </Tab>
       <Tab href="/friends" label="Friends" active={active === 'friends'}>
@@ -57,7 +59,7 @@ function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
       <Tab href="/wallet" label="Wallet" active={active === 'wallet'}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('wallet')} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3z" /><path d="M3 7l12-4v4" /><circle cx="16" cy="13.5" r="1.4" /></svg>
       </Tab>
-      <Link href={me ? '/you' : `/login?next=${encodeURIComponent(path)}`} aria-label={me ? 'You' : 'Log in'} aria-current={active === 'you' ? 'page' : undefined} className="navtab">
+      <Link href={me ? '/home' : `/login?next=${encodeURIComponent(path)}`} aria-label={me ? 'You' : 'Log in'} aria-current={active === 'you' ? 'page' : undefined} className="navtab">
         <span style={{ width: 42, height: 42, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {!me ? (
             <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.9" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
