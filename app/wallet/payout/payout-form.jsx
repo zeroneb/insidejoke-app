@@ -111,7 +111,7 @@ export function StripePayoutStart({ next, current }) {
         <span>{current ? 'Change where it lands' : 'One-time setup'}</span>
       </header>
       <section style={{ padding: '10px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <h1 style={{ margin: 0, fontWeight: 600, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em' }}>Get paid <span className="serif" style={{ fontWeight: 400, fontStyle: 'italic' }}>once,</span> then never again</h1>
+        <h1 style={{ margin: 0, fontWeight: 600, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em' }}>Set it up <span className="serif" style={{ fontWeight: 400, fontStyle: 'italic' }}>once,</span> get paid every time</h1>
         <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>{current ? `Cash-outs go to ${current} now. ` : ''}Link your bank and confirm it's you on our secure payments page. It takes about two minutes, then you come right back.</p>
       </section>
       <div style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
