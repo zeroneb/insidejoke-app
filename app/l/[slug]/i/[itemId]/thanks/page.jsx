@@ -54,7 +54,7 @@ export default async function ThanksPage({ params }) {
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
         </Link>
         <h1 style={{ position: 'relative', zIndex: 1, margin: 0, padding: '0 10px', fontWeight: 700, fontSize: 60, lineHeight: 0.88, letterSpacing: '-0.055em', color: '#EE6A2F' }}>All<br />covered!</h1>
-        <span style={{ position: 'absolute', right: 6, top: 140, display: 'block' }}><ItemSketch name={it.name} size={200} strokeWidth={1.6} /></span>
+        {it.photo ? <img src={`/api/photo/${it.id}`} alt={it.name} style={{ position: 'absolute', right: 14, top: 140, width: 180, height: 180, objectFit: 'contain', background: '#FFFFFF', padding: 10, boxSizing: 'border-box' }} /> : <span style={{ position: 'absolute', right: 6, top: 140, display: 'block' }}><ItemSketch name={it.name} size={200} strokeWidth={1.6} /></span>}
         <p style={{ position: 'absolute', left: 10, bottom: 12, margin: 0, maxWidth: 200, fontSize: 16, lineHeight: 1.35, color: '#5A1A08' }}>Your {what} {verb} {status}. {n} {n === 1 ? 'friend' : 'friends'} got you there.</p>
       </section>
 

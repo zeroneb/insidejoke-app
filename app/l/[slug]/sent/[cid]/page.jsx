@@ -73,14 +73,14 @@ export default async function SentPage({ params }) {
 
       <section className="r3-land" aria-label={treat ? 'Your treat' : 'Your gift'} style={{ margin: '26px 16px 0', background: '#FFFFFF', color: '#000000', display: 'flex', flexDirection: 'column' }}>
         {treat ? (
-          <div style={{ position: 'relative', height: 230, background: '#96E084', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '14px 16px', boxSizing: 'border-box' }}>
+          <div style={{ position: 'relative', height: 230, background: it.photo ? `#FFFFFF url(/api/photo/${it.id}) center / contain no-repeat` : '#96E084', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '14px 16px', boxSizing: 'border-box' }}>
             <span style={{ fontSize: 12, fontWeight: 700 }}>{it.store || ' '}</span>
             <span className="dot" aria-hidden="true" style={{ alignSelf: 'center', textAlign: 'center', fontSize: longest > 8 ? Math.max(28, Math.floor(46 * 8 / longest)) : 46, lineHeight: 0.95 }}>{words.map((w, i) => <span key={i}>{i ? <br /> : null}{w}</span>)}</span>
             <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}><span className="wide" style={{ fontSize: 17 }}>{dollars(c.amount_cents)}</span><span style={{ fontSize: 12, fontWeight: 700 }}>A treat · unlimited</span></span>
           </div>
         ) : (
-          <div style={{ position: 'relative', height: 230, background: '#E8642C', overflow: 'hidden' }}>
-            <R3Sketch name={it.name} />
+          <div style={{ position: 'relative', height: 230, background: it.photo ? '#FFFFFF' : '#E8642C', overflow: 'hidden' }}>
+            {it.photo ? <img src={`/api/photo/${it.id}`} alt={it.name} style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 14, boxSizing: 'border-box', display: 'block' }} /> : <R3Sketch name={it.name} />}
           </div>
         )}
         <div style={{ padding: '16px 16px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
