@@ -132,8 +132,8 @@ export default async function WalletPage({ searchParams }) {
       {cur.cents ? (
       <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared || cur.closed} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} />
       ) : (
-        <div style={{ padding: '26px 16px 34px', display: 'flex', flexDirection: 'column' }}>
-          <Link href="/wallet/history" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', border: `1.5px solid ${V}`, color: V, fontWeight: 800, fontSize: 17, padding: '16px 0', borderRadius: 999 }}>See your history</Link>
+        <div style={{ padding: '22px 16px 34px', display: 'flex', flexDirection: 'column' }}>
+          <Link href="/wallet/history" style={{ alignSelf: 'center', fontSize: 13, color: V, textDecoration: 'underline', textUnderlineOffset: 3, padding: '6px 10px' }}>See your history</Link>
         </div>
       )}
       </div>
