@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { get } from '@/lib/db';
-import { publicListsOf, between, profileLately } from '@/lib/lists';
+import { publicListsOf, between, profileLately, friendCounts } from '@/lib/lists';
 import { ListTile, tileData } from '@/components/list-tile';
 import { PhotoBlob } from '@/components/ui';
 import { addFriend, unfriend } from '@/lib/actions-a1';
@@ -41,6 +41,7 @@ export default async function FriendProfile({ params }) {
   tiles.sort((x, y) => (x.kind === 'treat') - (y.kind === 'treat')); // r1: wish lists first, as on the board
   const seen = {};
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
+  const fc = await friendCounts(them.id, me?.id);
   const recent = friend ? await profileLately(lists) : [];
   const gifts = me && !self ? await between(me.id, them.id) : [];
   const fromThem = gifts.filter((g) => g.giver_id === them.id).length;
@@ -70,6 +71,11 @@ export default async function FriendProfile({ params }) {
           <PhotoBlob user={them} owner={self} size={150} pad={22} uid="them" fontSize={74} />
           <h1 style={{ margin: '6px 0 0', fontWeight: 400, fontSize: 34, letterSpacing: '-0.02em', lineHeight: 1 }}>{(them.name || 'Someone').trim().split(/\s+/)[0]}{(them.name || '').trim().split(/\s+/).length > 1 ? <> <span className="serif" style={{ fontStyle: 'italic' }}>{them.name.trim().split(/\s+/).slice(1).join(' ')}</span></> : null}</h1>
           {them.bio ? <span style={{ fontSize: 15 }}>{them.bio}</span> : null}
+          {self ? (
+            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+          ) : (
+            <span style={{ fontSize: 14 }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</span>
+          )}
           {self ? (
             <>
               <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit in settings</Link>

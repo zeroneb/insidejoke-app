@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all, get } from '@/lib/db';
-import { lately, friendsLately, withProgress } from '@/lib/lists';
+import { lately, friendsLately, withProgress, friendCounts } from '@/lib/lists';
 import { ago } from '@/lib/time';
 import { Avatar, FaceSm, PhotoBlob } from '@/components/ui';
 import { ListTile, tileData } from '@/components/list-tile';
@@ -151,6 +151,7 @@ const ROW = { display: 'flex', justifyContent: 'space-between', alignItems: 'cen
 export default async function HomePage() {
   const me = await currentUser();
   if (!me) redirect('/signup?next=/home');
+  const fc = await friendCounts(me.id);
 
   const mine = await all(`SELECT * FROM lists WHERE status = 'open' AND (owner_id = ? OR id IN (SELECT list_id FROM list_members WHERE user_id = ? AND role <> 'viewer')) ORDER BY created_at DESC`, me.id, me.id);
   const tiles = await Promise.all(mine.map((l) => tileData(l, me.id)));
@@ -183,6 +184,7 @@ export default async function HomePage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
           <h1 style={{ margin: 0, fontWeight: 400, fontSize: 28, letterSpacing: '-0.02em', lineHeight: 1 }}>{me.name || 'Hi there'}</h1>
           {me.bio ? <span style={{ fontSize: 15 }}>{me.bio}</span> : <Link href="/you/settings" style={{ fontSize: 15, color: '#4A4A4A' }}>Add a line about you</Link>}
+          <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000', marginTop: 2 }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
         </div>
       </section>
 
