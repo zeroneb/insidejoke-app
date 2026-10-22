@@ -15,6 +15,7 @@ export default async function DevLogin() {
       <div className="page">
         <h1>Log in as</h1>
         {!test ? <p className="muted">Only available in test mode.</p> : null}
+        {!test ? <p className="muted" style={{ fontSize: 13 }}>Database: {dbMode() === 'postgres' ? 'connected' : 'none connected yet, data resets on every deploy'}</p> : null}
         {test ? (
           <form action={loadDemo} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <button className="pill" type="submit">Load the demo (Maya's list and friends)</button>
