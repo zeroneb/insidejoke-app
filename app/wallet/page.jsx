@@ -20,7 +20,7 @@ export default async function WalletPage({ searchParams }) {
   const sp = await searchParams;
   const lists = await walletByList(me.id);
   const pm = await payoutMethod(me.id);
-  const cur = lists.find((l) => l.list.id === sp?.l) || lists[0] || null;
+  const cur = lists.find((l) => l.list.id === sp?.l) || lists.find((l) => l.cents) || lists.find((l) => l.waiting) || lists[0] || null;
   const ownN = lists.filter((l) => !l.shared).length, sharedN = lists.length - ownN;
   const chipLabel = (l) => (l.shared ? (sharedN === 1 ? 'Collab list' : l.list.title) : ownN === 1 ? 'Your list' : l.list.title);
   const dest = pm ? pm.label.replace(/\s+(checking|savings)\b/i, '') : null;
@@ -82,8 +82,11 @@ export default async function WalletPage({ searchParams }) {
       {header}
       <div className="wal-cols">
       <div className="wal-hero">
-      {cur.cents ? bars('READY', 'TO CASH OUT') : bars('NOTHING', 'READY YET')}
-      {blobAmt(cur.cents, cur.cents ? (cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`) : 'Gifts on wishes still filling are waiting')}
+      {cur.cents ? bars('READY', 'TO CASH OUT') : cur.waiting ? bars('NOTHING', 'READY YET') : cur.paid ? bars('ALL', 'CASHED OUT') : bars('NOTHING', 'HERE YET')}
+      {cur.cents ? blobAmt(cur.cents, cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`)
+        : cur.waiting ? blobAmt(0, 'Gifts on wishes still filling are waiting')
+        : cur.paid ? blobAmt(cur.paid, 'cashed out from this list so far')
+        : blobAmt(0, 'When friends give toward this list, it lands here')}
 
       </div>
       <div className="wal-side">
