@@ -115,7 +115,7 @@ export default async function FriendProfile({ params }) {
         <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 30, lineHeight: 1 }}>{possessive(name)} <span style={{ fontWeight: 600 }}>lists</span></h2>
           {tiles.length ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+            <div className="tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
               {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
             </div>
           ) : (

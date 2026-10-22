@@ -209,7 +209,7 @@ export default async function HomePage() {
           <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 34, lineHeight: 1 }}>My <span style={{ fontWeight: 600 }}>lists</span></h2>
           <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: 14, textDecoration: 'none', padding: '10px 0' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
         </div>
-        <div className="home-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+        <div className="home-grid tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
           {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind)} variant="home" />)}
           {tiles.length === 0 ? (
             <Link href="/lists/new" style={{ height: 230, textDecoration: 'none', border: '1.5px dashed #000000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, fontSize: 15, textAlign: 'center', padding: 12 }}>

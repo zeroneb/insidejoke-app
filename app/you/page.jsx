@@ -51,7 +51,7 @@ export default async function YouPage() {
           </div>
           {tiles.length ? (
             <>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+              <div className="tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
                 {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind)} big={false} />)}
               </div>
               <p style={{ margin: 0, fontSize: 13, color: '#4A4A4A', lineHeight: 1.4 }}>Surprise lists and collabs never show here. Change who sees a list from its page.</p>
