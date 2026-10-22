@@ -55,8 +55,9 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
   const [note, setNote] = useState('');
   const [step, setStep] = useState('form');
   const pay = usePayment('apple');
-  const needsSetup = signedIn && !payLabel;
-  const onPay = needsSetup && (step === 'pay' || state?.needPayment);
+  // Also when the server finds the saved way to pay can't be charged (state.needPayment).
+  const needsSetup = signedIn && (!payLabel || !!state?.needPayment);
+  const onPay = needsSetup && (step === 'pay' || !!state?.needPayment);
 
   let cents = 0;
   if (treat) cents = units * item.price_cents;

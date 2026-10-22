@@ -58,7 +58,9 @@ export default function StripePay() {
           const { error, setupIntent } = await stripe.confirmSetup({ elements, redirect: 'if_required', confirmParams: { return_url: window.location.href } });
           if (error) { setErr(error.message || 'That did not go through. Try another card.'); return; }
           hidden.current.value = typeof setupIntent.payment_method === 'string' ? setupIntent.payment_method : setupIntent.payment_method?.id || '';
-          form.requestSubmit();
+          // Re-click the same button so React runs the form's action (requestSubmit alone did not).
+          const btn = e.submitter || form.querySelector('button[type=submit], button:not([type])');
+          setTimeout(() => (btn ? btn.click() : form.requestSubmit()), 0);
         };
         form.addEventListener('submit', onSubmit, true);
       } catch (e) {
