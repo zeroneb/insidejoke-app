@@ -91,7 +91,7 @@ export default function PayoutForm({ next, current, legalName, acct }) {
             <span className="serif" style={{ position: 'relative', fontSize: 32, lineHeight: 1, color: '#FFFFFF' }}>You're <span style={{ fontWeight: 600 }}>all set</span></span>
             <span style={{ position: 'relative', fontSize: 15, lineHeight: 1.4 }}>{bank === 'Another bank' ? 'Your bank' : bank} {masked} is linked. You won't see this again.</span>
           </section>
-          <p style={{ margin: '18px 20px 0', fontSize: 14, lineHeight: 1.45 }}><span className="dot" style={{ fontSize: 16 }}>5%</span> comes out only when you cash out. Your friends never pay a fee.</p>
+          <p style={{ margin: '18px 20px 0', fontSize: 14, lineHeight: 1.45 }}><span className="dot" style={{ fontSize: 16 }}>7%</span> comes out only when you cash out. Your friends never pay a fee.</p>
           <div style={{ padding: '18px 16px 0' }}><Link href={state?.next || next} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: V, color: Y, fontWeight: 800, fontSize: 17, padding: '17px 0', borderRadius: 999 }}>{(state?.next || next).startsWith('/wallet') ? 'Back to cash out' : 'Continue'}</Link></div>
         </>
       ) : null}

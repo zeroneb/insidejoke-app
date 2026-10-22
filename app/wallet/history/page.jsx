@@ -57,7 +57,7 @@ export default async function HistoryPage() {
   }
   for (const p of payouts) {
     rows.push({ key: 'p' + p.id, at: p.created_at, bank: true, from: 'You', to: (p.method_label || 'your bank').replace(/\s+(checking|savings)\b/i, ''),
-      what: `Cashed out ${usd(p.gross_cents)}, minus the 5% fee (${usd(p.fee_cents)})`,
+      what: `Cashed out ${usd(p.gross_cents)}, minus the 7% fee (${usd(p.fee_cents)})`,
       amt: '+' + usd(p.net_cents), plus: true, priv: true, icon: BANK_ICON, iconBg: '#D4FA4F' });
   }
   rows.sort((a, b) => b.at - a.at);

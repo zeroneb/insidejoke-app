@@ -91,7 +91,7 @@ export default async function WalletPage({ searchParams }) {
           </div>
         ))}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderTop: `1.5px solid ${V}`, borderBottom: `1.5px solid ${V}` }}>
-          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Processing fee</span><span style={{ fontSize: 12 }}>5%, taken once, at cash-out</span></span>
+          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Processing fee</span><span style={{ fontSize: 12 }}>7%, taken once, at cash-out</span></span>
           <span className="dot" style={{ fontSize: 20 }}>{usd(-cur.fee)}</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0 0' }}>
