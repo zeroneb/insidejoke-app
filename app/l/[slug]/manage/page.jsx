@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import { Avatar } from '@/components/ui';
+import { membersOf } from '@/lib/collab';
+import { removeMember } from '@/lib/actions-a4';
 import { redirect, notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all } from '@/lib/db';
@@ -21,6 +24,7 @@ export default async function ManagePage({ params, searchParams }) {
   if (!me) redirect(`/signup?next=/l/${slug}/manage`);
   if (list.owner_id !== me.id) redirect(`/l/${slug}`);
   const items = await itemsFor(list.id);
+  const people = (await membersOf(list.id)).filter((u) => u.id !== list.owner_id);
   const archivedItems = await Promise.all((await all('SELECT * FROM items WHERE list_id = ? AND removed = 2 ORDER BY created_at DESC', list.id)).map(withProgress));
   const archived = list.status === 'archived';
   const plain = (it) => ({ id: it.id, name: it.name, color: it.color, store: it.store, url: it.url, photo: it.photo ? 1 : 0, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, covered: it.covered, pct: it.pct, givers: it.givers, timesTreated: it.timesTreated });
@@ -47,6 +51,25 @@ export default async function ManagePage({ params, searchParams }) {
         <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.16em' }}>List settings</h2>
         <ManageForm slug={slug} title={list.title} visibility={list.visibility} date={list.date} surprise={!!list.surprise} />
         {archived ? <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>Money already given stays in your wallet. Unarchive to open it again.</p> : null}
+      </section>
+      <section aria-labelledby="h-people" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 8 }}>
+          <h2 id="h-people" className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.16em' }}>Collaborators</h2>
+          <Link href={`/l/${slug}/invite`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', color: '#000000', padding: '10px 0' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
+        </div>
+        <p style={{ margin: '0 0 6px', fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>Collaborators can add, edit and share things on this list with you.</p>
+        {people.length === 0 ? <p style={{ margin: 0, padding: '14px 0', borderTop: '1.5px solid #000000', fontSize: 15 }}>Just you for now.</p> : null}
+        {people.map((u) => (
+          <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderTop: '1.5px solid #000000' }}>
+            <Avatar user={u} size={40} />
+            <span style={{ flexGrow: 1, minWidth: 0, fontWeight: 700, fontSize: 16 }}>{u.name || 'Someone'}</span>
+            <form action={removeMember}>
+              <input type="hidden" name="slug" value={slug} /><input type="hidden" name="userId" value={u.id} />
+              <button aria-label={`Remove ${u.name || 'this person'} from the list`} style={{ border: '1.5px solid #E2452B', background: 'transparent', color: '#E2452B', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999, cursor: 'pointer' }}>Remove</button>
+            </form>
+          </div>
+        ))}
+        <div style={{ borderTop: '1.5px solid #000000' }} />
       </section>
       <section style={{ padding: '28px 20px 0' }}>
         {sp?.delete === 'cashout' ? <p role="alert" style={{ margin: '0 0 12px', padding: '10px 12px', border: '2px solid #E2452B', color: '#E2452B', fontWeight: 700, fontSize: 14 }}>There's money on this list you haven't cashed out. Cash it out first, then delete.</p> : null}
