@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ListProgress from '@/components/list-progress';
 import { Blob, Avatar, ItemSketch, Halftone, shortName } from '@/components/ui';
 
 export function firstName(u) {
@@ -70,6 +71,7 @@ export default function FriendList({ list, owner, items, me }) {
         </div>
       </section>
 
+      <ListProgress items={items} pad="22px 20px 0" />
       {treats.length ? (
         <section style={{ padding: '26px 0 0', display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 20px' }}>

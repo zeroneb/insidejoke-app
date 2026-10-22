@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Blob, Avatar, shortNoun, Halftone } from '@/components/ui';
+import ListProgress from '@/components/list-progress';
 import { tileInk, hostOf } from '@/components/friend-list';
 import { unpinBlastAction } from '@/lib/actions-a4';
 import { dismissNudge } from '@/lib/actions';
@@ -80,6 +81,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
         </section>
       ) : null}
 
+      <ListProgress items={items} />
       <section style={{ padding: '14px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 6 }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 16, letterSpacing: '0.12em' }}>On the list</h2>
