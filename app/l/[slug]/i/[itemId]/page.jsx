@@ -40,7 +40,7 @@ export default async function ItemPage({ params }) {
   const me = await currentUser();
   const isOwner = !!(me && me.id === owner.id);
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
-  const notes = (await notesFor(it.id, isOwner)).filter((n) => n.note || isOwner);
+  const notes = (await notesFor(it.id, isOwner));
   const privateCount = (await get("SELECT COUNT(*) AS n FROM contributions WHERE item_id = ? AND visibility = 'private'", it.id)).n;
   const liked = me ? new Set((await all('SELECT r.contribution_id FROM reactions r JOIN contributions c ON c.id = r.contribution_id WHERE c.item_id = ? AND r.user_id = ?', it.id, me.id)).map((r) => r.contribution_id)) : new Set();
 
@@ -90,12 +90,12 @@ export default async function ItemPage({ params }) {
           {!it.unlimited ? (
             <>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? '#2E9B47' : '#5546A0' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
-              <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>{lead}</b> {it.covered ? 'Thank you, everyone.' : it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'is' : 'are'} in.${isOwner ? '' : ' Join them.'}` : isOwner ? 'Share it so friends can start.' : 'Be the first to give.'}</span>
+              <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>{lead}</b> {it.covered ? 'Thank you, everyone.' : it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'is' : 'are'} in.${isOwner ? '' : ' Join them.'}` : 'Be the first to give.'}</span>
             </>
           ) : (
             <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>Given ×{it.timesTreated}.</b> {isOwner ? 'Friends can send it again and again.' : 'Send one anytime, again and again.'}</span>
           )}
-          {!isOwner ? (
+          {true ? (
             <div style={{ display: 'flex', gap: 10 }}>
               {it.unlimited ? (
                 <Link href={give} style={{ ...btn, background: '#000000', color: '#FFFFFF' }}>Send a treat</Link>
