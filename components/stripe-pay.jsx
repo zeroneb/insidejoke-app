@@ -47,7 +47,7 @@ export default function StripePay() {
           },
           fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700&display=swap' }]
         });
-        elements.create('payment', { layout: 'tabs', wallets: { applePay: 'auto', googlePay: 'auto' } }).mount(box.current);
+        elements.create('payment', { layout: 'tabs', paymentMethodOrder: ['apple_pay', 'google_pay', 'card', 'link'], wallets: { applePay: 'auto', googlePay: 'auto' } }).mount(box.current);
         setReady(true);
         form = box.current.closest('form');
         onSubmit = async (e) => {
