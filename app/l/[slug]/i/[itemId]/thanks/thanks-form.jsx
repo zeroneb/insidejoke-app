@@ -17,7 +17,10 @@ export default function ThanksForm({ slug, itemId, word, count, already, listHre
       <section className="r3-pop" role="status" style={{ margin: '24px 16px 0', background: '#D8F75A', padding: '26px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10 }}>
         <svg aria-hidden="true" width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><circle cx="32" cy="32" r="28" /><path d="M20 33l8 8 16-17" /></svg>
         <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 30, lineHeight: 1 }}>Thank-you <span style={{ fontWeight: 600 }}>sent</span></span>
-        <span style={{ fontSize: 15 }}>{n === 1 ? 'Your friend' : n === 2 ? 'Both friends' : `All ${n} friends`} got your text{done.photo ? ' and your photo' : ''}.</span>
+        <span style={{ fontSize: 15 }}>{n === 1 ? 'Your friend' : n === 2 ? 'Both friends' : `All ${n} friends`} {done.held ? 'will get it from you: tap below to text them from your phone.' : `got your text${done.photo ? ' and your photo' : ''}.`}</span>
+        {done.held && done.phones?.length ? (
+          <a href={`sms:${done.phones.join(',')}?&body=${encodeURIComponent(done.text || '')}`} style={{ marginTop: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', height: 52, padding: '0 22px', borderRadius: 999, background: '#000000', color: '#FFFFFF', textDecoration: 'none', fontWeight: 800, fontSize: 16 }}>Send it from your phone</a>
+        ) : null}
         <Link href={listHref} style={{ marginTop: 4, fontSize: 14, color: '#000000', textDecoration: 'underline', textUnderlineOffset: 3, padding: 8 }}>Back to your list</Link>
       </section>
     );

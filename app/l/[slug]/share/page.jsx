@@ -1,3 +1,4 @@
+import { smsEnabled, isTestMode } from '@/lib/texts';
 import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
@@ -43,6 +44,7 @@ export default async function SharePage({ params }) {
         <p style={{ margin: '10px 0 0', fontSize: 15, lineHeight: 1.4 }}>Here's exactly how it'll look to friends.</p>
       </section>
       <ShareSheet
+        canText={smsEnabled() || isTestMode()}
         slug={slug}
         title={list.title}
         url={link}

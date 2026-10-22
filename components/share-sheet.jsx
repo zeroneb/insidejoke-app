@@ -10,7 +10,7 @@ const bigBtn = { width: '100%', height: 56, border: 0, background: '#000000', co
 
 async function copyText(t) { try { await navigator.clipboard.writeText(t); return true; } catch { return false; } }
 
-export default function ShareSheet({ slug, title, url, profileUrl, ownerFirst, kind, sharer, invite, profile, canProfile }) {
+export default function ShareSheet({ slug, title, url, profileUrl, ownerFirst, kind, sharer, invite, profile, canProfile, canText = true }) {
   const [tab, setTab] = useState('text');
   const [copied, setCopied] = useState('');
   const [msg, setMsg] = useState(kind === 'birthday' ? 'made you guys a list so nobody has to guess 🎂' : 'made you guys a list so nobody has to guess');
@@ -52,7 +52,7 @@ export default function ShareSheet({ slug, title, url, profileUrl, ownerFirst, k
           </section>
           <div style={{ padding: '18px 16px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <a href={`sms:?&body=${encodeURIComponent(`${msg} ${url}`)}`} style={bigBtn}>Send by text</a>
-            {!byNumber ? (
+            {!canText ? null : !byNumber ? (
               <button type="button" onClick={() => setByNumber(true)} style={{ alignSelf: 'center', border: 0, background: 'transparent', fontFamily: 'inherit', fontSize: 14, fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: 3, padding: '10px 0', cursor: 'pointer', color: '#000000' }}>Or let us text it to a number</button>
             ) : (
               <form action={action} className="pop" style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '0 4px' }}>

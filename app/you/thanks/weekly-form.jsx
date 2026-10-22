@@ -15,7 +15,8 @@ export default function WeeklyForm({ count, first, link }) {
     return (
       <section className="a3-pop" role="status" style={{ margin: '22px 16px 0', background: '#13286B', color: '#FFFFFF', padding: '22px 18px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         <span className="dot" style={{ fontSize: 40, color: '#D8F75A' }}>{state.count}/{state.count}</span>
-        <p style={{ margin: 0, fontSize: 20, lineHeight: 1.25 }}>Sent. Each of them got it as their own text{state.photo ? ', photo and all' : ''}.</p>
+        <p style={{ margin: 0, fontSize: 20, lineHeight: 1.25 }}>{state.held ? 'Saved. Tap below to text it to them from your phone.' : `Sent. Each of them got it as their own text${state.photo ? ', photo and all' : ''}.`}</p>
+        {state.held && state.phones?.length ? <a href={`sms:${state.phones.join(',')}?&body=${encodeURIComponent(state.text || '')}`} style={{ alignSelf: 'flex-start', display: 'flex', alignItems: 'center', height: 50, padding: '0 22px', borderRadius: 999, background: '#D8F75A', color: '#000000', textDecoration: 'none', fontWeight: 800, fontSize: 16 }}>Send it from your phone</a> : null}
       </section>
     );
   }
