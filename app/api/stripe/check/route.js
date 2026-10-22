@@ -1,5 +1,6 @@
 import { currentUser } from '@/lib/auth';
-import { stripe, stripeOn, stripeTestKey } from '@/lib/stripe';
+import { stripe, stripeV2, stripeOn, stripeTestKey } from '@/lib/stripe';
+import { payoutMethod } from '@/lib/wallet';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,6 +24,16 @@ export async function GET() {
       const acct = await stripe('GET', '/account');
       out.connect = acct?.controller || acct?.settings?.dashboard ? 'platform account reachable' : 'reachable';
     } catch (e) { out.stripe = 'error: ' + e.message; }
+    const m = await payoutMethod(me.id);
+    if (m?.stripe_account_id) {
+      const pay = out.payoutAccount = { saved: m.label, readyInApp: !!m.stripe_ready, lastStatus: m.stripe_status || null };
+      try {
+        const a2 = await stripeV2('GET', `/core/accounts/${m.stripe_account_id}?include=configuration.recipient&include=requirements`);
+        pay.transfers = a2?.configuration?.recipient?.capabilities?.stripe_balance?.stripe_transfers || 'not in reply';
+        pay.stillNeeded = (a2?.requirements?.entries || []).map((r) => `${r.description || r.awaiting_action_from || ''} (${(r.impact?.restricts_capabilities || []).map((c) => c.capability + ':' + c.deadline?.status).join(', ')})`).slice(0, 8);
+      } catch (e) { pay.v2Error = e.message; }
+      try { const a = await stripe('GET', `/accounts/${m.stripe_account_id}`); pay.v1Capabilities = a.capabilities; pay.v1Due = a.requirements?.currently_due; } catch (e) { pay.v1Error = e.message; }
+    } else out.payoutAccount = 'none yet';
   }
   return Response.json(out);
 }
