@@ -212,10 +212,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
       </header>
 
       <section style={{ padding: '14px 20px 0' }}>
-        <div style={{ display: 'flex', gap: 14, alignItems: 'flex-end' }}>
-          <h1 style={{ margin: 0, flexGrow: 1, fontWeight: 400, fontSize: 42, lineHeight: 0.98, letterSpacing: '-0.04em' }}>Contribute to {forName}'s <span style={{ fontFamily: "'EB Garamond', serif", fontStyle: 'italic' }}>{short}</span></h1>
-          {item.photo ? <img src={`/api/photo/${item.id}`} alt={item.name} style={{ width: 96, height: 96, flexShrink: 0, objectFit: 'contain', background: '#FFFFFF', padding: 6, boxSizing: 'border-box' }} /> : null}
-        </div>
+        <h1 style={{ margin: 0, fontWeight: 400, fontSize: 42, lineHeight: 0.98, letterSpacing: '-0.04em' }}>Contribute to {forName}'s <span style={{ fontFamily: "'EB Garamond', serif", fontStyle: 'italic' }}>{short}</span></h1>
       </section>
 
       <section aria-label="Your amount" style={{ position: 'relative', marginTop: 10, height: 200 }}>
