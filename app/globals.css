@@ -659,3 +659,7 @@ main.r4-heat { background-size: 130% 130%; }
   .wal-hero { display: flex; flex-direction: column; flex: 1 1 0; min-width: 0; }
   .wal-side { display: flex; flex-direction: column; width: 500px; flex-shrink: 0; padding-top: 18px; }
 }
+
+.wal-wait>summary::-webkit-details-marker{display:none}
+.wal-wait[open]>summary{margin-bottom:6px}
+.wal-wait[open] .wal-chev{transform:rotate(90deg)}

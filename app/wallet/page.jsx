@@ -113,8 +113,8 @@ export default async function WalletPage({ searchParams }) {
       </>
       ) : null}
       {cur.waiting ? (
-        <section aria-label="Waiting" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Waiting on {cur.waitingWishes === 1 ? '1 wish' : `${cur.waitingWishes} wishes`}</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)}</span></span>
+        <details aria-label="Waiting" className="wal-wait" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <summary style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, cursor: 'pointer', listStyle: 'none' }}><span style={{ fontWeight: 800, fontSize: 16 }}>Waiting on {cur.waitingWishes === 1 ? '1 wish' : `${cur.waitingWishes} wishes`}</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)} <span className="wal-chev" style={{ fontFamily: 'inherit', fontSize: 16, display: 'inline-block' }}>›</span></span></summary>
           {(cur.waitingItems || []).map((w) => (
             <Link key={w.id} href={`/l/${cur.list.slug}/i/${w.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '10px 0', borderTop: `1.5px solid ${V}`, color: V, textDecoration: 'none' }}>
               <span style={{ fontWeight: 700, fontSize: 15, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{w.name}</span>
@@ -127,7 +127,7 @@ export default async function WalletPage({ searchParams }) {
             <li>The list closes (you archive it{cur.list.date ? ` or its date, ${cur.list.date}, passes` : ' or its date passes'})</li>
             <li>You archive the wish, then cash out its gifts or move them to another wish</li>
           </ul>
-        </section>
+        </details>
       ) : null}
       {cur.cents ? (
       <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared || cur.closed} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} />
