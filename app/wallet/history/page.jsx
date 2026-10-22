@@ -33,7 +33,7 @@ const nice = (name = '', store = '') => {
 const Globe = () => <svg role="img" aria-label="Public" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3c3 3 3 15 0 18" /><path d="M12 3c-3 3-3 15 0 18" /></svg>;
 const Lock = () => <svg role="img" aria-label="Private" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
 
-export default async function HistoryPage() {
+export default async function HistoryPage({ searchParams }) {
   const me = await currentUser();
   if (!me) redirect('/signup?next=/wallet/history');
   const { received, given, payouts } = await historyFor(me.id);
@@ -61,6 +61,11 @@ export default async function HistoryPage() {
       amt: '+' + usd(p.net_cents), plus: true, priv: true, icon: BANK_ICON, iconBg: '#D4FA4F' });
   }
   rows.sort((a, b) => b.at - a.at);
+  // Just cashed out: say so up top.
+  const sentIds = String((await searchParams)?.sent || '').split(',').filter(Boolean);
+  const sent = payouts.filter((p) => sentIds.includes(p.id));
+  const sentNet = sent.reduce((t, p) => t + p.net_cents, 0);
+  const sentTo = sent[0] ? (sent[0].method_label || 'your bank').replace(/\s+(checking|savings)\b/i, '') : '';
 
   return (
     <main className="r3-full" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -75,7 +80,14 @@ export default async function HistoryPage() {
         <h1 style={{ position: 'relative', margin: '26px 0 0 8px', fontWeight: 400, fontSize: 46, letterSpacing: '-0.03em', lineHeight: 0.95 }}>Your <span className="serif" style={{ fontStyle: 'italic' }}>history</span></h1>
       </section>
 
-      <section aria-label="Transactions" style={{ padding: '44px 20px 0', display: 'flex', flexDirection: 'column' }}>
+      {sent.length ? (
+        <section role="status" style={{ margin: '30px 20px 0', padding: '14px 16px', background: '#13286B', color: '#D4FA4F', display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <span style={{ fontWeight: 800, fontSize: 17 }}>Sent! {usd(sentNet)} is on its way to {sentTo}.</span>
+          <span style={{ fontSize: 13, color: '#FFFFFF' }}>Usually arrives in 1–2 business days.</span>
+        </section>
+      ) : null}
+
+      <section aria-label="Transactions" style={{ padding: sent.length ? '22px 20px 0' : '44px 20px 0', display: 'flex', flexDirection: 'column' }}>
         {rows.map((r) => (
           <div key={r.key} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '16px 0', borderTop: '1px solid #000000' }}>
             {r.bank ? (
