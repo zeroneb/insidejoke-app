@@ -165,9 +165,9 @@ export default function AddItemForm({ slug, initialTreat = false }) {
         <section className="pop" style={{ display: 'flex', gap: 12, alignItems: 'stretch', padding: '18px 20px 0' }}>
           <PhotoTile src={own.url || pulledPhoto} tag={own.file ? own.file.name : host} name={v.name} />
           <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 8 }}>
-            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, display: 'flex', gap: 8, alignItems: 'flex-start' }}><svg aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9B47" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L19 7" /></svg><span>Pulled from {host}. Check it and fix anything.</span></p>
-            <label style={{ height: 44, border: '1.5px dashed #000000', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
-              {camera}{own.file ? 'Change my photo' : 'Use my own photo'}
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, display: 'flex', gap: 8, alignItems: 'flex-start' }}><svg aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9B47" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L19 7" /></svg><span>{pulledPhoto || own.file ? <>Pulled from {host}. Check it and fix anything.</> : <>Got the name from {host}. They don’t share photos, so add one: a screenshot works.</>}</span></p>
+            <label style={{ height: 44, border: '1.5px dashed #000000', background: !pulledPhoto && !own.file ? '#D8F75A' : 'transparent', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
+              {camera}{own.file ? 'Change my photo' : pulledPhoto ? 'Use my own photo' : 'Add a photo'}
               <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
             </label>
             <button type="button" onClick={() => { setPhase('empty'); setLink(''); setPulledPhoto(null); own.setFile(null); }} style={{ height: 36, border: 0, background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer', padding: 0, textAlign: 'left', color: '#000' }}>Paste a different link</button>
