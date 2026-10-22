@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
+import { logOut, switchAccount } from '@/lib/actions';
 import { profileStats, publicListsOf } from '@/lib/lists';
 import { ListTile, tileData } from '@/components/list-tile';
 import { ProfileHero, Stats, Chevron, monthYear, spacedPhone } from '@/components/profile-hero';
@@ -77,6 +78,10 @@ export default async function YouPage() {
         <section style={{ margin: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <Link href="/you/settings" className="a1-link" style={{ borderTop: '1.5px solid #000000', minHeight: 56 }}><span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>Settings</span><span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>Name, bio, photo, dark mode, payouts, texts</span></span><Chevron /></Link>
           <Link href="/wallet/history" className="a1-link" style={{ borderTop: '1px solid #000000', borderBottom: '1.5px solid #000000', minHeight: 56 }}><span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>History</span><span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>Given, received, cash-outs. Only you see this.</span></span><Chevron /></Link>
+          <div style={{ display: 'flex', gap: 10, paddingTop: 18 }}>
+            <form action={logOut} style={{ flex: '1 1 0' }}><button className="a1-ghost" style={{ width: '100%', height: 48, fontSize: 15 }}>Log out</button></form>
+            <form action={switchAccount} style={{ flex: '1 1 0' }}><button className="a1-ghost" style={{ width: '100%', height: 48, fontSize: 15 }}>Switch account</button></form>
+          </div>
         </section>
         <div style={{ height: 24 }} />
       </main>
