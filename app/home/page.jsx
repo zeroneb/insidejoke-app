@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all, get } from '@/lib/db';
 import { lately, friendsLately, withProgress, friendCounts } from '@/lib/lists';
+import { unreadCount } from '@/lib/notifications';
 import { ago } from '@/lib/time';
 import { Avatar, FaceSm, PhotoBlob } from '@/components/ui';
 import { ListTile, tileData } from '@/components/list-tile';
@@ -162,7 +163,7 @@ export default async function HomePage() {
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
   const archived = (await get("SELECT COUNT(*) AS n FROM lists WHERE owner_id = ? AND status = 'archived'", me.id)).n;
   const friends = (await get("SELECT COUNT(*) AS n FROM friends WHERE user_id = ? AND status = 'friends'", me.id)).n;
-  const fresh = (await get('SELECT COUNT(*) AS n FROM contributions c JOIN lists l ON l.id = c.list_id WHERE l.owner_id = ? AND l.surprise = 0 AND c.created_at > ?', me.id, Date.now() - 2 * 24 * 3600 * 1000)).n;
+  const fresh = await unreadCount(me);
   const feed = await buildFeed(me);
   const reacts = await reactionsFor(feed.map((f) => f.key), me.id);
 
@@ -170,7 +171,7 @@ export default async function HomePage() {
     <main className="withnav" style={{ display: 'flex', flexDirection: 'column' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 12px 0 20px' }}>
         <Link href="/" style={{ textDecoration: 'none', color: '#13286B' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
-        <Link href="/wallet/history" aria-label={fresh ? `Activity, ${fresh} new` : 'Activity'} style={{ position: 'relative', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Link href="/notifications" aria-label={fresh ? `Notifications, ${fresh} new` : 'Notifications'} style={{ position: 'relative', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
           {fresh ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: '#E8642C' }} /> : null}
         </Link>
