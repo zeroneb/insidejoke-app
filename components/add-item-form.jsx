@@ -199,6 +199,14 @@ export default function AddItemForm({ slug, initialTreat = false }) {
 
       <div style={{ opacity: isReading ? 0.35 : 1, transition: 'opacity .3s' }}>
         <Fields v={v} set={set} treat={treat} n={n} />
+        {pv?.ok && pv.origCurrency ? (
+          <>
+            <input type="hidden" name="origPrice" value={pv.origPrice} /><input type="hidden" name="origCurrency" value={pv.origCurrency} />
+            <p style={{ margin: '8px 20px 0', fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>
+              The store lists it at <b style={{ color: '#000' }}>{new Intl.NumberFormat('en-US', { style: 'currency', currency: pv.origCurrency }).format(pv.origPrice)}</b>.{pv.price ? " Converted to dollars at today's rate; friends give in dollars." : " Add the price in dollars; friends give in dollars."}
+            </p>
+          </>
+        ) : null}
         <Qty n={n} setN={setN} treat={treat} setTreat={setTreat} />
       </div>
 

@@ -50,7 +50,7 @@ export default async function ItemView({ slug, itemId }) {
   const forInk = FOR_INK[it.color] || (dark ? '#D8F75A' : '#13286B');
   const store = it.store || (it.url ? hostOf(it.url) : '');
   const eyebrow = it.photo ? (it.url ? `Photo from ${store}` : `${forName}'s photo`) : store ? `From ${store}` : 'On the list';
-  const spec = [it.quantity > 1 ? `A set of ${it.quantity}` : null, it.unlimited ? 'Unlimited' : null, store || null, it.quantity > 1 || it.unlimited ? `${money(it.price_cents)} each` : money(it.price_cents)].filter(Boolean).join(' · ');
+  const spec = [it.quantity > 1 ? `A set of ${it.quantity}` : null, it.unlimited ? 'Unlimited' : null, store || null, it.quantity > 1 || it.unlimited ? `${money(it.price_cents)} each` : money(it.price_cents)].filter(Boolean).join(' · ') + (it.orig_currency && it.orig_price_cents ? ` (${new Intl.NumberFormat('en-US', { style: 'currency', currency: it.orig_currency }).format(it.orig_price_cents / 100)} at the store)` : '');
   const headline = it.unlimited ? ['Given', 'again and again'] : it.covered ? ['All', 'covered'] : it.pct >= 75 ? ['Almost', 'there'] : it.pct >= 50 ? ['More than', 'halfway'] : it.pct > 0 ? ['On its', 'way'] : ['Up for', 'grabs'];
   const lead = it.covered ? 'All covered.' : it.pct >= 75 ? 'Almost there.' : it.pct >= 50 ? 'More than halfway.' : it.pct > 0 ? 'Off to a good start.' : 'Up for grabs.';
   const fr = (n) => `${n} ${n === 1 ? 'friend' : 'friends'}`;
