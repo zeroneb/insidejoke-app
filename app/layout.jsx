@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { isTestMode } from '@/lib/texts';
 import { currentUser } from '@/lib/auth';
 import { GlobalNav } from '@/components/nav';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'insidejoke',
@@ -26,6 +27,7 @@ export default async function RootLayout({ children }) {
           {children}
         </div>
         <GlobalNav me={me} />
+        <Analytics />
       </body>
     </html>
   );

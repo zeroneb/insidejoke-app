@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.10",
+    "@vercel/analytics": "^1.6.1",
     "next": "^15.5.27",
     "postgres": "^3.4.9",
     "react": "^19.1.1",
