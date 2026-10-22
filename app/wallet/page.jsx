@@ -114,8 +114,19 @@ export default async function WalletPage({ searchParams }) {
       ) : null}
       {cur.waiting ? (
         <section aria-label="Waiting" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Given toward {cur.waitingWishes === 1 ? 'a wish' : `${cur.waitingWishes} wishes`} still filling</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)}</span></span>
-          <span style={{ fontSize: 13, lineHeight: 1.45 }}>Friends gave this toward specific things, so it unlocks once {cur.waitingWishes === 1 ? 'that wish is' : 'each wish is'} fully covered{cur.list.date ? `, or after the list's date (${cur.list.date})` : ''}.</span>
+          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Waiting on {cur.waitingWishes === 1 ? '1 wish' : `${cur.waitingWishes} wishes`}</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)}</span></span>
+          {(cur.waitingItems || []).map((w) => (
+            <Link key={w.id} href={`/l/${cur.list.slug}/i/${w.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '10px 0', borderTop: `1.5px solid ${V}`, color: V, textDecoration: 'none' }}>
+              <span style={{ fontWeight: 700, fontSize: 15, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{w.name}</span>
+              <span style={{ fontSize: 13, flexShrink: 0 }}>{whole(w.raised)}{w.goal ? ` of ${whole(w.goal)}` : ''} ›</span>
+            </Link>
+          ))}
+          <span style={{ fontSize: 13, fontWeight: 800, marginTop: 4 }}>This unlocks when any of these happens:</span>
+          <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.5 }}>
+            <li>The wish is fully covered</li>
+            <li>The list closes (you archive it{cur.list.date ? ` or its date, ${cur.list.date}, passes` : ' or its date passes'})</li>
+            <li>You archive the wish, then cash out its gifts or move them to another wish</li>
+          </ul>
         </section>
       ) : null}
       {cur.cents ? (
