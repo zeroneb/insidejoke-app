@@ -7,6 +7,7 @@ import { tri } from '@/lib/blob';
 import { usd } from '@/components/wallet-ui';
 import { R3Boil } from '@/components/r3';
 import CashOutForm from './cash-out-form';
+import { closeListForCashOut } from '@/lib/actions-r3';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Wallet · insidejoke' };
@@ -82,11 +83,13 @@ export default async function WalletPage({ searchParams }) {
       {header}
       <div className="wal-cols">
       <div className="wal-hero">
-      {bars('READY', 'TO CASH OUT')}
-      {blobAmt(cur.cents, cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`)}
+      {cur.cents ? bars('READY', 'TO CASH OUT') : bars('NOTHING', 'READY YET')}
+      {blobAmt(cur.cents, cur.cents ? (cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`) : 'Gifts on wishes still filling are waiting')}
 
       </div>
       <div className="wal-side">
+      {cur.cents ? (
+      <>
       <section aria-label="What is in it" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
         {cur.rows.map((r) => (
           <div key={r.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '13px 0', borderTop: `1.5px solid ${V}` }}>
@@ -108,7 +111,18 @@ export default async function WalletPage({ searchParams }) {
         <p style={{ margin: 0, textAlign: 'center', fontSize: 15, lineHeight: 1.4 }}><span style={{ background: V, color: Y, padding: '2px 6px', WebkitBoxDecorationBreak: 'clone', boxDecorationBreak: 'clone' }}>Your friends paid nothing extra. Every dollar they gave reached you.</span></p>
       </section>
 
-      <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} />
+      </>
+      ) : null}
+      {cur.waiting ? (
+        <section aria-label="Waiting" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Waiting on {cur.waitingWishes} {cur.waitingWishes === 1 ? 'wish' : 'wishes'} still filling</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)}</span></span>
+          <span style={{ fontSize: 13, lineHeight: 1.45 }}>Friends gave toward these things, so the money unlocks when each one is covered, or when the list closes{cur.list.date ? ` (${cur.list.date})` : ''}. Close it now to cash out everything.</span>
+          <form action={closeListForCashOut}><input type="hidden" name="listId" value={cur.list.id} /><button style={{ border: `1.5px solid ${V}`, background: 'transparent', color: V, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '10px 16px', borderRadius: 999, cursor: 'pointer' }}>Close the list and unlock it</button></form>
+        </section>
+      ) : null}
+      {cur.cents ? (
+      <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared || cur.closed} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} />
+      ) : null}
       </div>
       </div>
     </main>
