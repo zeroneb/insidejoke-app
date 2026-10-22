@@ -26,7 +26,8 @@ export async function GET(req) {
       return Response.redirect(url, 303);
     }
     const m = await refreshConnectAccount(me.id);
-    return go(m?.stripe_ready ? next : `/wallet/payout?next=${encodeURIComponent(next)}`);
+    // Ready, or still being checked: back to the wallet. Setup not finished: back to setup.
+    return go(m?.stripe_ready || m?.transferStatus === 'pending' ? next : `/wallet/payout?next=${encodeURIComponent(next)}`);
   } catch (e) {
     console.error('stripe connect return', e.message);
     return go(`/wallet/payout?next=${encodeURIComponent(next)}`);
