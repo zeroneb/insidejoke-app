@@ -56,12 +56,12 @@ export default function FriendList({ list, owner, items, me }) {
             <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
-        <Blob seed={5} color="#D8F75A" style={{ left: 10, top: 56 }} width={370} height={290} />
+        <span className="dk-center370"><Blob seed={5} color="#D8F75A" style={{ left: 10, top: 56 }} width={370} height={290} /></span>
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', left: '50%', marginLeft: -135, top: 62 }} width="270" height="270" viewBox="0 0 270 270">
           <defs><path id="fl-arc" d="M135 135 m-112 0 a112 112 0 1 1 224 0 a112 112 0 1 1 -224 0" /></defs>
           <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: '#13286B' }}><textPath href="#fl-arc">{ring}{ring}</textPath></text>
         </svg>
-        <h1 className="serif" style={{ position: 'absolute', left: 40, right: 40, top: long ? 160 : 150, margin: 0, textAlign: 'center', color: '#000000', fontWeight: 400, fontSize: long ? 38 : 52, lineHeight: 0.92 }}>
+        <h1 className="serif fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 160 : 150, margin: 0, textAlign: 'center', color: '#000000', fontWeight: 400, fontSize: long ? 38 : 52, lineHeight: 0.92 }}>
           {words.length > 1 ? <>{words.slice(0, -1).join(' ')} <span style={{ fontWeight: 600 }}>{words[words.length - 1]}</span></> : <span style={{ fontWeight: 600 }}>{list.title}</span>}
         </h1>
         <div style={{ position: 'absolute', left: 20, right: 20, bottom: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
@@ -100,10 +100,11 @@ export default function FriendList({ list, owner, items, me }) {
           <span style={{ fontSize: 13, fontWeight: 700 }}>Get it or contribute</span>
         </div>
         {wishes.length === 0 ? <p style={{ margin: 0, padding: '16px 0', borderTop: '1.5px solid #000000', fontSize: 14, color: '#4A4A4A' }}>Nothing here yet.</p> : null}
+        <div className="dk-wishgrid">
         {wishes.map((it, i) => {
           const ink = tileInk(it.color);
           return (
-            <div key={it.id} style={{ borderTop: '1.5px solid #000000', padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div key={it.id} className="dk-wish" style={{ borderTop: '1.5px solid #000000', padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <Link href={`/l/${slug}/i/${it.id}`} style={{ textDecoration: 'none', display: 'flex', gap: 14, color: '#000000' }}>
                 <div style={{ position: 'relative', width: 92, height: 92, flexShrink: 0, background: it.color, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {it.photo ? <Halftone src={it.photo} ink={ink === '#FFFFFF' ? '#13286B' : ink} size={92} /> : <ItemSketch name={it.name} size={72} ink={ink} strokeWidth={2.6} />}
@@ -127,6 +128,7 @@ export default function FriendList({ list, owner, items, me }) {
             </div>
           );
         })}
+        </div>
       </section>
 
       <div style={{ padding: '16px 20px 40px', borderTop: '1.5px solid #000000', margin: '0 20px' }}>

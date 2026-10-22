@@ -182,9 +182,10 @@ export default async function HomePage() {
   const comments = await commentsFor(feed.map((f) => f.key));
 
   return (
-    <main className="withnav" style={{ display: 'flex', flexDirection: 'column' }}>
+    <main className="withnav dk-wide home-page" style={{ display: 'flex', flexDirection: 'column' }}>
+      <div className="home-col">
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 12px 0 20px' }}>
-        <Link href="/" style={{ textDecoration: 'none', color: '#13286B' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
+        <Link href="/" className="dk-hide" style={{ textDecoration: 'none', color: '#13286B' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
         <Link href="/notifications" aria-label={fresh ? `Notifications, ${fresh} new` : 'Notifications'} style={{ position: 'relative', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
           {fresh ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: '#E8642C' }} /> : null}
@@ -208,7 +209,7 @@ export default async function HomePage() {
           <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 34, lineHeight: 1 }}>My <span style={{ fontWeight: 600 }}>lists</span></h2>
           <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: 14, textDecoration: 'none', padding: '10px 0' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
+        <div className="home-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
           {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind)} variant="home" />)}
           {tiles.length === 0 ? (
             <Link href="/lists/new" style={{ height: 230, textDecoration: 'none', border: '1.5px dashed #000000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, fontSize: 15, textAlign: 'center', padding: 12 }}>
@@ -221,7 +222,8 @@ export default async function HomePage() {
         <Link href="/wallet/history" style={{ ...ROW, borderBottom: '1.5px solid #000000', marginTop: -12 }}><span style={{ display: 'flex', alignItems: 'center', gap: 10 }}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>History<span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>given, received, cash-outs</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg></Link>
       </section>
 
-      <section style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
+      </div>
+      <section className="home-side" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, margin: '0 0 4px' }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
           <Link href="/friends" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>

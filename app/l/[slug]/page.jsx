@@ -8,6 +8,34 @@ import FriendList from '@/components/friend-list';
 import { Blob } from '@/components/ui';
 import { isMember, latestBlast } from '@/lib/collab';
 import { redirect } from 'next/navigation';
+import Link2 from 'next/link';
+import ItemView from '@/components/views/item-view';
+import GiveView from '@/components/views/give-view';
+import AddItemForm from '@/components/add-item-form';
+import PanelLinks from '@/components/panel-links';
+
+// Laptop: the list with a side panel (item, contribute, add). The panel only shows at ≥900px wide.
+async function withPanel(slug, sp, view, canAdd) {
+  let panel = null;
+  if (sp?.item && sp?.give) panel = <GiveView slug={slug} itemId={String(sp.item)} mode={sp.mode} />;
+  else if (sp?.item) panel = <ItemView slug={slug} itemId={String(sp.item)} />;
+  else if (sp?.add && canAdd) panel = (
+    <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 16px', gap: 8 }}>
+        <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em' }}>Add an item</span>
+        <Link2 href={`/l/${slug}`} aria-label="Close" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link2>
+      </header>
+      <AddItemForm slug={slug} initialTreat={sp?.treat === '1'} />
+    </main>
+  );
+  return (
+    <div className={panel ? 'split has-panel' : 'split'}>
+      <PanelLinks slug={slug} />
+      <div className="split-main">{view}</div>
+      {panel ? <aside className="split-panel" aria-label="Details" key={JSON.stringify(sp)}>{panel}</aside> : null}
+    </div>
+  );
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -23,12 +51,13 @@ async function canSee(list, me) {
   return !!(await get('SELECT 1 FROM list_shares WHERE list_id = ? AND phone = ?', list.id, me.phone));
 }
 
-export default async function ListPage({ params }) {
+export default async function ListPage({ params, searchParams }) {
   const { slug } = await params;
+  const sp = await searchParams;
   const list = await listBySlug(slug);
   if (!list) notFound();
   const me = await currentUser();
-  if (me && (me.id === list.owner_id || (await isMember(list.id, me.id)))) return <OwnerList list={list} items={await itemsFor(list.id)} me={me} blast={await latestBlast(list.id)} />;
+  if (me && (me.id === list.owner_id || (await isMember(list.id, me.id)))) return withPanel(slug, sp, <OwnerList list={list} items={await itemsFor(list.id)} me={me} blast={await latestBlast(list.id)} />, true);
   if (list.for_who === 'other' && !list.surprise) redirect(`/l/${slug}/shared`);
   if (!(await canSee(list, me))) {
     return (
@@ -44,5 +73,5 @@ export default async function ListPage({ params }) {
       </main>
     );
   }
-  return <FriendList list={list} owner={await owner(list)} items={await itemsFor(list.id)} me={me} />;
+  return withPanel(slug, sp, <FriendList list={list} owner={await owner(list)} items={await itemsFor(list.id)} me={me} />, false);
 }

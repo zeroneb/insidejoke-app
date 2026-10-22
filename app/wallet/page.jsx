@@ -78,11 +78,15 @@ export default async function WalletPage({ searchParams }) {
   }
 
   return (
-    <main className="r3-full" style={{ background: Y, color: V, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <main className="r3-full dk-wide wal-page" style={{ background: Y, color: V, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {header}
+      <div className="wal-cols">
+      <div className="wal-hero">
       {bars('READY', 'TO CASH OUT')}
       {blobAmt(cur.cents, cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`)}
 
+      </div>
+      <div className="wal-side">
       <section aria-label="What is in it" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
         {cur.rows.map((r) => (
           <div key={r.key} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, padding: '13px 0', borderTop: `1.5px solid ${V}` }}>
@@ -105,6 +109,8 @@ export default async function WalletPage({ searchParams }) {
       </section>
 
       <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} />
+      </div>
+      </div>
     </main>
   );
 }
