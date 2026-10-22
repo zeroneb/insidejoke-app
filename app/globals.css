@@ -246,7 +246,7 @@ form:has(#amtcustom:checked) .if-custom { display: flex; }
 /* ---- a1: sign up, home, you, settings, friends, profiles ---- */
 @keyframes caret { 0%,100% { opacity: 1 } 50% { opacity: 0 } } .caret { animation: caret 1s steps(1) infinite }
 .hi { background: #13286B; color: #FFFFFF; padding: 2px 7px; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1.55 }
-.duo { mix-blend-mode: multiply; filter: grayscale(1) contrast(1.35) brightness(1.05) }
+.duo { mix-blend-mode: multiply; filter: grayscale(1) contrast(1.1) brightness(1.18) }
 @keyframes spin405 { to { transform: rotate(405deg) } } .spin405 { animation: spin405 40s linear infinite }
 @keyframes a1up { from { transform: translateY(8px); opacity: 0 } to { transform: none; opacity: 1 } } .a1up { animation: a1up .25s ease-out both }
 @keyframes a1sheet { from { transform: translateY(40px); opacity: 0 } to { transform: none; opacity: 1 } } .a1sheet { animation: a1sheet .35s cubic-bezier(.2,.7,.2,1) both }

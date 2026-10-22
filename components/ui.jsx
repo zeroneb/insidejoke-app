@@ -174,11 +174,13 @@ export function PosterSketch({ name = '', unlimited = false, seed = 7 }) {
 // The person's blob with their initial, or their photo as a duotone halftone clipped to the blob.
 // `boil` uses the three-frame boiling blob; otherwise one still shape. `uid` keeps svg ids unique per page.
 export function PhotoBlob({ user, size = 170, owner = false, boil = true, uid = 'pb', fontSize, pad = 16 }) {
-  const color = owner ? '#B36EE0' : user?.color || '#D8F75A';
+  let color = owner ? '#B36EE0' : user?.color || '#D8F75A';
   const seed = user?.seed || 7;
   const [a, b, c] = boil ? tri(seed) : [blob(seed, 4), null, null];
   const initial = ((user?.name || '?').trim()[0] || '?').toUpperCase();
   const outer = size + pad * 2;
+  // With a photo, tint with a light wash of the person's color so faces stay bright.
+  if (user?.photo) color = lighten(color, 0.7);
   return (
     <span style={{ position: 'relative', width: size, height: size, display: 'block', flexShrink: 0 }}>
       <svg aria-hidden="true" style={{ position: 'absolute', left: -pad, top: -pad }} width={outer} height={outer} viewBox="-12 -12 224 224">
@@ -199,6 +201,14 @@ export function PhotoBlob({ user, size = 170, owner = false, boil = true, uid = 
       )}
     </span>
   );
+}
+
+function lighten(hex, amt) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(String(hex || ''));
+  if (!m) return '#F2EDE4';
+  const n = parseInt(m[1], 16);
+  const mix = (c) => Math.round(c + (255 - c) * amt).toString(16).padStart(2, '0');
+  return '#' + mix(n >> 16) + mix((n >> 8) & 255) + mix(n & 255);
 }
 
 // Small round avatar for rows and the feed: blob + bold initial, or the duotone photo.
