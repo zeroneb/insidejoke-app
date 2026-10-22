@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const me = await currentUser();
   if (!me) return Response.json({ error: 'Sign in first.' }, { status: 401 });
-  const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLIC_KEY || '';
+  const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.NEXT_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLIC_KEY || '';
   const names = Object.keys(process.env).filter((k) => /STRIPE/i.test(k));
   const out = {
     secretKey: stripeOn() ? (stripeTestKey() ? 'test key set' : 'LIVE key set') : 'missing',
