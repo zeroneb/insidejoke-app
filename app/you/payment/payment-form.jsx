@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { tri } from '@/lib/blob';
 import { R3Boil } from '@/components/r3';
 import { PaymentPicker, usePayment, splitPayLabel } from '@/components/payment-setup';
+import { stripeClientOn } from '@/components/stripe-pay';
 import { savePayment } from '@/lib/actions-a3';
 
 export default function PaymentForm({ next, current }) {
@@ -41,7 +42,7 @@ export default function PaymentForm({ next, current }) {
       {state?.error ? <p className="err" style={{ margin: '14px 20px 0' }}>{state.error}</p> : null}
       <div style={{ padding: '22px 16px 0' }}>
         <button type="submit" disabled={pending || (pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 4)} style={{ width: '100%', border: 0, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || (pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 4) ? 0.5 : 1 }}>
-          {pending ? 'Saving…' : pay.kind === 'apple' ? 'Use Apple Pay' : pay.kind === 'card' ? 'Save this card' : 'Link this bank'}
+          {pending ? 'Saving…' : stripeClientOn() ? 'Save' : pay.kind === 'apple' ? 'Use Apple Pay' : pay.kind === 'card' ? 'Save this card' : 'Link this bank'}
         </button>
       </div>
       <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: '#3A3A3A' }}>Saved for next time. Change it anytime in settings.</p>

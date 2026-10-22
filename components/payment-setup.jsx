@@ -3,6 +3,7 @@
 // a3: the "Set up paying once" chooser from Option 10 PaymentSetup. Used inline on the
 // give screen (first gift) and on /you/payment (change it later). Simulated in test mode.
 import { useState } from 'react';
+import StripePay, { stripeClientOn } from '@/components/stripe-pay';
 
 export const PAY_METHODS = [
   ['apple', 'Apple Pay', 'Fastest. Confirm with Face ID'],
@@ -19,6 +20,17 @@ export function splitPayLabel(label = '') {
 const inputStyle = { minWidth: 0, height: 52, border: '1.5px solid #000000', background: '#FFFFFF', fontFamily: 'inherit', fontSize: 15, padding: '0 12px', borderRadius: 0, color: '#000000', boxSizing: 'border-box', width: '100%' };
 
 export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', card, onCard }) {
+  if (stripeClientOn()) {
+    return (
+      <>
+        <StripePay />
+        <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: '#D8F75A', padding: '14px 16px' }}>
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
+          <span style={{ fontSize: 16, lineHeight: 1.3 }}>No fee added. All of it goes to {forName}.</span>
+        </section>
+      </>
+    );
+  }
   return (
     <>
       <div role="radiogroup" aria-label="How you pay" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -54,8 +66,9 @@ export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', car
 }
 
 export function usePayment(initial = 'apple') {
-  const [kind, setKind] = useState(initial);
-  const [card, setCard] = useState('');
+  // With Stripe on, the Payment Element picks the method; the label comes back from Stripe.
+  const [kind, setKind] = useState(stripeClientOn() ? 'card' : initial);
+  const [card, setCard] = useState(stripeClientOn() ? '0000000000000000' : '');
   const digits = card.replace(/\D/g, '');
   return { kind, setKind, card, setCard, last4: digits.slice(-4) || '4242', first: digits[0] || '4' };
 }
