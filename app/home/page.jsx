@@ -20,12 +20,12 @@ async function reactionsFor(keys, meId) {
   const rows = await all(`SELECT contribution_id, emoji, user_id FROM reactions WHERE contribution_id IN (${keys.map(() => '?').join(',')})`, ...keys);
   const out = {};
   for (const r of rows) {
-    const e = (out[r.contribution_id] ||= { count: 0, by: {}, mine: null });
+    const e = (out[r.contribution_id] ||= { count: 0, by: {}, mine: [] });
     e.count += 1;
     e.by[r.emoji] = (e.by[r.emoji] || 0) + 1;
-    if (r.user_id === meId) e.mine = r.emoji;
+    if (r.user_id === meId) e.mine.push(r.emoji);
   }
-  for (const e of Object.values(out)) e.top = Object.entries(e.by).sort((x, y) => y[1] - x[1])[0]?.[0] || null;
+  for (const e of Object.values(out)) e.list = Object.entries(e.by).sort((x, y) => y[1] - x[1]).map(([emoji, n]) => ({ emoji, n }));
   return out;
 }
 
@@ -139,7 +139,7 @@ function FeedRow({ f, r, n }) {
         {lead || <span style={{ fontSize: 15, lineHeight: 1.35 }}><Who g={one} /> {text}</span>}
         {f.note ? <span style={{ fontSize: 15, fontWeight: 700, color: '#13286B' }}>“{f.note}”</span> : null}
         <span style={{ fontSize: 12, color: '#4A4A4A' }}>{when}</span>
-        <LatelyActions cid={f.key} top={r?.top || null} count={r?.count || 0} mine={r?.mine || null} href={href} see={see} toName={first(f.noteBy || one.name)} delay={n} />
+        <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} toName={first(f.noteBy || one.name)} delay={n} />
       </div>
       <span className="dot" style={{ fontSize: 18, color: '#E8642C', flexShrink: 0 }}>{badge}</span>
     </div>
