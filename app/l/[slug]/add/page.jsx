@@ -6,6 +6,7 @@ import AddItemForm from '@/components/add-item-form';
 import { isMember } from '@/lib/collab';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // reading a store link can take a while
 
 export default async function AddItemPage({ params, searchParams }) {
   const { slug } = await params;

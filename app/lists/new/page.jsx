@@ -5,6 +5,7 @@ import { all } from '@/lib/db';
 import NewListForm from '@/components/new-list-form';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // reading a store link can take a while
 
 export default async function NewListPage() {
   const me = await currentUser();

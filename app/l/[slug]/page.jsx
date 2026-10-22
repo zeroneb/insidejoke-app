@@ -38,6 +38,7 @@ async function withPanel(slug, sp, view, canAdd) {
 }
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 60; // reading a store link can take a while
 
 // Who may see a list that is not the owner's own:
 // public + open: anyone with the link. Private: members (list_members) or numbers it was texted to.
