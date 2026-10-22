@@ -83,6 +83,15 @@ export default function AddItemForm({ slug, initialTreat = false }) {
     if (pv.ok) {
       setPhase('filled');
       setPulledPhoto(pv.photo || null);
+      // The store blocked our server, but its image server usually lets a real phone in: try likely addresses here.
+      if (!pv.photo && pv.imageCandidates?.length) {
+        (async () => {
+          for (const src of pv.imageCandidates) {
+            const ok = await new Promise((res) => { const im = new Image(); im.referrerPolicy = 'no-referrer'; im.onload = () => res(im.naturalWidth > 50); im.onerror = () => res(false); im.src = src; setTimeout(() => res(false), 6000); });
+            if (ok) { setPulledPhoto(src); break; }
+          }
+        })();
+      }
       setV((x) => ({ ...x, name: pv.name || x.name, price: pv.price ? '$' + String(pv.price).replace(/\.00$/, '') : x.price, store: pv.store || x.store }));
     } else {
       setPhase('blocked');
