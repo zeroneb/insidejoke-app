@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { setItemStateR2 } from '@/lib/actions-r2';
+import { setItemStateR2, retireItemWithGifts } from '@/lib/actions-r2';
 import { ItemRow } from '@/components/owner-list';
 
 const cell = { height: 44, border: '2px solid #000000', background: 'transparent', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', color: '#000000', display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none', boxSizing: 'border-box' };
@@ -26,6 +26,22 @@ export default function ManageRows({ slug, active, archived }) {
   const [open, setOpen] = useState(null);
   const [toast, setToast] = useState(null);
   const [pending, start] = useTransition();
+  // An item friends gave toward: ask where their gifts go before archiving or removing it.
+  const [ask, setAsk] = useState(null); // { it, state }
+  const [target, setTarget] = useState('');
+  const others = (it) => active.filter((x) => x.id !== it.id && !x.unlimited);
+  const retire = (it, state) => {
+    if (it.givers && !it.covered && !it.unlimited) { setOpen(null); setTarget(others(it).find((x) => !x.covered)?.id || others(it)[0]?.id || ''); setAsk({ it, state }); return; }
+    act(it, state, 'on', `${state === 'removed' ? 'Removed' : 'Archived'} "${short(it.name)}"`);
+  };
+  const confirm = (choice) => start(async () => {
+    const { it, state } = ask;
+    const r = await retireItemWithGifts(slug, it.id, state, choice, target);
+    if (r?.error) { setToast({ msg: r.error }); return; }
+    setAsk(null);
+    setToast({ msg: choice === 'move' ? `Moved the gifts and ${state === 'removed' ? 'removed' : 'archived'} "${short(it.name)}"` : `Gifts on "${short(it.name)}" are ready to cash out` });
+    router.refresh();
+  });
   const act = (it, state, prev, msg) => start(async () => {
     setOpen(null);
     const r = await setItemStateR2(slug, it.id, state);
@@ -50,8 +66,8 @@ export default function ManageRows({ slug, active, archived }) {
               {isOpen ? (
                 <div className="pop" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6, padding: '0 0 12px' }}>
                   <Link href={`/l/${slug}/i/${it.id}/edit`} style={cell}>Edit</Link>
-                  <button type="button" disabled={pending} onClick={() => act(it, 'archived', 'on', `Archived "${short(it.name)}"`)} style={{ ...cell, background: '#A9CDF5' }}>Archive</button>
-                  <button type="button" disabled={pending} onClick={() => act(it, 'removed', 'on', `Removed "${short(it.name)}"`)} style={{ ...cell, border: '2px solid #E2452B', background: '#E2452B', color: '#FFFFFF' }}>Remove</button>
+                  <button type="button" disabled={pending} onClick={() => retire(it, 'archived')} style={{ ...cell, background: '#A9CDF5' }}>Archive</button>
+                  <button type="button" disabled={pending} onClick={() => retire(it, 'removed')} style={{ ...cell, border: '2px solid #E2452B', background: '#E2452B', color: '#FFFFFF' }}>Remove</button>
                 </div>
               ) : null}
             </ItemRow>
@@ -59,6 +75,27 @@ export default function ManageRows({ slug, active, archived }) {
         })}
         {!active.length ? <p style={{ margin: 0, padding: '14px 0', borderTop: '1.5px solid #000000', fontSize: 14, color: '#4A4A4A' }}>Nothing on it yet.</p> : null}
       </section>
+
+      {ask ? (
+        <section role="dialog" aria-labelledby="mv-title" className="pop" style={{ margin: '18px 20px 0', border: '2.5px solid #000000', background: '#FFFFFF', padding: '16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <span id="mv-title" style={{ fontSize: 20, lineHeight: 1.15, letterSpacing: '-0.02em' }}>{ask.it.givers} {ask.it.givers === 1 ? 'friend' : 'friends'} gave toward <b>{short(ask.it.name)}</b>. Where should their gifts go?</span>
+          {others(ask.it).length ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <label htmlFor="mv-target" style={{ fontWeight: 800, fontSize: 14 }}>Move them to another wish</label>
+              <select id="mv-target" value={target} onChange={(e) => setTarget(e.target.value)} style={{ height: 48, border: '1.5px solid #000000', background: '#FFFFFF', fontFamily: 'inherit', fontSize: 15, padding: '0 10px', borderRadius: 0 }}>
+                {others(ask.it).map((x) => <option key={x.id} value={x.id}>{x.name}{x.covered ? ' (already covered)' : ` (${x.pct}% covered)`}</option>)}
+              </select>
+              <button type="button" disabled={pending || !target} onClick={() => confirm('move')} style={{ height: 48, border: 0, borderRadius: 999, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>Move the gifts</button>
+              <span style={{ fontSize: 12, color: '#4A4A4A' }}>Their names and notes move too. Each friend gets a quiet note that you moved their gift.</span>
+            </div>
+          ) : null}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, borderTop: '1px solid #000000', paddingTop: 12 }}>
+            <button type="button" disabled={pending} onClick={() => confirm('use')} style={{ height: 48, border: '2px solid #000000', borderRadius: 999, background: 'transparent', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, cursor: 'pointer', color: '#000' }}>Cash them out instead</button>
+            <span style={{ fontSize: 12, color: '#4A4A4A' }}>The money goes to your wallet now. Each friend gets a note that you used their gift toward something else.</span>
+          </div>
+          <button type="button" onClick={() => setAsk(null)} style={{ border: 0, background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 14, textDecoration: 'underline', cursor: 'pointer', alignSelf: 'center', color: '#000' }}>Keep it on the list</button>
+        </section>
+      ) : null}
 
       <section style={{ margin: '22px 20px 0', borderTop: '2.5px solid #000000', borderBottom: '2.5px solid #000000', padding: '12px 0 6px', display: 'flex', flexDirection: 'column' }}>
         <h2 className="wide" style={{ margin: '0 0 4px', fontSize: 14, letterSpacing: '0.16em' }}>Archived · {archived.length}</h2>

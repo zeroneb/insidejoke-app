@@ -78,7 +78,7 @@ export default function StripePay() {
       <div ref={box} style={{ minHeight: ready ? 0 : 120 }} />
       {!ready && !err ? <span style={{ fontSize: 13, color: '#4A4A4A' }}>Loading the secure card form…</span> : null}
       {err ? <p className="err" style={{ margin: 0 }}>{err}</p> : null}
-      <span style={{ fontSize: 12, color: '#4A4A4A' }}>Secured by Stripe. insidejoke never sees your card number.</span>
+      <span style={{ fontSize: 12, color: '#4A4A4A' }}>Secure payment. insidejoke never sees your card number.</span>
     </div>
   );
 }

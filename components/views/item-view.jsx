@@ -146,7 +146,7 @@ export default async function ItemView({ slug, itemId }) {
             <div key={n.id} style={{ display: 'flex', gap: 12, padding: '14px 0', borderTop: '1px solid #000000' }}>
               <Link href={`/u/${n.giver_id}`} aria-label={`${n.name}'s profile`} style={{ flexShrink: 0, textDecoration: 'none', height: 40 }}><Avatar user={n} size={40} /></Link>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}>
-                <span style={{ fontSize: 14 }}>{n.name || 'A friend'} <span style={{ color: '#3A3A3A' }}>{verb} · {ago(n.created_at)}{n.visibility === 'private' ? ' · private' : ''}</span></span>
+                <span style={{ fontSize: 14 }}>{n.name || 'A friend'} <span style={{ color: '#3A3A3A' }}>{verb} · {ago(n.created_at)}{n.visibility === 'private' ? ' · private' : ''}{n.moved_from_name ? ` · moved from the ${n.moved_from_name}` : ''}</span></span>
                 {n.note ? <span className="serif" style={{ fontStyle: 'italic', fontSize: 18, lineHeight: 1.2 }}>"{n.note}"</span> : null}
                 {(replies[n.id] || []).map((m, i) => <span key={i} style={{ fontSize: 14, lineHeight: 1.35, paddingLeft: 10, borderLeft: '2px solid #D4FA4F' }}><b>{me && m.uid === me.id ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>)}
               </div>

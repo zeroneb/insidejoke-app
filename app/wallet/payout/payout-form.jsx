@@ -112,11 +112,12 @@ export function StripePayoutStart({ next, current }) {
       </header>
       <section style={{ padding: '10px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <h1 style={{ margin: 0, fontWeight: 600, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em' }}>Get paid <span className="serif" style={{ fontWeight: 400, fontStyle: 'italic' }}>once,</span> then never again</h1>
-        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>{current ? `Cash-outs go to ${current} now. ` : ''}Our payments partner, Stripe, links your bank and checks your ID on its own secure page. It takes about two minutes, and then you come right back.</p>
+        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>{current ? `Cash-outs go to ${current} now. ` : ''}Link your bank and confirm it's you on our secure payments page. It takes about two minutes, then you come right back.</p>
       </section>
       <div style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {!current ? <label style={lbl}>Email for cash-out receipts<input name="email" type="email" required autoComplete="email" placeholder="you@example.com" style={field} /></label> : null}
         {state?.error ? <p className="err" style={{ margin: 0 }}>{state.error}</p> : null}
-        <button style={big} disabled={pending}>{pending ? 'Opening Stripe…' : current ? 'Change it on Stripe' : 'Continue to Stripe'}</button>
+        <button style={big} disabled={pending}>{pending ? 'Opening…' : current ? 'Change your bank' : 'Link your bank'}</button>
         <span style={{ fontSize: 13, textAlign: 'center' }}>insidejoke never sees your bank login or full account number.</span>
       </div>
     </form>
