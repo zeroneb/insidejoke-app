@@ -112,16 +112,6 @@ export default async function SettingsPage({ searchParams }) {
                 return <button key={k} name="value" value={k} role="radio" aria-checked={on ? 'true' : 'false'} className={on ? 'theme-on' : ''} style={{ flex: '1 1 0', height: 44, border: '1.5px solid #000000', marginLeft: i ? -1.5 : 0, borderRadius: i === 0 ? '999px 0 0 999px' : i === 2 ? '0 999px 999px 0' : 0, background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>{label}</button>;
               })}
             </form>
-            {/* r1: theme preview card (dark mode CSS flips these inline light colors) */}
-            <div aria-hidden="true" style={{ display: 'flex', gap: 10 }}>
-              <div style={{ flex: '1 1 0', height: 92, background: '#ECECEF', border: '1.5px solid #000000', padding: 10, boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <span style={{ fontFamily: "'EB Garamond', serif", fontSize: 20, lineHeight: 1, color: '#000000' }}>For my <span style={{ fontWeight: 600 }}>birthday</span></span>
-                <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                  <span style={{ width: 34, height: 22, background: '#D8F75A' }} /><span style={{ width: 34, height: 22, background: '#E8642C' }} /><span style={{ width: 34, height: 22, background: '#B36EE0' }} />
-                  <span style={{ marginLeft: 'auto', height: 22, padding: '0 10px', borderRadius: 999, background: '#000000', color: '#FFFFFF', fontSize: 11, fontWeight: 800, display: 'flex', alignItems: 'center' }}>Contribute</span>
-                </div>
-              </div>
-            </div>
             <p className="a1-s" style={{ margin: '0 0 14px' }}>{me.theme === 'dark' ? 'Dark grounds, same colors on your lists. Easier on the eyes at night.' : me.theme === 'auto' ? 'Follows your phone: light by day, dark when your phone switches.' : 'The classic light gray ground.'}</p>
           </div>
         </section>
