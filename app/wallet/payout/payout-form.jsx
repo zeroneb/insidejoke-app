@@ -36,7 +36,7 @@ export default function PayoutForm({ next, current, legalName, acct }) {
       </header>
 
       <section style={{ padding: '10px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <h1 style={{ margin: 0, fontWeight: 600, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em' }}>Get paid <span className="serif" style={{ fontWeight: 400, fontStyle: 'italic' }}>once,</span><br />then never again</h1>
+        <h1 style={{ margin: 0, fontWeight: 600, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em' }}>Set it up <span className="serif" style={{ fontWeight: 400, fontStyle: 'italic' }}>once,</span><br />get paid every time</h1>
         <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>{current && s < 2 ? `Cash-outs go to ${current} now. Pick a new bank to switch.` : "Two quick steps the first time you cash out. We'll never ask again."}</p>
       </section>
 
