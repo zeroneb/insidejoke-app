@@ -91,6 +91,15 @@ export default function AddItemForm({ slug, initialTreat = false }) {
     }
   }, [pv]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Paste a link and the details fill in by themselves; the button is a fallback.
+  useEffect(() => {
+    if (src !== 'link' || phase !== 'empty' || reading) return;
+    const t = link.trim();
+    if (!/^https?:\/\/\S+$/i.test(t) && !/^[^\s/]+\.[a-z]{2,}(\/\S*)?$/i.test(t)) return;
+    const h = setTimeout(() => { const b = document.getElementById('pullbtn'); if (b) b.click(); }, 600);
+    return () => clearTimeout(h);
+  }, [link, phase, src]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const isLink = src === 'link';
   const isReading = isLink && reading;
   const filled = isLink && !reading && phase === 'filled';

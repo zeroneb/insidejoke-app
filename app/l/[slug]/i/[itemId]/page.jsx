@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Avatar, ItemSketch, Halftone } from '@/components/ui';
 import { tileInk, hostOf, firstName } from '@/components/friend-list';
-import { listBySlug, itemById, owner as ownerOf, notesFor, money } from '@/lib/lists';
+import { listBySlug, itemById, owner as ownerOf, notesFor, money, ensureItemPhoto } from '@/lib/lists';
 import { currentUser } from '@/lib/auth';
 import { get, all } from '@/lib/db';
 import { toggleLike } from '@/lib/actions-a2';
@@ -34,7 +34,7 @@ export default async function ItemPage({ params }) {
   const { slug, itemId } = await params;
   const list = await listBySlug(slug);
   if (!list) notFound();
-  const it = await itemById(itemId);
+  const it = await ensureItemPhoto(await itemById(itemId));
   if (!it || it.list_id !== list.id) notFound();
   const owner = await ownerOf(list);
   const me = await currentUser();
