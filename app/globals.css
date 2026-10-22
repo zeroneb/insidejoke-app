@@ -544,8 +544,8 @@ html[data-theme="auto"] [style*="background:#F0895A"] .a1-ghost, html[data-theme
 html[data-theme="auto"] [style*="background:#5FC3D9"] .a1-ghost, html[data-theme="auto"] [style*="background:#5FC3D9"] .pill, html[data-theme="auto"] [style*="background:#5FC3D9"] .btn.ghost, html[data-theme="auto"] [style*="background:#5FC3D9"] .a1-t, html[data-theme="auto"] [style*="background:#5FC3D9"] .a1-s { color: #000000 !important; border-color: #000000 !important; }
 }
 /* Dark mode, pass 6: the list name typed on the lime blob. */
-html[data-theme="dark"] input#title { color: #000000 !important; border-color: #13286B !important; }
-@media (prefers-color-scheme: dark) { html[data-theme="auto"] input#title { color: #000000 !important; border-color: #13286B !important; } }
+html[data-theme="dark"] input#lname { color: #000000 !important; border-color: #13286B !important; }
+@media (prefers-color-scheme: dark) { html[data-theme="auto"] input#lname { color: #000000 !important; border-color: #13286B !important; } }
 
 /* ---- r4: Option 10 grounds for collab (pink) and surprise (sky) screens ---- */
 main.r4-pink { background: #F4D3EE; }
