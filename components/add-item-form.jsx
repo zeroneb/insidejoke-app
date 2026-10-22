@@ -210,7 +210,7 @@ export default function AddItemForm({ slug, initialTreat = false }) {
 // ---------- Edit item ----------
 export function EditItemForm({ slug, item, listTitle, contributed }) {
   const [state, action, pending] = useActionState(updateItem, null);
-  const [v, setV] = useState({ name: item.name || '', price: '$' + (item.price_cents / 100).toFixed(item.price_cents % 100 ? 2 : 0), store: item.store || '', note: item.note || '' });
+  const [v, setV] = useState({ name: item.name || '', price: '$' + (item.price_cents / 100).toFixed(item.price_cents % 100 ? 2 : 0), store: item.store || '', note: item.note || '', url: item.url || '' });
   const set = (o) => setV((x) => ({ ...x, ...o }));
   const [n, setN] = useState(Math.max(1, item.quantity || 1));
   const [treat, setTreat] = useState(item.quantity === 0);
@@ -223,7 +223,6 @@ export function EditItemForm({ slug, item, listTitle, contributed }) {
       <form action={action} style={{ display: 'flex', flexDirection: 'column' }}>
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="itemId" value={item.id} />
-        <input type="hidden" name="url" value={item.url || ''} />
         {item.photo ? <input type="hidden" name="keepPhoto" value="1" /> : null}
         <section style={{ padding: '20px 20px 0', display: 'flex', gap: 12, alignItems: 'stretch' }}>
           <PhotoTile src={own.url || item.photo} tag={own.file ? own.file.name : (item.photo ? host || 'your photo' : '')} bg={item.color} name={item.name} />
@@ -237,6 +236,11 @@ export function EditItemForm({ slug, item, listTitle, contributed }) {
               <a href={/^https?:/i.test(item.url) ? item.url : 'https://' + item.url} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 6, height: 36, fontWeight: 700, fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, color: '#000' }}>Open the link <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
             ) : <span style={{ height: 36 }} />}
           </div>
+        </section>
+        <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <label htmlFor="link" style={LBL}>Link</label>
+          <input id="link" name="url" className="a2-input" type="url" inputMode="url" value={v.url} onChange={(e) => set({ url: e.target.value })} placeholder="Paste the store link" />
+          {v.url.trim() !== (item.url || '') && v.url.trim() ? <span style={{ fontSize: 12, color: '#4A4A4A' }}>New link. Save and we'll pull its photo, store and price.</span> : null}
         </section>
         <Fields v={v} set={set} treat={treat} n={n} />
         <Qty n={n} setN={setN} treat={treat} setTreat={setTreat} />
