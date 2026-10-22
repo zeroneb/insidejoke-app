@@ -2,7 +2,8 @@
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { payoutMethod } from '@/lib/wallet';
-import PayoutForm from './payout-form';
+import PayoutForm, { StripePayoutStart } from './payout-form';
+import { stripeOn } from '@/lib/stripe';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Get paid · insidejoke' };
@@ -16,5 +17,6 @@ export default async function PayoutPage({ searchParams }) {
   // Test mode: a stable, made-up account ending for the linked bank.
   let h = 0; for (const ch of String(me.id)) h = (h * 31 + ch.charCodeAt(0)) % 9000;
   const acct = String(1000 + h);
+  if (stripeOn()) return <StripePayoutStart next={next} current={pm?.stripe_ready ? pm.label : null} />;
   return <PayoutForm next={next} current={pm ? pm.label.replace(/\s+(checking|savings)\b/i, '') : null} legalName={me.name || ''} acct={acct} />;
 }

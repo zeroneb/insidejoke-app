@@ -99,3 +99,26 @@ export default function PayoutForm({ next, current, legalName, acct }) {
     </form>
   );
 }
+
+// Real payouts: Stripe's own secure screens collect the bank and ID. One button gets you there.
+export function StripePayoutStart({ next, current }) {
+  const [state, action, pending] = useActionState(savePayoutBank, null);
+  return (
+    <form action={action} className="r3-full" style={{ background: Y, color: V, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      <input type="hidden" name="next" value={next} />
+      <header style={{ display: 'flex', alignItems: 'center', padding: '12px 20px 0 8px', fontSize: 13, fontWeight: 600, gap: 6 }}>
+        <Link href={next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <span>{current ? 'Change where it lands' : 'One-time setup'}</span>
+      </header>
+      <section style={{ padding: '10px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <h1 style={{ margin: 0, fontWeight: 600, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em' }}>Get paid <span className="serif" style={{ fontWeight: 400, fontStyle: 'italic' }}>once,</span> then never again</h1>
+        <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>{current ? `Cash-outs go to ${current} now. ` : ''}Our payments partner, Stripe, links your bank and checks your ID on its own secure page. It takes about two minutes, and then you come right back.</p>
+      </section>
+      <div style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {state?.error ? <p className="err" style={{ margin: 0 }}>{state.error}</p> : null}
+        <button style={big} disabled={pending}>{pending ? 'Opening Stripe…' : current ? 'Change it on Stripe' : 'Continue to Stripe'}</button>
+        <span style={{ fontSize: 13, textAlign: 'center' }}>insidejoke never sees your bank login or full account number.</span>
+      </div>
+    </form>
+  );
+}

@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { deleteList } from '@/lib/actions-a2';
+import { deleteList, setListArchived } from '@/lib/actions-a2';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all } from '@/lib/db';
@@ -32,7 +32,9 @@ export default async function Archived() {
               <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>{l.title}</span><span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>Archived {ago(l.archived_at || l.created_at)}</span></span>
               <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
             </Link>
-            <details style={{ paddingBottom: 10 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, paddingBottom: 10, flexWrap: 'wrap' }}>
+            <form action={setListArchived}><input type="hidden" name="slug" value={l.slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 36, padding: '0 14px', border: '1.5px solid #000000', borderRadius: 999, background: 'transparent', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', color: '#000' }}>Unarchive</button></form>
+            <details>
               <summary style={{ cursor: 'pointer', fontSize: 13, fontWeight: 700, color: '#E2452B', listStyle: 'none', width: 'fit-content', padding: '4px 0' }}>Delete</summary>
               <form action={deleteList} style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap', paddingTop: 6 }}>
                 <input type="hidden" name="slug" value={l.slug} /><input type="hidden" name="confirm" value="delete" /><input type="hidden" name="back" value="/home/archived" />
@@ -40,6 +42,7 @@ export default async function Archived() {
                 <button style={{ height: 40, padding: '0 16px', border: 0, borderRadius: 999, background: '#E2452B', color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>Yes, delete</button>
               </form>
             </details>
+            </div>
             </div>
           ))}
           {lists.length === 0 ? <p style={{ margin: 0, padding: '16px 0', borderTop: '1px solid #000000', fontSize: 15, color: '#4A4A4A' }}>Nothing archived.</p> : null}

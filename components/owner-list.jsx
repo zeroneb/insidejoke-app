@@ -4,6 +4,7 @@ import ListProgress from '@/components/list-progress';
 import { tileInk, hostOf } from '@/components/friend-list';
 import { unpinBlastAction } from '@/lib/actions-a4';
 import { dismissNudge } from '@/lib/actions';
+import { setListArchived } from '@/lib/actions-a2';
 
 // Title as on the boards: everything but the last word, then the last word in semibold on its own line.
 export function SplitTitle({ title }) {
@@ -68,6 +69,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
         </svg>
         <h1 className="serif" style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, fontSize: long ? 40 : 50, lineHeight: 0.92 }}><SplitTitle title={list.title} /></h1>
         <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: '#13286B', fontWeight: 800, fontSize: 14 }}>{status}</p>
+        {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid #000000', borderRadius: 999, background: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: '#000' }}>Unarchive</button></form> : null}
       </section>
 
       {blast ? (

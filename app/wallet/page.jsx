@@ -7,7 +7,6 @@ import { tri } from '@/lib/blob';
 import { usd } from '@/components/wallet-ui';
 import { R3Boil } from '@/components/r3';
 import CashOutForm from './cash-out-form';
-import { closeListForCashOut } from '@/lib/actions-r3';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Wallet · insidejoke' };
@@ -115,9 +114,8 @@ export default async function WalletPage({ searchParams }) {
       ) : null}
       {cur.waiting ? (
         <section aria-label="Waiting" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Waiting on {cur.waitingWishes} {cur.waitingWishes === 1 ? 'wish' : 'wishes'} still filling</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)}</span></span>
-          <span style={{ fontSize: 13, lineHeight: 1.45 }}>Friends gave toward these things, so the money unlocks when each one is covered, or when the list closes{cur.list.date ? ` (${cur.list.date})` : ''}. Close it now to cash out everything.</span>
-          <form action={closeListForCashOut}><input type="hidden" name="listId" value={cur.list.id} /><button style={{ border: `1.5px solid ${V}`, background: 'transparent', color: V, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '10px 16px', borderRadius: 999, cursor: 'pointer' }}>Close the list and unlock it</button></form>
+          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Given toward {cur.waitingWishes === 1 ? 'a wish' : `${cur.waitingWishes} wishes`} still filling</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.waiting)}</span></span>
+          <span style={{ fontSize: 13, lineHeight: 1.45 }}>Friends gave this toward specific things, so it unlocks once {cur.waitingWishes === 1 ? 'that wish is' : 'each wish is'} fully covered{cur.list.date ? `, or after the list's date (${cur.list.date})` : ''}.</span>
         </section>
       ) : null}
       {cur.cents ? (
