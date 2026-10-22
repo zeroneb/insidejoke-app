@@ -45,10 +45,10 @@ export default async function ItemPage({ params }) {
   const privateCount = (await get("SELECT COUNT(*) AS n FROM contributions WHERE item_id = ? AND visibility = 'private'", it.id)).n;
   const liked = me ? new Set((await all('SELECT r.contribution_id FROM reactions r JOIN contributions c ON c.id = r.contribution_id WHERE c.item_id = ? AND r.user_id = ?', it.id, me.id)).map((r) => r.contribution_id)) : new Set();
 
-  const dark = !it.photo && DARK.includes(it.color);
+  const dark = DARK.includes(it.color);
   const hdrInk = dark ? '#FFFFFF' : '#000000';
   const sketchInk = it.color === '#F4D3EE' ? '#E2452B' : it.color === '#D8F75A' || it.color === '#D4FA4F' ? '#13286B' : '#FFFFFF';
-  const forInk = it.photo ? '#000000' : FOR_INK[it.color] || (dark ? '#D8F75A' : '#13286B');
+  const forInk = FOR_INK[it.color] || (dark ? '#D8F75A' : '#13286B');
   const store = it.store || (it.url ? hostOf(it.url) : '');
   const eyebrow = it.photo ? (it.url ? `Photo from ${store}` : `${forName}'s photo`) : store ? `From ${store}` : 'On the list';
   const spec = [it.quantity > 1 ? `A set of ${it.quantity}` : null, it.unlimited ? 'Unlimited' : null, store || null, it.quantity > 1 || it.unlimited ? `${money(it.price_cents)} each` : money(it.price_cents)].filter(Boolean).join(' · ');
@@ -77,9 +77,9 @@ export default async function ItemPage({ params }) {
             <Link href={`/l/${slug}/share`} aria-label="Share item" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
-        <span style={{ position: 'absolute', left: 14, top: 64, fontWeight: 500, fontSize: 12, color: it.photo ? '#3A3A3A' : dark ? '#FFFFFF' : EYEBROW[it.color] || '#000000', zIndex: 1 }}>{eyebrow}</span>
+        <span style={{ position: 'absolute', left: 14, top: 64, fontWeight: 500, fontSize: 12, color: dark ? '#FFFFFF' : EYEBROW[it.color] || '#000000', zIndex: 1 }}>{eyebrow}</span>
         {it.photo ? (
-          <div style={{ position: 'absolute', inset: 0, background: '#FFFFFF' }}><img src={it.photo} alt={it.name} referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '56px 16px 52px', boxSizing: 'border-box', display: 'block' }} /></div>
+          <div className="bob" style={{ position: 'absolute', left: '50%', top: 84, marginLeft: -120, width: 240, height: 240, background: '#FFFFFF', boxShadow: '0 10px 30px rgba(0,0,0,.18)' }}><img src={it.photo} alt={it.name} referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'contain', padding: 10, boxSizing: 'border-box', display: 'block' }} /></div>
         ) : (
           <div className="bob" style={{ position: 'absolute', left: '50%', top: 70, marginLeft: -130, width: 260, height: 260, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <ItemSketch name={it.name} size={260} ink={sketchInk} unlimited={it.unlimited} strokeWidth={1.5} />
