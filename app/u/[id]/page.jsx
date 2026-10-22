@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { get } from '@/lib/db';
-import { publicListsOf, between } from '@/lib/lists';
+import { publicListsOf, between, profileLately } from '@/lib/lists';
 import { ListTile, tileData } from '@/components/list-tile';
 import { PhotoBlob } from '@/components/ui';
 import { addFriend, unfriend } from '@/lib/actions-a1';
@@ -41,6 +41,7 @@ export default async function FriendProfile({ params }) {
   tiles.sort((x, y) => (x.kind === 'treat') - (y.kind === 'treat')); // r1: wish lists first, as on the board
   const seen = {};
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
+  const recent = friend ? await profileLately(lists) : [];
   const gifts = me && !self ? await between(me.id, them.id) : [];
   const fromThem = gifts.filter((g) => g.giver_id === them.id).length;
   const toThem = gifts.length - fromThem;
@@ -116,6 +117,20 @@ export default async function FriendProfile({ params }) {
           )}
           {!friend && !self && tiles.length ? <p style={{ margin: 0, fontSize: 13, color: '#4A4A4A', lineHeight: 1.4 }}>You only see {possessive(name)} public lists now.</p> : null}
         </section>
+
+        {recent.length ? (
+          <section aria-label={`What ${name} has been up to`} style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column' }}>
+            <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 15, letterSpacing: '0.12em' }}>Lately</h2>
+            {recent.map((e) => (
+              <Link key={e.key} href={e.href} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid #000000', color: '#000000', textDecoration: 'none' }}>
+                <span style={{ fontSize: 14, lineHeight: 1.35 }}>
+                  {e.kind === 'list' ? <>Started a new list, <b>{e.title}</b></> : e.kind === 'added' ? <>Added <b>{e.item}</b> to {e.title}</> : <><b>{e.item}</b> is covered</>}
+                </span>
+                <span style={{ flexShrink: 0, fontSize: 12, color: '#4A4A4A' }}>{shortDate(e.at)}</span>
+              </Link>
+            ))}
+          </section>
+        ) : null}
 
         {timeline.length ? (
           <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column' }}>
