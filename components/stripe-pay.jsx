@@ -10,7 +10,7 @@ const PK = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '';
 export const stripeClientOn = () => !!PK;
 
 let loading;
-function loadStripe() {
+export function loadStripe() {
   if (typeof window === 'undefined') return Promise.reject(new Error('ssr'));
   if (window.Stripe) return Promise.resolve(window.Stripe(PK));
   loading = loading || new Promise((res, rej) => {
@@ -52,6 +52,7 @@ export default function StripePay() {
         form = box.current.closest('form');
         onSubmit = async (e) => {
           if (hidden.current.value) return; // already confirmed: let the action run
+          if (form.querySelector('input[name=paymentIntentId]')?.value) return; // finishing a bank check: card already saved
           e.preventDefault();
           e.stopPropagation();
           setErr('');
@@ -79,5 +80,36 @@ export default function StripePay() {
       {err ? <p className="err" style={{ margin: 0 }}>{err}</p> : null}
       <span style={{ fontSize: 12, color: '#4A4A4A' }}>Secured by Stripe. insidejoke never sees your card number.</span>
     </div>
+  );
+}
+
+// The bank's check (3-D Secure) for a gift charged with a saved card. When it passes,
+// the form submits again with the PaymentIntent id and the server records the gift.
+export function StripeAuth({ need }) {
+  const hidden = useRef(null);
+  const [err, setErr] = useState('');
+  useEffect(() => {
+    if (!need?.clientSecret) return;
+    let gone = false;
+    (async () => {
+      try {
+        const stripe = await loadStripe();
+        const { error, paymentIntent } = await stripe.handleNextAction({ clientSecret: need.clientSecret });
+        if (gone) return;
+        if (error || !paymentIntent || !['succeeded', 'processing'].includes(paymentIntent.status)) { setErr((error && error.message) || 'Your bank did not approve it. Nothing was charged.'); return; }
+        hidden.current.value = paymentIntent.id;
+        const form = hidden.current.closest('form');
+        const btn = form.querySelector('button[type=submit], button:not([type])');
+        btn ? btn.click() : form.requestSubmit();
+      } catch (e) { if (!gone) setErr('Could not open your bank check. Try again.'); }
+    })();
+    return () => { gone = true; };
+  }, [need?.clientSecret]);
+  return (
+    <>
+      <input ref={hidden} type="hidden" name="paymentIntentId" defaultValue="" />
+      {need?.clientSecret && !err ? <p style={{ margin: '0 0 10px', fontSize: 14 }}>Checking with your bank…</p> : null}
+      {err ? <p className="err" style={{ margin: '0 0 12px' }}>{err}</p> : null}
+    </>
   );
 }

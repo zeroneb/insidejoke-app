@@ -1,4 +1,5 @@
 'use client';
+import { StripeAuth } from '@/components/stripe-pay';
 
 // r3: Option 10 Contribute (wish, mustard), Treat (treat, green), and the first-time
 // PaymentSetup step (shown in place of the form before the first gift is paid).
@@ -99,6 +100,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
     return (
       <form action={action} className="r3-full" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         {hidden}
+        <StripeAuth need={state?.needAuth} />
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
           <button type="button" onClick={() => setStep('form')} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>One-time setup</span>
@@ -143,6 +145,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
     return (
       <form action={action} className="r3-full" style={{ background: '#96E084', color: '#000000', display: 'flex', flexDirection: 'column', overflow: 'hidden', flexGrow: 1 }}>
         {hidden}
+        <StripeAuth need={state?.needAuth} />
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
           <Link href={`/l/${slug}`} aria-label="Close" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
           <span className="wide" style={{ fontSize: 12, letterSpacing: '0.18em', borderTop: '2px solid #000000', borderBottom: '2px solid #000000', padding: '5px 10px' }}>Treat · unlimited</span>
@@ -201,6 +204,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
   return (
     <form action={action} className="r3-full" style={{ background: '#E3C552', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {hidden}
+      <StripeAuth need={state?.needAuth} />
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px', gap: 6 }}>
         <Link href={`/l/${slug}/i/${item.id}`} aria-label="Close" style={{ width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{X}</Link>
         <span style={{ fontSize: 15, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{item.name}</span>

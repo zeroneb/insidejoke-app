@@ -1,0 +1,18 @@
+import { chromium } from 'playwright';
+import fs from 'node:fs';
+const B = 'http://localhost:3800', stub = fs.readFileSync(new URL('./stub.js', import.meta.url), 'utf8');
+const br = await chromium.launch(); const ctx = await br.newContext({ viewport: { width: 390, height: 844 } });
+await ctx.route('https://js.stripe.com/**', (r) => r.fulfill({ contentType: 'application/javascript', body: stub }));
+const p = await ctx.newPage(); p.on('request', (r) => r.method() === 'POST' && console.log('  POST', r.url().replace(B, ''))); p.on('console', (m) => console.log('  log:', m.text().slice(0, 120))); p.on('console', (m) => m.type() === 'error' && console.log('console:', m.text().slice(0, 150)));
+await p.goto(B + '/dev/login'); await p.click('form:has-text("+15550000002") button'); await p.waitForURL('**/home');
+const flog = async (t) => console.log('  stripe@'+t+':', (await (await fetch('http://localhost:4242/_log')).json()).filter(l=>!l.includes('_log')).map(l=>l.split(' ').slice(0,2).join(' ')).join(' ; '));
+const say = async (t) => console.log(t, '|', (await p.innerText('body')).replace(/\s+/g, ' ').slice(0, 160));
+await p.goto(B + '/l/maya-birthday', { waitUntil: 'networkidle' });
+const give = await p.evaluate(() => [...document.querySelectorAll('a')].map((a) => a.getAttribute('href')).find((h) => /\/give$/.test(h || '')));
+console.log('give link', give);
+await p.goto(B + give, { waitUntil: 'networkidle' });
+await p.locator('button[type=submit]').last().click(); await p.waitForTimeout(800); await flog(1); await say('1 after tapping pay on amount screen');
+await p.waitForSelector('#fake-card', { timeout: 8000 }); await p.click('button[type=submit]'); await p.waitForTimeout(3000); await flog(2); await say('2 after first card (bad)');
+await p.waitForSelector('#fake-card', { timeout: 8000 }).catch(() => console.log('no card form shown after failure'));
+console.log('hidden before 3:', await p.evaluate(()=>document.querySelector('input[name=paymentMethodId]')?.value)); await p.evaluate(()=>document.querySelector('form').addEventListener('submit',()=>console.log('submit event'),true)); await p.click('button[type=submit]'); await p.waitForTimeout(3000); console.log('3 url', p.url(), 'confirms', await p.evaluate(()=>window.__confirms), 'hidden', await p.evaluate(()=>document.querySelector('input[name=paymentMethodId]')?.value), 'err', await p.evaluate(()=>[...document.querySelectorAll('.err')].map(e=>e.textContent))); await flog(3); await say('3');
+await br.close();
