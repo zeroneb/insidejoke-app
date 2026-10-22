@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Avatar, ItemSketch } from '@/components/ui';
 import { tileInk, hostOf, firstName } from '@/components/friend-list';
-import { listBySlug, itemById, owner as ownerOf, notesFor, money, ensureItemPhoto } from '@/lib/lists';
+import { listBySlug, itemById, owner as ownerOf, notesFor, money, ensureItemPhoto, commentsFor } from '@/lib/lists';
 import { currentUser } from '@/lib/auth';
 import { get, all } from '@/lib/db';
 import { toggleLike } from '@/lib/actions-a2';
@@ -41,6 +41,7 @@ export default async function ItemPage({ params }) {
   const isOwner = !!(me && me.id === owner.id);
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const notes = (await notesFor(it.id, isOwner));
+  const replies = await commentsFor(notes.map((n) => n.id));
   const privateCount = (await get("SELECT COUNT(*) AS n FROM contributions WHERE item_id = ? AND visibility = 'private'", it.id)).n;
   const liked = me ? new Set((await all('SELECT r.contribution_id FROM reactions r JOIN contributions c ON c.id = r.contribution_id WHERE c.item_id = ? AND r.user_id = ?', it.id, me.id)).map((r) => r.contribution_id)) : new Set();
 
@@ -148,6 +149,7 @@ export default async function ItemPage({ params }) {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}>
                 <span style={{ fontSize: 14 }}>{n.name || 'A friend'} <span style={{ color: '#3A3A3A' }}>{verb} · {ago(n.created_at)}{n.visibility === 'private' ? ' · private' : ''}</span></span>
                 {n.note ? <span className="serif" style={{ fontStyle: 'italic', fontSize: 18, lineHeight: 1.2 }}>"{n.note}"</span> : null}
+                {(replies[n.id] || []).map((m, i) => <span key={i} style={{ fontSize: 14, lineHeight: 1.35, paddingLeft: 10, borderLeft: '2px solid #D4FA4F' }}><b>{me && m.uid === me.id ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>)}
               </div>
               {me ? (
                 <form action={toggleLike} style={{ alignSelf: 'center', flexShrink: 0 }}>

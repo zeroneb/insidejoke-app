@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all, get } from '@/lib/db';
-import { lately, friendsLately, withProgress, friendCounts } from '@/lib/lists';
+import { lately, friendsLately, withProgress, friendCounts, commentsFor } from '@/lib/lists';
 import { unreadCount } from '@/lib/notifications';
 import { ago } from '@/lib/time';
 import { Avatar, FaceSm, PhotoBlob } from '@/components/ui';
@@ -83,7 +83,19 @@ function Who({ g }) {
 const possessive = (n) => (n.endsWith('s') ? `${n}’` : `${n}’s`);
 
 // One Lately row, Option 10 Home.
-function FeedRow({ f, r, n }) {
+function Comments({ list, meId }) {
+  if (!list.length) return null;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4, paddingLeft: 10, borderLeft: '2px solid #D4FA4F' }}>
+      {list.slice(-3).map((m, i) => (
+        <span key={i} style={{ fontSize: 14, lineHeight: 1.35 }}><b>{m.uid === meId ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>
+      ))}
+      {list.length > 3 ? <span style={{ fontSize: 12, color: '#4A4A4A' }}>{list.length - 3} earlier</span> : null}
+    </div>
+  );
+}
+
+function FeedRow({ f, r, c = [], me, n }) {
   const g = f.givers;
   const one = g[0];
   const from = f.store ? ` from ${f.store}` : '';
@@ -139,6 +151,7 @@ function FeedRow({ f, r, n }) {
         {lead || <span style={{ fontSize: 15, lineHeight: 1.35 }}><Who g={one} /> {text}</span>}
         {f.note ? <span style={{ fontSize: 15, fontWeight: 700, color: '#13286B' }}>“{f.note}”</span> : null}
         <span style={{ fontSize: 12, color: '#4A4A4A' }}>{when}</span>
+        <Comments list={c} meId={me?.id} />
         <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} toName={first(f.noteBy || one.name)} delay={n} />
       </div>
       <span className="dot" style={{ fontSize: 18, color: '#E8642C', flexShrink: 0 }}>{badge}</span>
@@ -166,6 +179,7 @@ export default async function HomePage() {
   const fresh = await unreadCount(me);
   const feed = await buildFeed(me);
   const reacts = await reactionsFor(feed.map((f) => f.key), me.id);
+  const comments = await commentsFor(feed.map((f) => f.key));
 
   return (
     <main className="withnav" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -213,7 +227,7 @@ export default async function HomePage() {
           <Link href="/friends" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
         </div>
         <p style={{ margin: '0 0 12px', fontSize: 13, color: '#4A4A4A' }}>Your contacts on insidejoke. Tap anyone to see their profile.</p>
-        {feed.map((f, n) => <FeedRow key={f.key} f={f} r={reacts[f.key]} n={n} />)}
+        {feed.map((f, n) => <FeedRow key={f.key} f={f} r={reacts[f.key]} c={comments[f.key] || []} me={me} n={n} />)}
         {feed.length === 0 ? (
           <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid #000000', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and your friends’ gifts and notes show up here.</p>
         ) : null}

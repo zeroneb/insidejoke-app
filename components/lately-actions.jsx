@@ -52,7 +52,7 @@ export default function LatelyActions({ cid, chips = [], mine = [], href, see = 
       ) : null}
       {open ? (
         sent ? (
-          <p className="a1up" role="status" style={{ margin: '4px 0 0', fontSize: 13 }}><span style={{ background: '#D4FA4F', padding: '3px 8px' }}>Texted to {state.to}.</span></p>
+          <p className="a1up" role="status" style={{ margin: '4px 0 0', fontSize: 13 }}><span style={{ background: '#D4FA4F', padding: '3px 8px' }}>Sent. {state.to} sees it here and gets it by text.</span></p>
         ) : (
           <form action={act} className="a1up" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
             <input type="hidden" name="contributionId" value={cid} />
