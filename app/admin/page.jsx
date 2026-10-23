@@ -55,6 +55,31 @@ export default async function AdminPage() {
     FROM users u WHERE ${REAL} ORDER BY u.created_at DESC LIMIT 200`);
 
   let errors = [];
+  // ---- activity log (app_events) and texts ----
+  const ev = async (sql, ...p) => { try { return await all(sql, ...p); } catch { return []; } };
+  const wk = since(7);
+  const parse = (d) => { try { return JSON.parse(d || '{}'); } catch { return {}; } };
+  const linkRows = (await ev("SELECT ref, detail, at FROM app_events WHERE kind = 'link' AND at > ? ORDER BY at DESC LIMIT 400", wk)).map((r) => ({ ...r, d: parse(r.detail) }));
+  const linkFails = linkRows.filter((r) => !r.d.price || !r.d.photo || !r.d.name);
+  const texts = await ev('SELECT status, COUNT(*) AS n FROM texts WHERE created_at > ? GROUP BY status', wk);
+  const textFails = await ev("SELECT to_phone, kind, created_at FROM texts WHERE status = 'failed' ORDER BY created_at DESC LIMIT 10");
+  const payFails = await ev("SELECT e.at, e.detail, u.name FROM app_events e LEFT JOIN users u ON u.id = e.user_id WHERE e.kind = 'pay_fail' ORDER BY e.at DESC LIMIT 10");
+  const payoutFails = await ev("SELECT e.at, e.detail, u.name FROM app_events e LEFT JOIN users u ON u.id = e.user_id WHERE e.kind = 'payout_fail' ORDER BY e.at DESC LIMIT 10");
+  const giftsDays = await ev(`SELECT c.created_at, c.amount_cents FROM contributions c JOIN users u ON u.id = c.giver_id WHERE ${REAL} AND c.created_at > ?`, since(14));
+  const gdays = days.map((d, i) => { const start = new Date(); start.setHours(0, 0, 0, 0); start.setDate(start.getDate() - (13 - i)); const t = start.getTime(); const g = giftsDays.filter((r) => Number(r.created_at) >= t && Number(r.created_at) < t + DAY); return { label: d.label, n: g.length, cents: g.reduce((a, r) => a + Number(r.amount_cents), 0) }; });
+  const maxG = Math.max(1, ...gdays.map((d) => d.n));
+  const views = await ev("SELECT e.detail, COUNT(*) AS n FROM app_events e WHERE e.kind = 'list_view' AND e.at > ? GROUP BY e.detail", wk);
+  const topViewed = await ev("SELECT l.title, l.slug, COUNT(*) AS n FROM app_events e JOIN lists l ON l.id = e.ref WHERE e.kind = 'list_view' AND e.at > ? GROUP BY l.title, l.slug ORDER BY n DESC LIMIT 5", wk);
+  const signups = await ev("SELECT detail, COUNT(*) AS n FROM app_events WHERE kind = 'signup' AND at > ? GROUP BY detail", wk);
+  const feed = (await ev(`SELECT * FROM (
+      SELECT u.created_at AS at, 'joined' AS what, u.name AS who, '' AS thing FROM users u WHERE ${REAL}
+      UNION ALL SELECT l.created_at, 'made a list', u.name, l.title FROM lists l JOIN users u ON u.id = l.owner_id WHERE ${REAL}
+      UNION ALL SELECT i.created_at, 'added', u.name, i.name FROM items i JOIN lists l ON l.id = i.list_id JOIN users u ON u.id = l.owner_id WHERE ${REAL}
+      UNION ALL SELECT c.created_at, 'gave toward', u.name, i.name FROM contributions c JOIN items i ON i.id = c.item_id JOIN users u ON u.id = c.giver_id WHERE ${REAL}
+      UNION ALL SELECT p.created_at, 'cashed out', u.name, '' FROM payouts p JOIN users u ON u.id = p.user_id WHERE ${REAL}
+    ) x ORDER BY at DESC LIMIT 30`));
+  const cnt = (rows, key) => Number(rows.find((r) => r.detail === key || r.status === key)?.n || 0);
+  const when = (t) => new Date(Number(t)).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
   try { errors = await all('SELECT * FROM app_errors ORDER BY at DESC LIMIT 25'); } catch {}
 
   const card = { border: '1.5px solid #000', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4, background: '#fff' };
@@ -99,6 +124,59 @@ export default async function AdminPage() {
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', ...small }}><span>{days[0].label}</span><span>Today</span></div>
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Recent activity</h2>
+        <div style={{ background: '#fff', border: '1px solid #000', fontSize: 13 }}>
+          {feed.length ? feed.map((f, i) => <div key={i} style={{ padding: '7px 10px', borderTop: i ? '1px solid #ddd' : 0 }}><span style={{ color: '#4A4A4A' }}>{when(f.at)}</span> · <b>{f.who || 'Someone'}</b> {f.what} {f.thing ? <i>{String(f.thing).slice(0, 60)}</i> : null}</div>) : <div style={{ padding: 10, ...small }}>Nothing yet.</div>}
+        </div>
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Sharing, last 7 days</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
+          <div style={card}><span style={small}>List views by visitors</span><span style={big}>{cnt(views, 'visitor')}</span><span style={small}>not signed in</span></div>
+          <div style={card}><span style={small}>List views by members</span><span style={big}>{cnt(views, 'signed_in')}</span><span style={small}>signed in, not the owner</span></div>
+          <div style={card}><span style={small}>Sign-ups from a shared link</span><span style={big}>{cnt(signups, 'from_share')}</span><span style={small}>{cnt(signups, 'direct')} signed up directly</span></div>
+        </div>
+        {topViewed.length ? <div style={{ fontSize: 13 }}>Most viewed: {topViewed.map((t, i) => <span key={t.slug}>{i ? ' · ' : ''}<a href={`/l/${t.slug}`} style={{ color: '#000' }}>{t.title}</a> ({Number(t.n)})</span>)}</div> : null}
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Gifts, last 14 days</h2>
+        <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 110 }}>
+          {gdays.map((d) => (
+            <div key={d.label} title={`${d.label}: ${d.n} gifts, ${usd(d.cents)}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
+              <span style={{ fontSize: 11 }}>{d.n || ''}</span>
+              <span style={{ width: '100%', height: `${(d.n / maxG) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? '#E8642C' : '#bbb' }} />
+            </div>
+          ))}
+        </div>
+        <h3 style={{ margin: '8px 0 0', fontSize: 15 }}>Payments that failed ({payFails.length})</h3>
+        {payFails.length ? payFails.map((f, i) => <div key={i} style={{ fontSize: 13 }}>{when(f.at)} · {f.name || 'Someone'} · <span style={{ color: '#B3261E' }}>{String(f.detail).slice(0, 140)}</span></div>) : <span style={small}>None.</span>}
+        <h3 style={{ margin: '8px 0 0', fontSize: 15 }}>Cash-outs that failed ({payoutFails.length})</h3>
+        {payoutFails.length ? payoutFails.map((f, i) => <div key={i} style={{ fontSize: 13 }}>{when(f.at)} · {f.name || 'Someone'} · <span style={{ color: '#B3261E' }}>{String(f.detail).slice(0, 140)}</span></div>) : <span style={small}>None.</span>}
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Store links, last 7 days</h2>
+        <span style={{ fontSize: 14 }}>{linkRows.length} read · <b>{linkFails.length}</b> missing something {linkRows.length ? `(${Math.round(((linkRows.length - linkFails.length) / linkRows.length) * 100)}% complete)` : ''}</span>
+        {linkFails.slice(0, 25).map((r, i) => (
+          <div key={i} style={{ fontSize: 13, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <span style={{ color: '#4A4A4A' }}>{when(r.at)}</span>
+            <b>{r.d.host || ''}</b>
+            <span style={{ color: '#B3261E' }}>missing {[!r.d.name && 'name', !r.d.price && 'price', !r.d.photo && 'photo'].filter(Boolean).join(', ')}</span>
+            <a href={r.ref} target="_blank" rel="noreferrer" style={{ color: '#000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 360 }}>{r.ref}</a>
+          </div>
+        ))}
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Texts, last 7 days</h2>
+        <span style={{ fontSize: 14 }}>{['sent', 'failed', 'test', 'held'].map((k) => `${cnt(texts, k)} ${k}`).join(' · ')}</span>
+        <span style={small}>"test" means test mode (shown in the Outbox, not texted). "held" means texting isn't switched on.</span>
+        {textFails.map((t, i) => <div key={i} style={{ fontSize: 13 }}>{when(t.created_at)} · {t.kind} to ••{String(t.to_phone).slice(-4)} <span style={{ color: '#B3261E' }}>failed</span></div>)}
       </section>
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

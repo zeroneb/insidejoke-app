@@ -74,5 +74,6 @@ export default async function ListPage({ params, searchParams }) {
       </main>
     );
   }
+  (await import('@/lib/events')).logEvent('list_view', { userId: me?.id || null, ref: list.id, detail: me ? 'signed_in' : 'visitor' });
   return withPanel(slug, sp, <FriendList list={list} owner={await owner(list)} items={await itemsFor(list.id)} me={me} />, false);
 }
