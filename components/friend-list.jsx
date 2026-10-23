@@ -1,5 +1,7 @@
 import { TitleWords } from '@/components/owner-list';
 import Link from 'next/link';
+import { coverFor, listKind } from '@/lib/cover';
+import { CoverArt } from '@/components/cover-art';
 import ListProgress from '@/components/list-progress';
 import { Blob, Avatar, ItemSketch, Halftone, shortName } from '@/components/ui';
 
@@ -48,27 +50,29 @@ export default function FriendList({ list, owner, items, me }) {
   const profile = owner ? `/u/${owner.id}` : '/';
   const words = String(list.title || '').trim().split(/\s+/);
   const long = (list.title || '').length > 20;
+  const cv = coverFor(list, listKind(list, items));
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-      <section style={{ position: 'relative', background: '#13286B', color: '#FFFFFF', height: 420, overflow: 'hidden', flexShrink: 0 }}>
+      <section style={{ position: 'relative', background: cv.bg, color: cv.chrome, height: 420, overflow: 'hidden', flexShrink: 0 }}>
+        <CoverArt cv={cv} />
         <header style={{ position: 'relative', zIndex: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cv.chrome} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           {me && list.visibility !== 'private' ? (
-            <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+            <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={cv.chrome} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
-        <span className="dk-center370"><Blob seed={5} color="#D8F75A" style={{ left: 10, top: 56 }} width={370} height={290} /></span>
+        <span className="dk-center370"><Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} style={{ left: 10, top: 56 }} width={370} height={290} /></span>
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', left: '50%', marginLeft: -135, top: 62 }} width="270" height="270" viewBox="0 0 270 270">
           <defs><path id="fl-arc" d="M135 135 m-112 0 a112 112 0 1 1 224 0 a112 112 0 1 1 -224 0" /></defs>
-          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: '#13286B' }}><textPath href="#fl-arc">{ring.repeat(ring.length < 34 ? 4 : 2)}</textPath></text>
+          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: cv.art === 'circle' ? cv.circle : cv.title }}><textPath href="#fl-arc">{ring.repeat(ring.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
-        <h1 className="fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 150 : 140, margin: 0, textAlign: 'center', color: '#000000', fontWeight: 400, lineHeight: 0.92 }}>
+        <h1 className="fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 150 : 140, margin: 0, textAlign: 'center', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}>
           <TitleWords title={list.title} size={long ? 38 : 50} width={290} />
         </h1>
         <div style={{ position: 'absolute', left: 20, right: 20, bottom: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-          <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: '#FFFFFF', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
-          <span className="dot" style={{ fontSize: 14, flexShrink: 0 }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
+          <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: cv.chrome, minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
+          <span className="dot" style={{ fontSize: 14, flexShrink: 0, color: cv.chrome }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
         </div>
       </section>
 

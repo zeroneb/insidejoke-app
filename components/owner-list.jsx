@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { coverFor, listKind } from '@/lib/cover';
+import { CoverArt } from '@/components/cover-art';
 import { Blob, Avatar, shortNoun, Halftone } from '@/components/ui';
 import ListProgress from '@/components/list-progress';
 import { tileInk, hostOf } from '@/components/friend-list';
@@ -62,23 +64,25 @@ export default function OwnerList({ list, items, me, blast = null }) {
   const showNudge = !archived && !hasTreat && !list.nudge_dismissed && items.length > 0;
   const who = list.for_who === 'other' && list.recipient_name ? list.recipient_name.toLowerCase() : null;
   const ringText = list.ring_text ? `${list.ring_text.trim()} · ` : who ? `${who}'s list · things ${who} would actually loveeee · ` : `your list · things you would actually loveeee · `;
+  const cv = coverFor(list, listKind(list, items));
+  const bg = archived ? '#8C8A86' : cv.bg;
   const status = archived ? 'Archived · friends can no longer see it' : `${vis} · ${items.length} ${items.length === 1 ? 'thing' : 'things'} so far`;
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-      <section style={{ position: 'relative', background: archived ? '#8C8A86' : '#E8642C', color: '#FFFFFF', height: 300, overflow: 'hidden', flexShrink: 0 }}>
-        <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -70, bottom: -80, width: 260, height: 260, borderRadius: '50%', background: '#13286B' }} />
+      <section style={{ position: 'relative', background: bg, color: cv.chrome, height: 300, overflow: 'hidden', flexShrink: 0 }}>
+        <CoverArt cv={cv} />
         <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
-          <Link href={`/l/${slug}/share`} style={{ border: '2px solid #FFFFFF', color: '#FFFFFF', textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
+          <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cv.chrome} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={`/l/${slug}/share`} style={{ border: `2px solid ${cv.chrome}`, color: cv.chrome, textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
         </header>
-        <Blob seed={5} width={320} height={190} style={{ left: -24, top: 64 }} />
+        <Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} width={320} height={190} style={{ left: -24, top: 64 }} />
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', right: -90, bottom: -100, zIndex: 0 }} width="300" height="300" viewBox="0 0 300 300">
           <defs><path id="ol-arc" d="M150 150 m-142 0 a142 142 0 1 1 284 0 a142 142 0 1 1 -284 0" /></defs>
-          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: '#13286B' }}><textPath href="#ol-arc">{ringText.repeat(ringText.length < 34 ? 4 : 2)}</textPath></text>
+          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: cv.text }}><textPath href="#ol-arc">{ringText.repeat(ringText.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
-        <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={long ? 40 : 50} /></h1>
-        <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: '#13286B', fontWeight: 800, fontSize: 14 }}>{status}</p>
+        <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={long ? 40 : 50} /></h1>
+        <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: archived ? '#FFFFFF' : cv.title, fontWeight: 800, fontSize: 14 }}>{status}</p>
         {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid #000000', borderRadius: 999, background: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: '#000' }}>Unarchive</button></form> : null}
       </section>
 

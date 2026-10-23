@@ -7,16 +7,8 @@ import { Blob } from '@/components/ui';
 // Kinds: own wish list (blob title), collab ("COLLAB · WITH <name>"), surprise ("SECRET FROM <name>", cake),
 // treat list (every item unlimited: spinning diamond). Never shows amounts.
 
-const OWN = [
-  { bg: '#E8642C', ink: '#FFFFFF', blob: '#D8F75A', title: '#000000', circle: '#13286B', circleInk: '#13286B' },
-  { bg: '#13286B', ink: '#FFFFFF', blob: '#F4D3EE', title: '#E2452B', circle: '#E8642C', circleInk: '#FFFFFF' },
-  { bg: '#B36EE0', ink: '#FFFFFF', blob: '#D8F75A', title: '#13286B', circle: '#13286B', circleInk: '#FFFFFF' },
-  { bg: '#F4D3EE', ink: '#E2452B', blob: '#E8642C', title: '#000000', circle: '#E2452B', circleInk: '#E2452B' }
-];
-const TREAT = [
-  { bg: '#96E084', ink: '#000000', dia: '#E8642C', title: '#000000' },
-  { bg: '#E8642C', ink: '#FFFFFF', dia: '#96E084', title: '#000000' }
-];
+import { OWN, TREAT, coverIndex } from '@/lib/cover';
+import { Cake, Bouquet } from '@/components/cover-art';
 const VIS = { public: 'Public', private: 'Private', friends: 'Friends' };
 
 // Everything a tile needs, computed once per list.
@@ -41,45 +33,16 @@ export async function tileData(list, viewerId) {
 
 const firstName = (n) => (n || '').trim().split(/\s+/)[0] || 'a friend';
 
+// Same type as the list page title: first words in tight sans, last word in wide caps.
 function SerifTitle({ title, color, size }) {
   const words = title.trim().split(/\s+/);
-  const last = words.pop();
+  const last = words.pop() || '';
+  const caps = Math.max(13, Math.min(Math.round(size * 0.85), Math.floor(150 / (Math.max(1, last.length) * 0.86))));
   return (
-    <span className="serif" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color, fontSize: Math.min(size, Math.floor(size * 9 / Math.max(9, ...title.trim().split(/\s+/).map((w) => w.length)))), lineHeight: 0.95, marginTop: size > 26 ? -10 : -6, maxWidth: '100%', overflowWrap: 'normal', hyphens: 'none' }}>
-      {words.length ? <>{words.join(' ')}<br /></> : null}<span style={{ fontWeight: 600 }}>{last}</span>
+    <span style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color, lineHeight: 0.95, marginTop: size > 26 ? -10 : -6, maxWidth: '100%' }}>
+      {words.length ? <span style={{ display: 'block', fontFamily: "'Inter Tight', sans-serif", fontSize: Math.min(size * 1.05, Math.floor(size * 12 / Math.max(12, words.join(' ').length))), letterSpacing: '-0.045em' }}>{words.join(' ')}</span> : null}
+      <span className="wide" style={{ display: 'block', fontSize: caps, letterSpacing: '0.01em', marginTop: 2 }}>{last}</span>
     </span>
-  );
-}
-
-function Cake({ style = { right: 8, bottom: 44 }, w = 96, h = 104, sparkle = false }) {
-  return (
-    <svg aria-hidden="true" style={{ position: 'absolute', ...style }} width={w} height={h} viewBox="0 0 120 140" fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M18 128 C40 132 82 132 104 127" />
-      <path d="M24 126 C23 112 24 100 26 88 C48 84 76 84 98 87 C100 100 100 113 99 126" />
-      <path d="M30 86 C30 77 31 70 33 64 C50 60 72 60 90 63 C92 71 92 79 92 86" />
-      <path d="M26 92 C34 98 40 92 46 98 C52 104 58 96 64 101 C70 106 78 97 84 102 C90 106 96 99 99 95" strokeWidth="2" />
-      <path d="M33 70 C40 75 46 69 52 74 C58 79 64 71 70 76 C76 80 84 72 91 76" strokeWidth="2" />
-      <path d="M34 108 L40 122 M46 108 L52 122 M58 108 L64 122 M70 108 L76 122 M82 108 L88 122" strokeWidth="1.6" />
-      <path d="M46 60 L45 42 M61 59 L61 38 M76 60 L77 42" />
-      <path d="M45 36 C41 31 44 26 45 22 C48 27 50 31 45 36 Z M61 32 C57 27 60 21 61 17 C64 22 66 27 61 32 Z M77 36 C73 31 76 26 77 22 C80 27 82 31 77 36 Z" strokeWidth="2" />
-      {sparkle ? <path d="M14 40 L20 46 M20 40 L14 46 M102 24 L106 34 M98 30 L110 28 M96 52 L100 56" strokeWidth="1.8" /> : null}
-    </svg>
-  );
-}
-
-function Bouquet({ ink = '#FFFFFF', style = { right: 10, bottom: 44 }, w = 88, h = 112, sparkle = false }) {
-  return (
-    <svg aria-hidden="true" style={{ position: 'absolute', ...style }} width={w} height={h} viewBox="0 0 110 150" fill="none" stroke={ink} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M30 92 C29 108 31 128 34 142 C48 145 64 145 76 141 C80 126 81 108 79 92 C64 89 44 89 30 92 Z" />
-      <path d="M27 91 C44 85 66 84 83 89" strokeWidth="1.8" />
-      <path d="M36 110 L75 108 M37 122 L75 121 M38 133 L73 133 M47 95 L48 141 M61 94 L62 142" strokeWidth="1.6" />
-      <path d="M50 90 C48 70 44 55 36 42 M56 90 C57 68 60 50 70 36 M53 90 C53 70 54 54 54 32" />
-      <path d="M28 42 C23 30 30 21 36 26 C40 19 47 23 45 33 C43 42 33 47 28 42 Z" />
-      <path d="M64 37 C61 25 69 18 74 24 C80 19 85 28 81 36 C77 43 67 43 64 37 Z" />
-      <path d="M48 31 C45 18 52 11 56 16 C60 11 65 18 62 28 C60 35 51 36 48 31 Z" />
-      <path d="M50 74 C40 68 35 59 37 54 C46 55 51 64 50 74 M57 67 C66 60 73 57 76 60 C71 67 62 69 57 67" />
-      {sparkle ? <path d="M88 14 L92 22 M98 22 L90 26 M86 28 L90 26" strokeWidth="1.8" /> : null}
-    </svg>
   );
 }
 
@@ -127,7 +90,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   }
 
   if (t.kind === 'treat') {
-    const c = TREAT[i % TREAT.length];
+    const c = TREAT[coverIndex(t) % TREAT.length];
     const words = t.title.replace(/[^\p{L}\p{N}\s']/gu, ' ').trim().split(/\s+/).filter(Boolean).slice(0, 3);
     const lines = words.length <= 1 ? ['TREAT', '\u00a0 TREAT', 'TREAT'] : words.map((w) => w.toUpperCase());
     if (v === 'friend') {
@@ -160,7 +123,8 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     );
   }
 
-  const c = OWN[i % OWN.length];
+  const ci = coverIndex(t);
+  const c = OWN[ci % OWN.length];
   if (v === 'home' || v === 'friend') {
     const home = v === 'home';
     const tail = home ? `${t.covered} covered` : t.fresh ? `+${t.fresh} new` : `${t.pct}%`;
@@ -168,7 +132,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
       <Link href={href} aria-label={`${t.title}, ${vis}, ${things}, ${home ? `${t.covered} covered` : tail}`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
         {home ? <div aria-hidden="true" style={{ position: 'absolute', right: -50, bottom: -40, width: 150, height: 150, borderRadius: '50%', background: c.circle }} /> : null}
         <span style={{ ...plainCap, color: home ? c.circleInk : c.ink }}>{vis} · {things}</span>
-        <Blob seed={5 + i * 22} color={c.blob} width={200} height={home ? 140 : 120} style={{ left: -14, top: home ? 44 : 40 }} />
+        <Blob seed={5 + (ci % OWN.length) * 22} color={c.blob} width={200} height={home ? 140 : 120} style={{ left: -14, top: home ? 44 : 40 }} />
         <SerifTitle title={t.title} color={c.title} size={home ? 27 : 25} />
         <span className="dot" style={{ position: 'relative', alignSelf: 'flex-end', fontSize: home ? 16 : 15 }}>{foot ? foot[1] : tail}</span>
       </Link>
@@ -176,7 +140,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   }
   return (
     <Link href={href} aria-label={`${t.title}, ${vis}, ${things}, ${t.covered} covered`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
-      <Blob seed={5 + i * 22} color={c.blob} width={190} height={130} style={{ left: -8, top: 30 }} />
+      <Blob seed={5 + (ci % OWN.length) * 22} color={c.blob} width={190} height={130} style={{ left: -8, top: 30 }} />
       <span className="wide" style={CAP}>{vis} · {things}</span>
       <SerifTitle title={t.title} color={c.title} size={25} />
       <span style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
