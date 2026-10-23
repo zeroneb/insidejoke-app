@@ -101,7 +101,7 @@ export default function PayoutForm({ next, current, legalName, acct }) {
 }
 
 // Real payouts: Stripe's own secure screens collect the bank and ID. One button gets you there.
-export function StripePayoutStart({ next, current }) {
+export function StripePayoutStart({ next, current, started = false, status = '' }) {
   const [state, action, pending] = useActionState(savePayoutBank, null);
   return (
     <form action={action} className="r3-full" style={{ background: Y, color: V, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
@@ -115,9 +115,15 @@ export function StripePayoutStart({ next, current }) {
         <p style={{ margin: 0, fontSize: 15, lineHeight: 1.4 }}>{current ? `Cash-outs go to ${current} now. ` : ''}Link your bank and confirm it's you on our secure payments page. It takes about two minutes, then you come right back.</p>
       </section>
       <div style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {!current ? <label style={lbl}>Email for cash-out receipts<input name="email" type="email" required autoComplete="email" placeholder="you@example.com" style={field} /></label> : null}
+        {started ? (
+          <p role="status" style={{ margin: '0 0 6px', padding: '12px 14px', border: `1.5px dashed ${V}`, fontSize: 14, lineHeight: 1.45 }}>
+            {status === 'pending' ? 'Your bank is linked and being checked. That usually takes a minute or two.' : 'Almost there. Your bank setup needs a few more details before cash-outs can go through. Tap Finish setup to pick up where you left off.'}
+            {/^(restricted|missing|unknown|error)/.test(status) ? <span style={{ display: 'block', fontSize: 12, marginTop: 4, opacity: 0.8 }}>Status: {status}</span> : null}
+          </p>
+        ) : null}
+        {!current && !started ? <label style={lbl}>Email for cash-out receipts<input name="email" type="email" required autoComplete="email" placeholder="you@example.com" style={field} /></label> : null}
         {state?.error ? <p className="err" style={{ margin: 0 }}>{state.error}</p> : null}
-        <button style={big} disabled={pending}>{pending ? 'Opening…' : current ? 'Change your bank' : 'Link your bank'}</button>
+        <button style={big} disabled={pending}>{pending ? 'Opening…' : started ? 'Finish setup' : current ? 'Change your bank' : 'Link your bank'}</button>
         <span style={{ fontSize: 13, textAlign: 'center' }}>insidejoke never sees your bank login or full account number.</span>
       </div>
     </form>

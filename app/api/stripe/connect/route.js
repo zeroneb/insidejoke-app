@@ -7,6 +7,7 @@ import { stripeOn } from '@/lib/stripe';
 import { connectOnboardingLink, refreshConnectAccount, payoutMethod } from '@/lib/wallet';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 30;
 
 const safeNext = (n, d) => (/^\/[^/]/.test(n || '') ? n : d);
 
@@ -25,9 +26,15 @@ export async function GET(req) {
       const url = await connectOnboardingLink(me.id, m?.kind || 'bank', { returnUrl: `${back}&step=return`, refreshUrl: `${back}&step=refresh` });
       return Response.redirect(url, 303);
     }
-    const m = await refreshConnectAccount(me.id);
-    // Ready, or still being checked: back to the wallet. Setup not finished: back to setup.
-    return go(m?.stripe_ready || m?.transferStatus === 'pending' ? next : `/wallet/payout?next=${encodeURIComponent(next)}`);
+    // Stripe usually switches transfers on a few seconds after onboarding: give it a moment.
+    let m = await refreshConnectAccount(me.id);
+    for (let i = 0; i < 3 && !m?.stripe_ready && /^(pending|restricted)$/.test(m?.transferStatus || ''); i++) {
+      await new Promise((r) => setTimeout(r, 2000));
+      m = await refreshConnectAccount(me.id);
+    }
+    if (m && !m.stripe_ready && m.transferStatus === 'restricted') m.transferStatus = 'pending';
+    // Ready, or still being checked: back to the wallet (cash-out re-checks). Setup not finished: back to setup.
+    return go(m?.stripe_ready || m?.transferStatus === 'pending' ? next : `/wallet/payout?next=${encodeURIComponent(next)}&status=${encodeURIComponent(String(m?.transferStatus || 'unfinished').slice(0, 40))}`);
   } catch (e) {
     console.error('stripe connect return', e.message);
     return go(`/wallet/payout?next=${encodeURIComponent(next)}`);

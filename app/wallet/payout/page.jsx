@@ -17,6 +17,6 @@ export default async function PayoutPage({ searchParams }) {
   // Test mode: a stable, made-up account ending for the linked bank.
   let h = 0; for (const ch of String(me.id)) h = (h * 31 + ch.charCodeAt(0)) % 9000;
   const acct = String(1000 + h);
-  if (stripeOn()) return <StripePayoutStart next={next} current={pm?.stripe_ready ? pm.label : null} />;
+  if (stripeOn()) return <StripePayoutStart next={next} current={pm?.stripe_ready ? pm.label : null} started={!!pm?.stripe_account_id && !pm?.stripe_ready} status={String(sp?.status || pm?.stripe_status || '')} />;
   return <PayoutForm next={next} current={pm ? pm.label.replace(/\s+(checking|savings)\b/i, '') : null} legalName={me.name || ''} acct={acct} />;
 }
