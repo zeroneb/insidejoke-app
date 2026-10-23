@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { coverFor, listKind } from '@/lib/cover';
 import { CoverArt } from '@/components/cover-art';
+import { ChangeCover } from '@/components/cover-photo';
 import { Blob, Avatar, shortNoun, Halftone } from '@/components/ui';
 import ListProgress from '@/components/list-progress';
 import { tileInk, hostOf } from '@/components/friend-list';
@@ -74,7 +75,10 @@ export default function OwnerList({ list, items, me, blast = null }) {
         <CoverArt cv={cv} />
         <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
           <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
-          <Link href={`/l/${slug}/share`} style={{ border: `2px solid ${cv.chrome}`, color: cv.chrome, textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <ChangeCover slug={slug} hasPhoto={!!list.photo} color={cv.icon || cv.chrome} />
+            <Link href={`/l/${slug}/share`} style={{ border: `2px solid ${cv.chrome}`, color: cv.chrome, textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
+          </span>
         </header>
         <Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} width={320} height={190} style={{ left: -24, top: 64 }} />
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', right: -90, bottom: -100, zIndex: 0 }} width="300" height="300" viewBox="0 0 300 300">

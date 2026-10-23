@@ -8,7 +8,7 @@ import { Blob } from '@/components/ui';
 // treat list (every item unlimited: spinning diamond). Never shows amounts.
 
 import { OWN, TREAT, coverIndex } from '@/lib/cover';
-import { Cake, Bouquet } from '@/components/cover-art';
+import { Cake, Bouquet, PhotoShape } from '@/components/cover-art';
 const VIS = { public: 'Public', private: 'Private', friends: 'Friends' };
 
 // Everything a tile needs, computed once per list.
@@ -66,6 +66,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     const names = ['You', ...t.others.slice(0, 2).map((o) => firstName(o.name))];
     return (
       <Link href={href} aria-label={`${t.title}, collab${w ? ' with ' + w : ''}`} style={{ ...base, justifyContent: 'space-between', background: '#F4D3EE', color: '#E2452B', borderTop: '1.5px solid #E2452B', borderBottom: '1.5px solid #E2452B' }}>
+        {t.photo ? <PhotoShape src={t.photo} size={150} color="#FFFFFF" style={{ right: -36, top: 40 }} /> : null}
         <Bouquet ink="#E2452B" style={{ right: -4, top: 34 }} w={116} h={158} sparkle />
         <span style={{ ...plainCap, letterSpacing: '0.08em', textTransform: 'uppercase', fontStyle: 'italic' }}>Collab ✦ Collab</span>
         <span style={{ position: 'relative', fontFamily: "'Archivo', sans-serif", fontStretch: '62%', fontWeight: 900, fontSize: 36, lineHeight: 0.88, textTransform: 'uppercase', maxWidth: '70%', overflowWrap: 'anywhere' }}>{t.title}</span>
@@ -81,6 +82,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     return (
       <Link href={href} aria-label={`${t.title}, surprise hidden from ${who}, with ${t.givers} friends, ${t.pct}% covered`} style={{ ...base, background: '#A9CDF5', color: '#FFFFFF' }}>
         <div aria-hidden="true" style={{ position: 'absolute', right: 10, top: 10, width: 12, height: 12, borderRadius: '50%', background: '#C8743A' }} />
+        {t.photo ? <PhotoShape src={t.photo} size={150} color="#E7B48A" style={{ right: -40, bottom: -30 }} /> : null}
         <Cake style={{ right: 2, bottom: 32 }} w={104} h={122} sparkle />
         <span style={{ ...plainCap, color: '#8A4E20' }}>Surprise · hidden from {who}</span>
         <span className="wide" style={{ position: 'relative', marginTop: 8, fontSize: 21, letterSpacing: '0.06em', lineHeight: 1.05, maxWidth: '90%', overflowWrap: 'anywhere' }}>{t.title}</span>
@@ -96,7 +98,8 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     if (v === 'friend') {
       return (
         <Link href={href} aria-label={`${t.title}, ${vis}, unlimited, ${t.count} treats`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
-          <div aria-hidden="true" style={{ position: 'absolute', left: 40, top: 46, width: 84, height: 84, background: c.dia, transform: 'rotate(45deg)' }} />
+          {t.photo ? <PhotoShape src={t.photo} shape="diamond" size={84} color={c.dia} style={{ left: 40, top: 46 }} />
+            : <div aria-hidden="true" style={{ position: 'absolute', left: 40, top: 46, width: 84, height: 84, background: c.dia, transform: 'rotate(45deg)' }} />}
           <span style={plainCap}>{vis} · unlimited</span>
           <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color: c.title, fontSize: 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
           <span style={plainCap}>{foot ? foot[0] : `${t.count} ${t.count === 1 ? 'treat' : 'treats'}`}</span>
@@ -106,12 +109,13 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     const home = v === 'home';
     return (
       <Link href={href} aria-label={`${t.title}, ${vis}, unlimited`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
-        <div aria-hidden="true" className="spinslow" style={{ position: 'absolute', left: home ? 34 : 44, top: 54, width: home ? 96 : 86, height: home ? 96 : 86, background: c.dia, transform: 'rotate(45deg)' }} />
+        {t.photo ? <PhotoShape src={t.photo} shape="diamond" size={home ? 96 : 86} color={c.dia} style={{ left: home ? 34 : 44, top: 54 }} />
+          : <div aria-hidden="true" className="spinslow" style={{ position: 'absolute', left: home ? 34 : 44, top: 54, width: home ? 96 : 86, height: home ? 96 : 86, background: c.dia, transform: 'rotate(45deg)' }} />}
         {home ? <span style={plainCap}>{vis} · unlimited</span> : <span className="wide" style={CAP}>{vis} · unlimited</span>}
         <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color: c.title, fontSize: home ? 30 : 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
         {home ? (
           <span aria-hidden="true" style={{ position: 'relative', display: 'flex', gap: 1 }}>
-            {['a1', 'a2', 'a3'].map((k) => <svg key={k} className={k} width="14" height="16" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill={c.ink} /></svg>)}
+            {['a1', 'a2', 'a3'].map((k) => <svg key={k} className={k} width="14" height="16" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="#000000" /></svg>)}
           </span>
         ) : (
           <span style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
@@ -130,7 +134,8 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     const tail = home ? `${t.covered} covered` : t.fresh ? `+${t.fresh} new` : `${t.pct}%`;
     return (
       <Link href={href} aria-label={`${t.title}, ${vis}, ${things}, ${home ? `${t.covered} covered` : tail}`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
-        {home ? <div aria-hidden="true" style={{ position: 'absolute', right: -50, bottom: -40, width: 150, height: 150, borderRadius: '50%', background: c.circle }} /> : null}
+        {t.photo ? <PhotoShape src={t.photo} size={150} color={c.circle} style={{ right: -50, bottom: -40 }} />
+          : home ? <div aria-hidden="true" style={{ position: 'absolute', right: -50, bottom: -40, width: 150, height: 150, borderRadius: '50%', background: c.circle }} /> : null}
         <span style={{ ...plainCap, color: home ? c.circleInk : c.ink }}>{vis} · {things}</span>
         <Blob seed={5 + (ci % OWN.length) * 22} color={c.blob} width={200} height={home ? 140 : 120} style={{ left: -14, top: home ? 44 : 40 }} />
         <SerifTitle title={t.title} color={c.title} size={home ? 27 : 25} />
@@ -140,6 +145,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   }
   return (
     <Link href={href} aria-label={`${t.title}, ${vis}, ${things}, ${t.covered} covered`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
+      {t.photo ? <PhotoShape src={t.photo} size={140} color={c.blob} style={{ right: -46, bottom: -36 }} /> : null}
       <Blob seed={5 + (ci % OWN.length) * 22} color={c.blob} width={190} height={130} style={{ left: -8, top: 30 }} />
       <span className="wide" style={CAP}>{vis} · {things}</span>
       <SerifTitle title={t.title} color={c.title} size={25} />

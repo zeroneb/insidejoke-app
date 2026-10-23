@@ -33,14 +33,41 @@ export function Bouquet({ ink = '#FFFFFF', style = { right: 10, bottom: 44 }, w 
 }
 
 
+// A cover photo framed in the cover's own shape: a circle, or a diamond on treat lists.
+// The shape keeps its color behind the photo, so it still reads as the cover's art while it loads.
+export function PhotoShape({ src, shape = 'circle', size, color, style, className }) {
+  if (shape === 'diamond') {
+    return (
+      <div aria-hidden="true" className={className} style={{ position: 'absolute', width: size, height: size, background: color, transform: 'rotate(45deg)', overflow: 'hidden', ...style }}>
+        <img src={src} alt="" referrerPolicy="no-referrer" style={{ position: 'absolute', left: '-21%', top: '-21%', width: '142%', height: '142%', objectFit: 'cover', transform: 'rotate(-45deg)', display: 'block' }} />
+      </div>
+    );
+  }
+  return (
+    <div aria-hidden="true" className={className} style={{ position: 'absolute', width: size, height: size, borderRadius: '50%', background: color, overflow: 'hidden', ...style }}>
+      <img src={src} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+    </div>
+  );
+}
+
 // The list's own cover art behind the header (matches its tile).
 export function CoverArt({ cv }) {
-  if (cv.art === 'diamond') return <div aria-hidden="true" className="spinslow" style={{ position: 'absolute', right: -30, bottom: -40, width: 200, height: 200, background: cv.dia, transform: 'rotate(45deg)' }} />;
+  const p = cv.photo;
+  if (cv.art === 'diamond') {
+    // The photo stays still inside the diamond (a spinning photo is hard to look at).
+    if (p) return <PhotoShape src={p} shape="diamond" size={200} color={cv.dia} style={{ right: -30, bottom: -40 }} />;
+    return <div aria-hidden="true" className="spinslow" style={{ position: 'absolute', right: -30, bottom: -40, width: 200, height: 200, background: cv.dia, transform: 'rotate(45deg)' }} />;
+  }
   if (cv.art === 'cake') return (<>
-    <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -80, bottom: -90, width: 260, height: 260, borderRadius: '50%', background: cv.orb }} />
+    {p ? <PhotoShape src={p} size={260} color={cv.orb} className="breathe" style={{ right: -80, bottom: -90 }} />
+      : <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -80, bottom: -90, width: 260, height: 260, borderRadius: '50%', background: cv.orb }} />}
     <Cake style={{ right: 14, bottom: 22 }} w={120} h={140} sparkle />
   </>);
-  if (cv.art === 'bouquet') return <Bouquet ink={cv.title} style={{ right: 6, bottom: 10 }} w={130} h={176} sparkle />;
+  if (cv.art === 'bouquet') return (<>
+    {p ? <PhotoShape src={p} size={260} color={cv.blob} className="breathe" style={{ right: -80, bottom: -90 }} /> : null}
+    <Bouquet ink={cv.title} style={{ right: 6, bottom: 10 }} w={130} h={176} sparkle />
+  </>);
+  if (p) return <PhotoShape src={p} size={260} color={cv.circle} className="breathe" style={{ right: -70, bottom: -80 }} />;
   return <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -70, bottom: -80, width: 260, height: 260, borderRadius: '50%', background: cv.circle }} />;
 }
 

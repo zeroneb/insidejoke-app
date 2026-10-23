@@ -4,6 +4,7 @@ import { useActionState, useState } from 'react';
 import { createList } from '@/lib/actions';
 import { Blob, Avatar } from '@/components/ui';
 import { defaultListTitle } from '@/lib/list-title';
+import { CoverPhotoField } from '@/components/cover-photo';
 
 const OCC = ['Birthday', 'Holidays', 'Just because', 'New place', "Dinner I'm hosting", 'Secret Santa'];
 const VIS = [['public', 'Public', 'On your profile. Anyone you share it with, or who finds it, can give.'], ['private', 'Private', 'Only the people you pick']];
@@ -106,6 +107,11 @@ export default function NewListForm({ me, friends = [] }) {
             </div>
           </div>
         ) : null}
+      </Section>
+
+      <Section>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}><H2>Cover photo</H2><span style={{ fontSize: 12, color: '#4A4A4A' }}>Optional</span></div>
+        <CoverPhotoField shape={forWho === 'me' && listType === 'treats' ? 'diamond' : 'circle'} />
       </Section>
 
       {forWho === 'me' ? (
