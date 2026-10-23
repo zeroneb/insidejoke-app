@@ -105,7 +105,9 @@ export default async function ItemView({ slug, itemId }) {
               {it.unlimited ? (
                 <Link href={give} style={{ ...btn, background: '#000000', color: '#FFFFFF' }}>Send a treat</Link>
               ) : it.covered ? (
-                <span aria-disabled="true" style={{ ...btn, background: '#2E9B47', color: '#FFFFFF' }}>All covered</span>
+                isOwner && it.url
+                  ? <a href={`/go/${it.id}`} target="_blank" rel="noopener sponsored" style={{ ...btn, background: '#2E9B47', color: '#FFFFFF', textDecoration: 'none' }}>All covered · Go get it ↗</a>
+                  : <span aria-disabled="true" style={{ ...btn, background: '#2E9B47', color: '#FFFFFF' }}>All covered</span>
               ) : (
                 <>
                   <Link href={give} style={{ ...btn, background: '#000000', color: '#FFFFFF' }}>Contribute</Link>
