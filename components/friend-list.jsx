@@ -43,7 +43,7 @@ export default function FriendList({ list, owner, items, me }) {
   const wishes = items.filter((i) => !i.unlimited);
   const covered = wishes.filter((i) => i.covered).length;
   const lower = forName.toLowerCase();
-  const ring = `${lower}'s list · things ${lower} would actually loveeee · `;
+  const ring = list.ring_text ? `${list.ring_text.trim()} · ` : `${lower}'s list · things ${lower} would actually loveeee · `;
   const profile = owner ? `/u/${owner.id}` : '/';
   const words = String(list.title || '').trim().split(/\s+/);
   const long = (list.title || '').length > 20;
@@ -60,7 +60,7 @@ export default function FriendList({ list, owner, items, me }) {
         <span className="dk-center370"><Blob seed={5} color="#D8F75A" style={{ left: 10, top: 56 }} width={370} height={290} /></span>
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', left: '50%', marginLeft: -135, top: 62 }} width="270" height="270" viewBox="0 0 270 270">
           <defs><path id="fl-arc" d="M135 135 m-112 0 a112 112 0 1 1 224 0 a112 112 0 1 1 -224 0" /></defs>
-          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: '#13286B' }}><textPath href="#fl-arc">{ring}{ring}</textPath></text>
+          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: '#13286B' }}><textPath href="#fl-arc">{ring.repeat(ring.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
         <h1 className="serif fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 160 : 150, margin: 0, textAlign: 'center', color: '#000000', fontWeight: 400, fontSize: long ? 38 : 52, lineHeight: 0.92 }}>
           {words.length > 1 ? <>{words.slice(0, -1).join(' ')} <span style={{ fontWeight: 600 }}>{words[words.length - 1]}</span></> : <span style={{ fontWeight: 600 }}>{list.title}</span>}

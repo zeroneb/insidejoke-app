@@ -49,7 +49,7 @@ export default async function ManagePage({ params, searchParams }) {
 
       <section style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column', gap: 14 }}>
         <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.16em' }}>List settings</h2>
-        <ManageForm slug={slug} title={list.title} visibility={list.visibility} date={list.date} surprise={!!list.surprise} />
+        <ManageForm slug={slug} title={list.title} visibility={list.visibility} date={list.date} surprise={!!list.surprise} ring={list.ring_text || ''} ringDefault={list.for_who === 'other' && list.recipient_name ? `${list.recipient_name.toLowerCase()}'s list · things ${list.recipient_name.toLowerCase()} would actually loveeee` : 'your list · things you would actually loveeee'} />
         {archived ? <p style={{ margin: 0, fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>Money already given stays in your wallet. Unarchive to open it again.</p> : null}
       </section>
       <section aria-labelledby="h-people" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>

@@ -51,7 +51,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
   const hasTreat = items.some((i) => i.unlimited);
   const showNudge = !archived && !hasTreat && !list.nudge_dismissed && items.length > 0;
   const who = list.for_who === 'other' && list.recipient_name ? list.recipient_name.toLowerCase() : null;
-  const ringText = who ? `${who}'s list · things ${who} would actually loveeee · ` : `your list · things you would actually loveeee · `;
+  const ringText = list.ring_text ? `${list.ring_text.trim()} · ` : who ? `${who}'s list · things ${who} would actually loveeee · ` : `your list · things you would actually loveeee · `;
   const status = archived ? 'Archived · friends can no longer see it' : `${vis} · ${items.length} ${items.length === 1 ? 'thing' : 'things'} so far`;
 
   return (
@@ -65,7 +65,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
         <Blob seed={5} width={320} height={190} style={{ left: -24, top: 64 }} />
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', right: -90, bottom: -100, zIndex: 0 }} width="300" height="300" viewBox="0 0 300 300">
           <defs><path id="ol-arc" d="M150 150 m-142 0 a142 142 0 1 1 284 0 a142 142 0 1 1 -284 0" /></defs>
-          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: '#13286B' }}><textPath href="#ol-arc">{ringText}{ringText}</textPath></text>
+          <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: '#13286B' }}><textPath href="#ol-arc">{ringText.repeat(ringText.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
         <h1 className="serif" style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, fontSize: long ? 40 : 50, lineHeight: 0.92 }}><SplitTitle title={list.title} /></h1>
         <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: '#13286B', fontWeight: 800, fontSize: 14 }}>{status}</p>
