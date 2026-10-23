@@ -15,6 +15,7 @@ export async function GET() {
     publishableKey: pk ? (pk.startsWith('pk_test_') ? 'test key set' : pk.startsWith('pk_live_') ? 'LIVE key set' : 'set, but does not look like a Stripe key') : 'missing',
   };
   out.stripeVariablesFound = names;
+  out.deployment = { environment: process.env.VERCEL_ENV || 'local', commit: (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7), url: process.env.VERCEL_URL || '' };
   if ((stripeTestKey() && pk.startsWith('pk_live_')) || (stripeOn() && !stripeTestKey() && pk.startsWith('pk_test_'))) out.warning = 'The two keys are from different modes. Use both test keys or both live keys.';
   if (stripeOn()) {
     try {
