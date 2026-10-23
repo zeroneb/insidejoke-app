@@ -6,6 +6,7 @@ import { friendsOf } from '@/lib/lists';
 import { FaceSm, Blob } from '@/components/ui';
 import { Chevron } from '@/components/profile-hero';
 import AddFriendForm from '@/components/add-friend-form';
+import ContactsPicker from '@/components/contacts-picker';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Friends · insidejoke' };
@@ -84,6 +85,7 @@ export default async function FriendsPage({ searchParams }) {
         </section>
 
         <section id="add" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
+          <ContactsPicker />
           <AddFriendForm defaultPhone={found?.none ? q : ''} />
         </section>
         <div style={{ height: 24 }} />

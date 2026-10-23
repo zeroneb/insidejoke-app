@@ -24,7 +24,7 @@ function Switch({ k, on, label }) {
 
 const TEXTS = [
   ['notify_covered', 'When a wish is covered', 'The moment something on a list is fully paid for.'],
-  ['notify_share', 'When a friend shares a list', 'A new list from someone in your contacts.'],
+  ['notify_share', 'When a friend shares a list', 'A new list from one of your friends.'],
   ['notify_reminders', 'Reminders before dates', 'A nudge a week before birthdays and dates you saved.']
 ];
 

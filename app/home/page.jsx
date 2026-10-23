@@ -228,7 +228,7 @@ export default async function HomePage() {
           <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
           <Link href="/friends" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
         </div>
-        <p style={{ margin: '0 0 12px', fontSize: 13, color: '#4A4A4A' }}>Your contacts on insidejoke. Tap anyone to see their profile.</p>
+        <p style={{ margin: '0 0 12px', fontSize: 13, color: '#4A4A4A' }}>Your friends on insidejoke. Tap anyone to see their profile.</p>
         {feed.map((f, n) => <FeedRow key={f.key} f={f} r={reacts[f.key]} c={comments[f.key] || []} me={me} n={n} />)}
         {feed.length === 0 ? (
           <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid #000000', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and your friends’ gifts and notes show up here.</p>
