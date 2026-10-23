@@ -7,11 +7,21 @@ import { dismissNudge } from '@/lib/actions';
 import { setListArchived } from '@/lib/actions-a2';
 
 // Title as on the boards: everything but the last word, then the last word in semibold on its own line.
-export function SplitTitle({ title }) {
-  const words = String(title || '').trim().split(/\s+/);
-  if (words.length < 2) return <span style={{ fontWeight: 600 }}>{title}</span>;
-  return <>{words.slice(0, -1).join(' ')}<br /><span style={{ fontWeight: 600 }}>{words[words.length - 1]}</span></>;
+// List cover title: everything but the last word in tight sans, the last word in wide caps.
+// The caps shrink for long words so they stay on the cover.
+const CAPS_W = 0.86; // Archivo wide 800, width per letter in em
+export function TitleWords({ title, size = 50, width = 300 }) {
+  const words = String(title || '').trim().split(/\s+/).filter(Boolean);
+  const last = words.pop() || '';
+  const capSize = Math.max(22, Math.min(Math.round(size * 0.8), Math.floor(width / (Math.max(1, last.length) * CAPS_W))));
+  return (
+    <>
+      {words.length ? <span style={{ display: 'block', fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: size * 1.08, letterSpacing: '-0.045em', lineHeight: 0.95 }}>{words.join(' ')}</span> : null}
+      <span className="wide" style={{ display: 'block', fontSize: capSize, letterSpacing: '0.01em', lineHeight: 1, marginTop: words.length ? 4 : 0 }}>{last}</span>
+    </>
+  );
 }
+export function SplitTitle({ title }) { return <TitleWords title={title} />; }
 
 // r2: Doto tag on the 54px tile ("VASE", "BOOTS", "SANTAL").
 export function tileTag(name) {
@@ -67,7 +77,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
           <defs><path id="ol-arc" d="M150 150 m-142 0 a142 142 0 1 1 284 0 a142 142 0 1 1 -284 0" /></defs>
           <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: '#13286B' }}><textPath href="#ol-arc">{ringText.repeat(ringText.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
-        <h1 className="serif" style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, fontSize: long ? 40 : 50, lineHeight: 0.92 }}><SplitTitle title={list.title} /></h1>
+        <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={long ? 40 : 50} /></h1>
         <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: '#13286B', fontWeight: 800, fontSize: 14 }}>{status}</p>
         {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid #000000', borderRadius: 999, background: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: '#000' }}>Unarchive</button></form> : null}
       </section>

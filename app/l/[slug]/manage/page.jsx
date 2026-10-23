@@ -8,7 +8,7 @@ import { all } from '@/lib/db';
 import { listBySlug, itemsFor, withProgress } from '@/lib/lists';
 import { setListArchived, deleteList } from '@/lib/actions-a2';
 import { Blob } from '@/components/ui';
-import { SplitTitle } from '@/components/owner-list';
+import { TitleWords } from '@/components/owner-list';
 import ManageForm from '@/components/manage-form';
 import ManageRows from '@/components/manage-list-r2';
 
@@ -41,7 +41,7 @@ export default async function ManagePage({ params, searchParams }) {
           </form>
         </header>
         <Blob seed={5} width={320} height={190} style={{ left: -24, top: 64 }} />
-        <h1 className="serif" style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, fontSize: (list.title || '').length > 22 ? 40 : 50, lineHeight: 0.92 }}><SplitTitle title={list.title} /></h1>
+        <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: '#000000', fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={(list.title || '').length > 22 ? 40 : 50} /></h1>
         <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: '#13286B', fontWeight: 800, fontSize: 14 }}>{archived ? 'Archived · friends can no longer see this list' : `${list.visibility === 'private' ? 'Only people you pick' : 'Friends can see'} · ${items.length} ${items.length === 1 ? 'thing' : 'things'}`}</p>
       </section>
 

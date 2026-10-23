@@ -1,3 +1,4 @@
+import { TitleWords } from '@/components/owner-list';
 import Link from 'next/link';
 import ListProgress from '@/components/list-progress';
 import { Blob, Avatar, ItemSketch, Halftone, shortName } from '@/components/ui';
@@ -62,8 +63,8 @@ export default function FriendList({ list, owner, items, me }) {
           <defs><path id="fl-arc" d="M135 135 m-112 0 a112 112 0 1 1 224 0 a112 112 0 1 1 -224 0" /></defs>
           <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: '#13286B' }}><textPath href="#fl-arc">{ring.repeat(ring.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
-        <h1 className="serif fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 160 : 150, margin: 0, textAlign: 'center', color: '#000000', fontWeight: 400, fontSize: long ? 38 : 52, lineHeight: 0.92 }}>
-          {words.length > 1 ? <>{words.slice(0, -1).join(' ')} <span style={{ fontWeight: 600 }}>{words[words.length - 1]}</span></> : <span style={{ fontWeight: 600 }}>{list.title}</span>}
+        <h1 className="fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 150 : 140, margin: 0, textAlign: 'center', color: '#000000', fontWeight: 400, lineHeight: 0.92 }}>
+          <TitleWords title={list.title} size={long ? 38 : 50} width={290} />
         </h1>
         <div style={{ position: 'absolute', left: 20, right: 20, bottom: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
           <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: '#FFFFFF', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
