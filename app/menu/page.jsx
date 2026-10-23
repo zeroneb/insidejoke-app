@@ -1,3 +1,4 @@
+import { LEGAL } from '@/components/legal';
 import Link from 'next/link';
 import { Blob } from '@/components/ui';
 
@@ -45,7 +46,7 @@ export default function Menu() {
 
       <section className="menu-sec" style={{ gap: 8 }}>
         <span className="wide menu-lbl">Contact</span>
-        <a href="mailto:hello@example.com" className="serif" style={{ textDecoration: 'none', fontSize: 26, color: '#fff' }}>[contact email]</a>
+        {LEGAL.email ? <a href={`mailto:${LEGAL.email}`} className="serif" style={{ textDecoration: 'none', fontSize: 26, color: '#fff' }}>{LEGAL.email}</a> : <span className="serif" style={{ fontSize: 26, color: '#fff' }}>[contact email]</span>}
         <span style={{ fontSize: 14, color: '#DCE3FF' }}>Say hi, pitch a collab, or tell us what you'd love.</span>
       </section>
       <div style={{ height: 40 }} />

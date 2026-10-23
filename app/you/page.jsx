@@ -1,3 +1,6 @@
+import { appUrl } from '@/lib/texts';
+import ShareProfile from '@/components/share-profile';
+import { handleFor } from '@/lib/handles';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
@@ -33,7 +36,7 @@ export default async function YouPage() {
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 12px' }}>
           <span style={{ width: 44 }} />
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Your profile</span>
-          <Link href={`/u/${me.id}`} aria-label="Share your profile" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+          <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: '#000' }} />
         </header>
 
         <ProfileHero user={me} owner ring={`insidejoke since ${monthYear(me.created_at)}`} uid="you">
