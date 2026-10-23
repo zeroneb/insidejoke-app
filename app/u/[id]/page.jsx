@@ -82,8 +82,8 @@ export default async function FriendProfile({ params }) {
           {self ? (
             <>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                <ShareProfile url={`${appUrl()}/${(await handleFor(them)) || 'u/' + them.id}`} name={them.name} style={{ ...PILL, background: '#D4FA4F' }} />
                 <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit</Link>
+                <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(them)) || 'u/' + them.id}`} name={them.name} style={{ ...PILL, width: 44, padding: 0, justifyContent: 'center', background: 'transparent' }} />
               </div>
               <span style={{ fontSize: 12, color: '#4A4A4A' }}>This is how others see your profile.</span>
             </>

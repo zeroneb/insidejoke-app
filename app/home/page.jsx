@@ -189,10 +189,13 @@ export default async function HomePage() {
       <div className="home-col">
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 12px 0 20px' }}>
         <Link href="/" className="dk-hide" style={{ textDecoration: 'none', color: '#13286B' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+        <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: '#000' }} />
         <Link href="/notifications" aria-label={fresh ? `Notifications, ${fresh} new` : 'Notifications'} style={{ position: 'relative', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
           {fresh ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: '#E8642C' }} /> : null}
         </Link>
+        </span>
       </header>
 
       <section style={{ padding: '18px 20px 0', display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -205,7 +208,6 @@ export default async function HomePage() {
           {me.bio ? <span style={{ fontSize: 15 }}>{me.bio}</span> : <Link href="/you/settings" style={{ fontSize: 15, color: '#4A4A4A' }}>Add a line about you</Link>}
           <span style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 2 }}>
             <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
-            <ShareProfile url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid #000', background: '#D4FA4F', borderRadius: 999, padding: '5px 12px', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', color: '#000' }} />
           </span>
         </div>
       </section>
