@@ -15,7 +15,7 @@ const VIS = { public: 'Public', private: 'Private', friends: 'Friends' };
 export async function tileData(list, viewerId) {
   const items = await itemsFor(list.id);
   const wishes = items.filter((i) => !i.unlimited);
-  const treatsOnly = items.length > 0 && wishes.length === 0;
+  const treatsOnly = !!list.treats || (items.length > 0 && wishes.length === 0);
   const sent = items.filter((i) => i.unlimited).reduce((n, i) => n + (i.timesTreated || 0), 0);
   const covered = wishes.filter((i) => i.covered).length;
   const target = wishes.reduce((n, i) => n + i.target, 0);

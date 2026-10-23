@@ -7,13 +7,14 @@ import { saveListSettings } from '@/lib/actions-a2';
 const pill = (on) => ({ border: `1.5px solid ${on ? '#E2452B' : '#000000'}`, background: on ? '#F4D3EE' : 'transparent', color: on ? '#E2452B' : '#000000', fontFamily: 'inherit', fontWeight: 700, fontSize: 14, minHeight: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer' });
 const LBL = { fontWeight: 800, fontSize: 14 };
 
-export default function ManageForm({ slug, title, visibility, date, surprise, ring = '', ringDefault = '' }) {
+export default function ManageForm({ slug, title, visibility, date, surprise, ring = '', ringDefault = '', treats = false, canTreat = false }) {
   const [state, action, pending] = useActionState(saveListSettings, null);
   const [t, setT] = useState(title);
   const [vis, setVis] = useState(visibility);
   const [d, setD] = useState(date || '');
   const [r, setR] = useState(ring || '');
-  const dirty = t !== title || vis !== visibility || d !== (date || '') || r !== (ring || '');
+  const [tr, setTr] = useState(!!treats);
+  const dirty = t !== title || vis !== visibility || d !== (date || '') || r !== (ring || '') || tr !== !!treats;
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       <input type="hidden" name="slug" value={slug} />
@@ -22,6 +23,16 @@ export default function ManageForm({ slug, title, visibility, date, surprise, ri
         <label htmlFor="mtitle" style={LBL}>Name</label>
         <input id="mtitle" name="title" value={t} onChange={(e) => setT(e.target.value)} className="a2-input serif" style={{ fontSize: 22 }} />
       </div>
+      {canTreat ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <span style={LBL}>What goes on it</span>
+          <input type="hidden" name="treats" value={tr ? '1' : '0'} />
+          <div role="radiogroup" aria-label="What goes on it" style={{ display: 'flex', gap: 8 }}>
+            {[[false, 'Wishes'], [true, 'Unlimited']].map(([k, l]) => <button key={l} type="button" role="radio" aria-checked={tr === k} onClick={() => setTr(k)} style={pill(tr === k)}>{l}</button>)}
+          </div>
+          <span style={{ fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>Unlimited lists get the treats cover: things friends can give again and again.</span>
+        </div>
+      ) : null}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <label htmlFor="mring" style={LBL}>Circle text <span style={{ fontWeight: 400, color: '#4A4A4A' }}>optional</span></label>
         <input id="mring" name="ring" value={r} maxLength={70} onChange={(e) => setR(e.target.value)} placeholder={ringDefault} className="a2-input serif" style={{ fontSize: 18 }} />

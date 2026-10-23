@@ -55,6 +55,7 @@ export default function NewListForm({ me, friends = [] }) {
   const [title, setTitle] = useState('For my birthday');
   const pickFor = (k) => { setForWho(k); if (k === 'other' && title === 'For my birthday') setTitle(''); if (k === 'me' && title === '') setTitle('For my birthday'); };
   const [surprise, setSurprise] = useState(false);
+  const [listType, setListType] = useState('wishes');
   const [occ, setOcc] = useState('Birthday');
   const [extra, setExtra] = useState([]);
   const [adding, setAdding] = useState(false);
@@ -101,6 +102,14 @@ export default function NewListForm({ me, friends = [] }) {
           </div>
         ) : null}
       </Section>
+
+      {forWho === 'me' ? (
+        <Section>
+          <H2>What goes on it</H2>
+          <input type="hidden" name="listType" value={listType} />
+          <Cards label="What goes on it" opts={[['wishes', 'Wishes', 'Things friends get or chip in on'], ['treats', 'Unlimited', 'Coffee, bagels, flowers: treat me anytime, again and again']]} value={listType} onPick={setListType} />
+        </Section>
+      ) : null}
 
       <Section>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}><H2>Occasion</H2><span style={{ fontSize: 12, color: '#4A4A4A' }}>Optional</span></div>
