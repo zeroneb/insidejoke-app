@@ -67,7 +67,8 @@ export function CoverArt({ cv }) {
     {p ? <PhotoShape src={p} size={260} color={cv.blob} className="breathe" style={{ right: -80, bottom: -90 }} /> : null}
     <Bouquet ink={cv.title} style={{ right: 6, bottom: 10 }} w={130} h={176} sparkle />
   </>);
-  if (p) return <PhotoShape src={p} size={260} color={cv.circle} className="breathe" style={{ right: -70, bottom: -80 }} />;
+  // Slightly smaller than the plain circle and still, so the ring of words sits clear of the photo.
+  if (p) return <PhotoShape src={p} size={236} color={cv.circle} style={{ right: -58, bottom: -68 }} />;
   return <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -70, bottom: -80, width: 260, height: 260, borderRadius: '50%', background: cv.circle }} />;
 }
 

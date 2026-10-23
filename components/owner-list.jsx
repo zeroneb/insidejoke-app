@@ -80,11 +80,11 @@ export default function OwnerList({ list, items, me, blast = null }) {
             <Link href={`/l/${slug}/share`} style={{ border: `2px solid ${cv.chrome}`, color: cv.chrome, textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
           </span>
         </header>
-        <Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} width={320} height={190} style={{ left: -24, top: 64 }} />
         <svg aria-hidden="true" className="slow" style={{ position: 'absolute', right: -90, bottom: -100, zIndex: 0 }} width="300" height="300" viewBox="0 0 300 300">
           <defs><path id="ol-arc" d="M150 150 m-142 0 a142 142 0 1 1 284 0 a142 142 0 1 1 -284 0" /></defs>
           <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: cv.text }}><textPath href="#ol-arc">{ringText.repeat(ringText.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
+        <Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} width={320} height={190} style={{ left: -24, top: 64 }} />
         <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={long ? 40 : 50} /></h1>
         <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: archived ? '#FFFFFF' : cv.title, fontWeight: 800, fontSize: 14 }}>{status}</p>
         {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid #000000', borderRadius: 999, background: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: '#000' }}>Unarchive</button></form> : null}
