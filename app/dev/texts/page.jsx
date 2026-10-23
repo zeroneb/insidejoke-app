@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { all } from '@/lib/db';
 import { isTestMode } from '@/lib/texts';
@@ -17,6 +18,7 @@ function linkify(body) {
 const when = (t) => new Date(t).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 export default async function Outbox() {
+  if (!isTestMode()) notFound();
   const rows = await all('SELECT * FROM texts ORDER BY created_at DESC LIMIT 200');
   const test = isTestMode();
   return (

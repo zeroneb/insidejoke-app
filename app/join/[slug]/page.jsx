@@ -18,6 +18,7 @@ export default async function JoinPage({ params, searchParams }) {
   const list = await listBySlug(slug);
   if (!list || list.status !== 'open') notFound();
   const me = await currentUser();
+  if (!(await (await import('@/lib/access')).canSeeList(list, me))) redirect(me ? '/home' : `/signup?next=${encodeURIComponent('/l/' + slug)}`);
   const team = await teamOf(list);
   const organiser = team[0];
   const name = whoFor(list);

@@ -17,6 +17,7 @@ export default async function SharedPage({ params, searchParams }) {
   const list = await listBySlug(slug);
   if (!list || list.status !== 'open') notFound();
   const me = await currentUser();
+  if (!(await (await import('@/lib/access')).canSeeList(list, me))) redirect(me ? '/home' : `/signup?next=${encodeURIComponent('/l/' + slug)}`);
   if (me && list.recipient_phone && me.phone === list.recipient_phone && !list.sent_at) redirect('/home'); // no peeking at your own surprise
   // r4: collaborators see the SharedList board (who added what, matches, add a wish or treat); others see give / help build.
   const editor = !!me && (await canEdit(list, me));

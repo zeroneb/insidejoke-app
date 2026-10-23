@@ -37,6 +37,7 @@ export default async function ItemView({ slug, itemId }) {
   if (!it || it.list_id !== list.id) notFound();
   const owner = await ownerOf(list);
   const me = await currentUser();
+  if (!(await (await import('@/lib/access')).canSeeList(list, me))) notFound();
   const isOwner = !!(me && me.id === owner.id);
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const notes = (await notesFor(it.id, isOwner));

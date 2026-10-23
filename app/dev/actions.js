@@ -8,6 +8,7 @@ import { createSession } from '@/lib/auth';
 import { isTestMode } from '@/lib/texts';
 
 export async function clearTexts() {
+  if (!isTestMode()) return;
   await run('DELETE FROM texts');
   revalidatePath('/dev/texts');
 }

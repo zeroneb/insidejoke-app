@@ -8,6 +8,8 @@ export const dynamic = 'force-dynamic';
 export async function GET() {
   const me = await currentUser();
   if (!me) return Response.json({ error: 'Sign in first.' }, { status: 401 });
+  const digits = (p) => String(p || '').replace(/\D/g, '').replace(/^1(?=\d{10}$)/, '');
+  if (!String(process.env.ADMIN_PHONES || '').split(',').map(digits).filter(Boolean).includes(digits(me.phone))) return Response.json({ error: 'Not found.' }, { status: 404 });
   const pk = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.NEXT_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLIC_KEY || '';
   const names = Object.keys(process.env).filter((k) => /STRIPE/i.test(k));
   const out = {

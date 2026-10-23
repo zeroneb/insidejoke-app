@@ -43,14 +43,7 @@ export const maxDuration = 60; // reading a store link can take a while
 // Who may see a list that is not the owner's own:
 // public + open: anyone with the link. Private: members (list_members) or numbers it was texted to.
 // Surprise: never the person it is for, until it is sent. Archived: nobody.
-async function canSee(list, me) {
-  if (list.status === 'archived') return false;
-  if (list.surprise && !list.sent_at && me && list.recipient_id === me.id) return false;
-  if (list.visibility !== 'private') return true;
-  if (!me) return false;
-  if (await get('SELECT 1 FROM list_members WHERE list_id = ? AND user_id = ?', list.id, me.id)) return true;
-  return !!(await get('SELECT 1 FROM list_shares WHERE list_id = ? AND phone = ?', list.id, me.phone));
-}
+const canSee = async (list, me) => (await import('@/lib/access')).canSeeList(list, me);
 
 export default async function ListPage({ params, searchParams }) {
   const { slug } = await params;
@@ -59,8 +52,9 @@ export default async function ListPage({ params, searchParams }) {
   if (!list) notFound();
   const me = await currentUser();
   if (me && (me.id === list.owner_id || (await isMember(list.id, me.id)))) return withPanel(slug, sp, <OwnerList list={list} items={await itemsFor(list.id)} me={me} blast={await latestBlast(list.id)} />, true);
-  if (list.for_who === 'other' && !list.surprise) redirect(`/l/${slug}/shared`);
-  if (!(await canSee(list, me))) {
+  const visible = await canSee(list, me);
+  if (visible && list.for_who === 'other' && !list.surprise) redirect(`/l/${slug}/shared`);
+  if (!visible) {
     return (
       <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         <section style={{ position: 'relative', background: '#13286B', height: 300, overflow: 'hidden' }}>

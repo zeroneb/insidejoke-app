@@ -9,7 +9,7 @@ import { connectOnboardingLink, refreshConnectAccount, payoutMethod } from '@/li
 export const dynamic = 'force-dynamic';
 export const maxDuration = 30;
 
-const safeNext = (n, d) => (/^\/[^/]/.test(n || '') ? n : d);
+import { safeNext } from '@/lib/access';
 
 export async function GET(req) {
   const u = new URL(req.url);

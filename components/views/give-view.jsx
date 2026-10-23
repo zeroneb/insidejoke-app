@@ -17,6 +17,7 @@ export default async function GiveView({ slug, itemId, mode }) {
   if (it.covered) redirect(`/l/${slug}/i/${it.id}`);
   const owner = await ownerOf(list);
   const me = await currentUser();
+  if (!(await (await import('@/lib/access')).canSeeList(list, me))) notFound();
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const pm = me ? await paymentMethod(me.id) : null;
   const item = { id: it.id, photo: !!it.photo, name: it.name, note: it.note, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, remaining: it.remaining, pct: it.pct, color: it.color, store: it.store, givers: it.givers, timesTreated: it.timesTreated };
