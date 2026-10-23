@@ -7,6 +7,8 @@ import { ListTile, tileData } from '@/components/list-tile';
 import { PhotoBlob } from '@/components/ui';
 import { addFriend, unfriend } from '@/lib/actions-a1';
 import TextFriendForm from '@/components/text-friend-form';
+import ShareProfile from '@/components/share-profile';
+import { appUrl } from '@/lib/texts';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,8 +80,11 @@ export default async function FriendProfile({ params }) {
           )}
           {self ? (
             <>
-              <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit in settings</Link>
-              <span style={{ fontSize: 12, color: '#4A4A4A' }}>This is how others see your profile. Copy the link to share it.</span>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <ShareProfile url={`${appUrl()}/u/${them.id}`} name={them.name} style={{ ...PILL, background: '#D4FA4F' }} />
+                <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit</Link>
+              </div>
+              <span style={{ fontSize: 12, color: '#4A4A4A' }}>This is how others see your profile.</span>
             </>
           ) : friend ? (
             <>
