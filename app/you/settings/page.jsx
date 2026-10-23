@@ -6,6 +6,7 @@ import { paymentMethod } from '@/lib/payments';
 import { payoutMethod } from '@/lib/wallet';
 import { spacedPhone, Chevron } from '@/components/profile-hero';
 import { ProfileForm, PhoneChange } from '@/components/settings-forms';
+import { handleFor } from '@/lib/handles';
 import Nav from '@/components/nav';
 
 export const dynamic = 'force-dynamic';
@@ -56,7 +57,7 @@ export default async function SettingsPage({ searchParams }) {
 
         <section aria-labelledby="h-profile" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <h2 id="h-profile" className="a1-cap" style={{ margin: '0 0 10px' }}>Profile</h2>
-          <ProfileForm me={{ id: me.id, name: me.name, bio: me.bio, photo: me.photo, seed: me.seed, color: me.color }} />
+          <ProfileForm me={{ id: me.id, name: me.name, bio: me.bio, photo: me.photo, seed: me.seed, color: me.color, handle: await handleFor(me) }} />
         </section>
 
         <section aria-labelledby="h-phone" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>

@@ -45,6 +45,7 @@ export function ProfileForm({ me }) {
         </div>
       ) : null}
       <label className="a1-field" style={{ borderTop: 0, paddingTop: 18 }}><span className="a1-cap" style={{ fontSize: 10 }}>Name</span><input type="text" name="name" defaultValue={me.name} autoComplete="name" maxLength={60} required /></label>
+      <label className="a1-field"><span className="a1-cap" style={{ fontSize: 10 }}>Your link</span><span style={{ display: 'flex', alignItems: 'baseline', gap: 2 }}><span style={{ color: '#4A4A4A', flexShrink: 0 }}>insidejoke.club/</span><input type="text" name="handle" defaultValue={me.handle || ''} maxLength={30} autoCapitalize="none" autoCorrect="off" spellCheck={false} style={{ flexGrow: 1, minWidth: 0 }} /></span><span className="a1-s">Letters, numbers, dots and underscores. Share it so friends find your lists.</span></label>
       <label className="a1-field"><span className="a1-cap" style={{ fontSize: 10 }}>Bio · one line</span><input type="text" name="bio" defaultValue={me.bio || ''} maxLength={60} placeholder="ceramics, natural wine, long walks" /><span className="a1-s">Friends see this under your name.</span></label>
       <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12, paddingTop: 4, borderTop: '1px solid #000000' }}>
         {state?.error ? <span className="a1-s" style={{ color: '#E2452B', fontWeight: 700, marginTop: 12 }}>{state.error}</span> : state?.ok && !pending ? <span role="status" className="a1-s" style={{ marginTop: 12 }}>Saved.</span> : null}

@@ -9,6 +9,7 @@ import { addFriend, unfriend } from '@/lib/actions-a1';
 import TextFriendForm from '@/components/text-friend-form';
 import ShareProfile from '@/components/share-profile';
 import { appUrl } from '@/lib/texts';
+import { handleFor } from '@/lib/handles';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,7 +30,7 @@ const PILL = { marginTop: 6, display: 'flex', alignItems: 'center', gap: 8, bord
 // a1/r1: a friend's profile, Option 10 FriendProfile.
 export default async function FriendProfile({ params }) {
   const { id } = await params;
-  const them = await get('SELECT * FROM users WHERE id = ?', id);
+  const them = (await get('SELECT * FROM users WHERE id = ?', id)) || (await get('SELECT * FROM users WHERE handle = ?', String(id).toLowerCase()));
   if (!them || them.phone.startsWith('deleted:')) notFound();
   const me = await currentUser();
   const self = me?.id === them.id;
@@ -81,7 +82,7 @@ export default async function FriendProfile({ params }) {
           {self ? (
             <>
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                <ShareProfile url={`${appUrl()}/u/${them.id}`} name={them.name} style={{ ...PILL, background: '#D4FA4F' }} />
+                <ShareProfile url={`${appUrl()}/${(await handleFor(them)) || 'u/' + them.id}`} name={them.name} style={{ ...PILL, background: '#D4FA4F' }} />
                 <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit</Link>
               </div>
               <span style={{ fontSize: 12, color: '#4A4A4A' }}>This is how others see your profile.</span>
