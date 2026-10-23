@@ -1,3 +1,6 @@
+import { appUrl } from '@/lib/texts';
+import ShareProfile from '@/components/share-profile';
+import { handleFor } from '@/lib/handles';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
@@ -200,7 +203,10 @@ export default async function HomePage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
           <h1 style={{ margin: 0, fontWeight: 400, fontSize: 28, letterSpacing: '-0.02em', lineHeight: 1 }}>{me.name || 'Hi there'}</h1>
           {me.bio ? <span style={{ fontSize: 15 }}>{me.bio}</span> : <Link href="/you/settings" style={{ fontSize: 15, color: '#4A4A4A' }}>Add a line about you</Link>}
-          <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000', marginTop: 2 }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 2 }}>
+            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+            <ShareProfile url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid #000', background: '#D4FA4F', borderRadius: 999, padding: '5px 12px', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', color: '#000' }} />
+          </span>
         </div>
       </section>
 
