@@ -54,6 +54,9 @@ export default async function AdminPage() {
       (SELECT COALESCE(SUM(c.amount_cents),0) FROM contributions c WHERE c.giver_id = u.id) AS given
     FROM users u WHERE ${REAL} ORDER BY u.created_at DESC LIMIT 200`);
 
+  let errors = [];
+  try { errors = await all('SELECT * FROM app_errors ORDER BY at DESC LIMIT 25'); } catch {}
+
   const card = { border: '1.5px solid #000', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4, background: '#fff' };
   const big = { fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em' };
   const small = { fontSize: 12, color: '#4A4A4A' };
@@ -96,6 +99,16 @@ export default async function AdminPage() {
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', ...small }}><span>{days[0].label}</span><span>Today</span></div>
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Recent errors ({errors.length})</h2>
+        {errors.length ? errors.map((e) => (
+          <details key={e.id} style={{ background: '#fff', border: '1px solid #000', padding: '8px 10px', fontSize: 13 }}>
+            <summary style={{ cursor: 'pointer' }}>{new Date(Number(e.at)).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} · {e.method} {e.path} · <b>{String(e.message).slice(0, 120)}</b>{e.digest ? ` · digest ${e.digest}` : ''}</summary>
+            <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, margin: '8px 0 0' }}>{e.stack}</pre>
+          </details>
+        )) : <span style={small}>None so far.</span>}
       </section>
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
