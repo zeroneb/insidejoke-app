@@ -3,6 +3,7 @@
 import { useActionState, useState } from 'react';
 import { createList } from '@/lib/actions';
 import { Blob, Avatar } from '@/components/ui';
+import { defaultListTitle } from '@/lib/list-title';
 
 const OCC = ['Birthday', 'Holidays', 'Just because', 'New place', "Dinner I'm hosting", 'Secret Santa'];
 const VIS = [['public', 'Public', 'On your profile. Anyone you share it with, or who finds it, can give.'], ['private', 'Private', 'Only the people you pick']];
@@ -52,11 +53,15 @@ function Chip({ user, onRemove }) {
 export default function NewListForm({ me, friends = [] }) {
   const [state, action, pending] = useActionState(createList, null);
   const [forWho, setForWho] = useState('me');
-  const [title, setTitle] = useState('For my birthday');
-  const pickFor = (k) => { setForWho(k); if (k === 'other' && title === 'For my birthday') setTitle(''); if (k === 'me' && title === '') setTitle('For my birthday'); };
+  const [occ, setOccRaw] = useState('Birthday');
+  const [title, setTitleRaw] = useState(defaultListTitle('Birthday'));
+  // Until the person types their own name, the name follows the occasion.
+  const [titleEdited, setTitleEdited] = useState(false);
+  const setTitle = (v) => { setTitleRaw(v); setTitleEdited(v.trim() !== ''); };
+  const setOcc = (o) => { setOccRaw(o); if (!titleEdited && forWho === 'me') setTitleRaw(defaultListTitle(o)); };
+  const pickFor = (k) => { setForWho(k); if (titleEdited) return; setTitleRaw(k === 'me' ? defaultListTitle(occ) : ''); };
   const [surprise, setSurprise] = useState(false);
   const [listType, setListType] = useState('wishes');
-  const [occ, setOcc] = useState('Birthday');
   const [extra, setExtra] = useState([]);
   const [adding, setAdding] = useState(false);
   const [newOcc, setNewOcc] = useState('');
@@ -81,7 +86,7 @@ export default function NewListForm({ me, friends = [] }) {
       <section aria-label="Name" style={{ position: 'relative', height: 250, margin: '6px 16px 0', background: '#13286B', overflow: 'hidden' }}>
         <Blob seed={22} width={300} height={206} style={{ left: 30, top: 22 }} />
         <label htmlFor="lname" style={{ position: 'absolute', left: 0, top: 18, width: '100%', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#FFFFFF' }}>Name your list</label>
-        <input id="lname" name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={forWho === 'other' ? 'For Mom' : 'For my birthday'} style={{ position: 'absolute', left: 50, right: 50, top: 92, border: 0, borderBottom: '1.5px solid #13286B', background: 'transparent', textAlign: 'center', fontFamily: "'EB Garamond', serif", fontSize: 40, color: '#000000', padding: '4px 0', boxSizing: 'border-box', width: 'calc(100% - 100px)', borderRadius: 0, outline: 'none' }} />
+        <input id="lname" name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={forWho === 'other' ? 'For Mom' : defaultListTitle(occ)} style={{ position: 'absolute', left: 50, right: 50, top: 92, border: 0, borderBottom: '1.5px solid #13286B', background: 'transparent', textAlign: 'center', fontFamily: "'EB Garamond', serif", fontSize: 40, color: '#000000', padding: '4px 0', boxSizing: 'border-box', width: 'calc(100% - 100px)', borderRadius: 0, outline: 'none' }} />
         <span style={{ position: 'absolute', left: 0, bottom: 16, width: '100%', textAlign: 'center', fontSize: 12, color: '#FFFFFF' }}>Tap to rename anytime</span>
       </section>
 
