@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Blob, Logo } from '@/components/ui';
 import { blob } from '@/lib/blob';
+import LandingDesktop from '@/components/landing-desktop';
 
 const rep = (a) => a.concat(a, a, a);
 const BAND = rep(["Let's celebrate you", '✦', 'and life', '✦']);
@@ -27,6 +28,11 @@ function MenuIcon() {
 export default function Landing() {
   const priya = blob(21, 4);
   return (
+    <>
+    <div className="dk-only"><main className="lp-dk">
+      <LandingDesktop />
+    </main></div>
+    <div className="ph-only">
     <main className="lp">
       <section aria-label="Announcement" className="lp-band">
         <div className="marq lp-bandin">{BAND.map((b, i) => <span key={i}>{b}</span>)}</div>
@@ -224,5 +230,7 @@ export default function Landing() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, fontSize: 14 }}><Link href="/about">Company</Link><Link href="/privacy">Privacy policy</Link><Link href="/menu">Contact</Link></div>
       </footer>
     </main>
+    </div>
+    </>
   );
 }

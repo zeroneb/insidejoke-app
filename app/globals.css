@@ -663,3 +663,14 @@ main.r4-heat { background-size: 130% 130%; }
 .wal-wait>summary::-webkit-details-marker{display:none}
 .wal-wait[open]>summary{margin-bottom:6px}
 .wal-wait[open] .wal-chev{transform:rotate(90deg)}
+
+/* Option 16: signed-out pages on laptop. No side menu there, so no empty strip. */
+@media (min-width: 900px) {
+  body:not(:has(.nav)) .app { margin-left: 0; }
+  .app > main.lp-dk { max-width: none; width: 100%; }
+  .app > div:has(> main.lp-dk) { max-width: none !important; }
+  .app > main.su-split { max-width: none; display: grid !important; grid-template-columns: 1fr 1fr; min-height: 100vh; padding: 0; }
+  .su-form { display: flex; flex-direction: column; justify-content: center; align-items: center; background: #ECECEF; }
+  .su-form > form { width: 100%; max-width: 480px; flex-grow: 0 !important; margin: 0 !important; min-height: 0 !important; padding-bottom: 0 !important; }
+  .su-form:has(> form[style*="A9CDF5"]) { background: #A9CDF5; }
+}

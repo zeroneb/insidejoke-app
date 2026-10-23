@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import SignupForm from '@/components/signup-form';
+import SignupArt from '@/components/signup-art';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,8 +12,9 @@ export default async function SignupPage({ searchParams, title = 'Sign up' }) {
   const me = await currentUser();
   if (me) redirect(next);
   return (
-    <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minHeight: '100vh' }}>
-      <SignupForm next={next} title={title} />
+    <main className="su-split" style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, minHeight: '100vh' }}>
+      <SignupArt />
+      <div className="su-form"><SignupForm next={next} title={title} /></div>
     </main>
   );
 }
