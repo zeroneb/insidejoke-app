@@ -18,6 +18,7 @@ export default async function WalletPage({ searchParams }) {
   const me = await currentUser();
   if (!me) redirect('/signup?next=/wallet');
   const sp = await searchParams;
+  try { const { all } = await import('@/lib/db'); const ids = (await all('SELECT id FROM lists WHERE owner_id = ?', me.id)).map((r) => r.id); await (await import('@/lib/payments')).settlePendingGifts({ listIds: ids }); } catch {}
   const lists = await walletByList(me.id);
   const pm = await payoutMethod(me.id);
   const cur = lists.find((l) => l.list.id === sp?.l) || lists.find((l) => l.cents) || lists.find((l) => l.waiting) || lists[0] || null;
@@ -124,6 +125,7 @@ export default async function WalletPage({ searchParams }) {
               <span style={{ fontSize: 13, flexShrink: 0 }}>{whole(w.raised)}{w.goal ? ` of ${whole(w.goal)}` : ''} ›</span>
             </Link>
           ))}
+          {cur.clearing ? <span style={{ fontSize: 13, lineHeight: 1.45, marginTop: 4 }}>Includes {whole(cur.clearing)} paid by bank, still clearing. Bank payments take 3–5 business days.</span> : null}
           <span style={{ fontSize: 13, fontWeight: 800, marginTop: 4 }}>This unlocks when any of these happens:</span>
           <ul style={{ margin: 0, paddingLeft: 18, fontSize: 13, lineHeight: 1.5 }}>
             <li>The wish is fully covered</li>
@@ -133,7 +135,7 @@ export default async function WalletPage({ searchParams }) {
         </details>
       ) : null}
       {cur.cents ? (
-      <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared || cur.closed} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} />
+      <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared || cur.closed} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} toGo={cur.closed ? 0 : Math.max(0, 2500 - cur.cents)} />
       ) : (
         <div style={{ padding: '22px 16px 34px', display: 'flex', flexDirection: 'column' }}>
           <Link href="/wallet/history" style={{ alignSelf: 'center', fontSize: 13, color: V, textDecoration: 'underline', textUnderlineOffset: 3, padding: '6px 10px' }}>See your history</Link>

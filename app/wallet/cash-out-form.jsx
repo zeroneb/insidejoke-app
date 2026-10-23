@@ -7,7 +7,7 @@ import { cashOutList } from '@/lib/actions-r3';
 
 const V = '#3B12D9', Y = '#E6F98A';
 
-export default function CashOutForm({ listId, shared, net, dest, card }) {
+export default function CashOutForm({ listId, shared, net, dest, card, toGo = 0 }) {
   const [state, action, pending] = useActionState(cashOutList, null);
   const [arch, setArch] = useState(false);
   const note = shared
@@ -28,7 +28,12 @@ export default function CashOutForm({ listId, shared, net, dest, card }) {
       </section>
       <div style={{ padding: '26px 16px 34px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {state?.error ? <p className="err" style={{ margin: 0 }}>{state.error}</p> : null}
-        {dest ? (
+        {dest && toGo > 0 && !arch && !shared ? (
+          <>
+            <span aria-disabled="true" style={{ display: 'block', width: '100%', textAlign: 'center', border: `1.5px dashed ${V}`, color: V, fontWeight: 800, fontSize: 16, padding: '16px 0', borderRadius: 999, boxSizing: 'border-box' }}>Cash out at $25 · ${(toGo / 100).toFixed(2).replace(/\.00$/, '')} to go</span>
+            <span style={{ textAlign: 'center', fontSize: 12 }}>Or archive the list above to cash out what's here now.</span>
+          </>
+        ) : dest ? (
           <button type="submit" disabled={pending} style={{ display: 'block', width: '100%', textAlign: 'center', border: 0, background: V, color: Y, fontFamily: 'inherit', fontWeight: 800, fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending ? 0.6 : 1 }}>{pending ? 'Sending…' : `Cash out ${net} to ${dest}`}</button>
         ) : (
           <Link href={`/wallet/payout?next=${encodeURIComponent('/wallet?l=' + listId)}`} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: V, color: Y, fontWeight: 800, fontSize: 17, padding: '17px 0', borderRadius: 999 }}>Set up where it lands</Link>

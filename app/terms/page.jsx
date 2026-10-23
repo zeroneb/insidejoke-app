@@ -32,6 +32,8 @@ export default function Page() {
             <li>Money given to your lists is held for you until you cash out to a bank account you link.</li>
             <li><b>Fee.</b> When you cash out, we take a 7% processing fee from the amount sent. That's the only fee. The fee is shown before you confirm.</li>
             <li><b>When money can be cashed out.</b> Treats and fully covered wishes can be cashed out anytime. Money toward a wish that isn't fully covered becomes available when that wish is covered, when the list closes (you archive it or its date passes), or when you archive the wish and choose to cash out or move its gifts to another wish.</li>
+            <li><b>Minimum cash-out.</b> You can cash out once you have $25 ready, or anytime a list has closed (archived or its date has passed).</li>
+            <li><b>Bank payments.</b> Gifts paid from a bank account take 3–5 business days to clear and can be cashed out once they have. If a bank payment is returned, the gift is removed.</li>
             <li>To cash out you must complete identity and bank verification with our payment provider. Payouts usually arrive in 1–2 business days but can take longer.</li>
             <li>We may hold or reverse funds connected to fraud, chargebacks, or a breach of these terms.</li>
             <li>You're responsible for any taxes on money you receive.</li>
