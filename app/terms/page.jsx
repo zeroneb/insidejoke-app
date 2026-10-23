@@ -11,6 +11,7 @@ export default function Page() {
       intro={`These terms are an agreement between you and ${n} ("insidejoke", "we", "us") for using insidejoke.club and our services. By using insidejoke you agree to them. If you don't agree, please don't use insidejoke.`}
       sections={[
         { h: 'What insidejoke is', body: (<p>insidejoke lets you make lists of things you'd love, share them, and let friends and family get them, chip in toward them, or treat you to them. Money given is held for the person celebrated and passed to them when they cash out. insidejoke is not a store: we don't sell, ship or guarantee the items on lists, and links go to other sites we don't control.</p>) },
+        { h: 'Store links', body: (<p>Links to stores on lists may be affiliate links. If someone buys through them, insidejoke may earn a small commission from the store. It never changes the price you pay or what anyone gives.</p>) },
         { h: 'Your account', body: (<>
           <ul>
             <li>You need a working phone number to sign up. Keep your phone and sign-in codes secure. You're responsible for what happens on your account.</li>

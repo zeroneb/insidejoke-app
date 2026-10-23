@@ -70,6 +70,7 @@ export default async function AdminPage() {
   const maxG = Math.max(1, ...gdays.map((d) => d.n));
   const views = await ev("SELECT e.detail, COUNT(*) AS n FROM app_events e WHERE e.kind = 'list_view' AND e.at > ? GROUP BY e.detail", wk);
   const topViewed = await ev("SELECT l.title, l.slug, COUNT(*) AS n FROM app_events e JOIN lists l ON l.id = e.ref WHERE e.kind = 'list_view' AND e.at > ? GROUP BY l.title, l.slug ORDER BY n DESC LIMIT 5", wk);
+  const outbound = await ev("SELECT detail, COUNT(*) AS n FROM app_events WHERE kind = 'outbound' AND at > ? GROUP BY detail ORDER BY n DESC LIMIT 8", wk);
   const signups = await ev("SELECT detail, COUNT(*) AS n FROM app_events WHERE kind = 'signup' AND at > ? GROUP BY detail", wk);
   const feed = (await ev(`SELECT * FROM (
       SELECT u.created_at AS at, 'joined' AS what, u.name AS who, '' AS thing FROM users u WHERE ${REAL}
@@ -140,6 +141,7 @@ export default async function AdminPage() {
           <div style={card}><span style={small}>List views by members</span><span style={big}>{cnt(views, 'signed_in')}</span><span style={small}>signed in, not the owner</span></div>
           <div style={card}><span style={small}>Sign-ups from a shared link</span><span style={big}>{cnt(signups, 'from_share')}</span><span style={small}>{cnt(signups, 'direct')} signed up directly</span></div>
         </div>
+        <div style={{ fontSize: 13 }}>Store link clicks: <b>{outbound.reduce((a, r) => a + Number(r.n), 0)}</b>{outbound.length ? ' · ' + outbound.map((r) => `${String(r.detail).replace(/^www\./, '')} ${Number(r.n)}`).join(' · ') : ''}</div>
         {topViewed.length ? <div style={{ fontSize: 13 }}>Most viewed: {topViewed.map((t, i) => <span key={t.slug}>{i ? ' · ' : ''}<a href={`/l/${t.slug}`} style={{ color: '#000' }}>{t.title}</a> ({Number(t.n)})</span>)}</div> : null}
       </section>
 

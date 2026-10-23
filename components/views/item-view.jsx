@@ -116,7 +116,7 @@ export default async function ItemView({ slug, itemId }) {
           ) : null}
         </div>
         {it.url ? (
-          <a href={/^https?:/i.test(it.url) ? it.url : 'https://' + it.url} target="_blank" rel="noopener" style={{ alignSelf: 'flex-start', marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'underline', textUnderlineOffset: 3, fontSize: 15, fontWeight: 700, padding: '10px 0', color: '#000000' }}>See it on {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
+          <a href={`/go/${it.id}`} target="_blank" rel="noopener sponsored" style={{ alignSelf: 'flex-start', marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'underline', textUnderlineOffset: 3, fontSize: 15, fontWeight: 700, padding: '10px 0', color: '#000000' }}>See it on {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
         ) : null}
       </section>
 
