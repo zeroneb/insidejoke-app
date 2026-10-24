@@ -4,9 +4,7 @@ import { Blob } from '@/components/ui';
 
 const SOCIALS = [
   ['Instagram', '@clubinsidejoke', 'https://instagram.com/clubinsidejoke'],
-  ['X / Twitter', '@clubinsidejoke', 'https://x.com/clubinsidejoke'],
-  ['LinkedIn', '[company page]', 'https://linkedin.com'],
-  ['Substack', '[newsletter]', 'https://substack.com']
+  ['X / Twitter', '@clubinsidejoke', 'https://x.com/clubinsidejoke']
 ];
 
 export const metadata = { title: 'Menu · insidejoke' };
@@ -39,7 +37,7 @@ export default function Menu() {
         <span className="wide menu-lbl">Find us on</span>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
           {SOCIALS.map(([name, handle, href]) => (
-            <a key={name} href={href} className="menu-social"><span style={{ fontWeight: 700, fontSize: 15 }}>{name}</span><span style={{ fontSize: 12, color: '#DCE3FF' }}>{handle}</span></a>
+            <a key={name} href={href} target="_blank" rel="noopener noreferrer" className="menu-social"><span style={{ fontWeight: 700, fontSize: 15 }}>{name}</span><span style={{ fontSize: 12, color: '#DCE3FF' }}>{handle}</span></a>
           ))}
         </div>
       </section>
