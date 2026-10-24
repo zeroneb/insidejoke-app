@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { blob } from '@/lib/blob';
 import PlayOnScroll from '@/components/play-on-scroll';
+import SocialIcons from '@/components/social-icons';
 
 const x4 = (a) => a.concat(a, a, a);
 const BAND = x4(["LET'S CELEBRATE YOU", '✦', 'AND LIFE', '✦']);
@@ -97,7 +98,7 @@ export default function LandingDesktop() {
     <PlayOnScroll />
     <footer style={{ background: '#13286B', color: '#FFFFFF', padding: '36px 64px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <span><span className="wide" style={{ fontSize: '22px', textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: '28px', color: '#D4FA4F' }}>joke</span></span>
-    <nav aria-label="Footer" style={{ display: 'flex', gap: '28px', fontSize: '15px' }}><Link href="/about">Company</Link><Link href="/privacy">Privacy policy</Link><Link href="/menu">Contact</Link></nav>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '36px' }}><nav aria-label="Footer" style={{ display: 'flex', gap: '28px', fontSize: '15px' }}><Link href="/about">Company</Link><Link href="/privacy">Privacy policy</Link><Link href="/menu">Contact</Link></nav><SocialIcons size={22} /></div>
     </footer>
     </div>
   );

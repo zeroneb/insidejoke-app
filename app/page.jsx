@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Blob, Logo } from '@/components/ui';
 import { blob } from '@/lib/blob';
 import LandingDesktop from '@/components/landing-desktop';
+import SocialIcons from '@/components/social-icons';
 
 const rep = (a) => a.concat(a, a, a);
 const BAND = rep(["Let's celebrate you", '✦', 'and life', '✦']);
@@ -228,6 +229,7 @@ export default function Landing() {
       <footer className="lp-foot">
         <span style={{ fontSize: 26 }}><span className="wide" style={{ fontSize: 22, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 28, color: '#D4FA4F' }}>joke</span></span>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, fontSize: 14 }}><Link href="/about">Company</Link><Link href="/privacy">Privacy policy</Link><Link href="/menu">Contact</Link></div>
+        <SocialIcons />
       </footer>
     </main>
     </div>
