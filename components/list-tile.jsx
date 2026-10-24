@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { all, get } from '@/lib/db';
 import { itemsFor } from '@/lib/lists';
 import { Blob } from '@/components/ui';
+import CoverDesign from '@/components/cover-design';
+import { parse as parseDesign } from '@/lib/cover-designs';
 
 // a1/r1: list tiles from the Option 10 Home / You / FriendProfile boards.
 // Kinds: own wish list (blob title), collab ("COLLAB · WITH <name>"), surprise ("SECRET FROM <name>", cake),
@@ -60,6 +62,17 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   const base = { position: 'relative', height: h, textDecoration: 'none', overflow: 'hidden', display: 'flex', flexDirection: 'column', padding: 12, boxSizing: 'border-box' };
   const href = `/l/${t.slug}`;
   const plainCap = { position: 'relative', fontSize: 11, fontWeight: 700, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' };
+
+  // v1 covers: the list's own cover, filling the tile.
+  const design = parseDesign(t.design);
+  if (design) {
+    return (
+      <Link href={href} aria-label={`${t.title}, ${things}`} style={{ ...base, padding: 0 }}>
+        <CoverDesign design={design} title={t.title} fluid height={h} label={t.title} ctx={{ visibility: t.visibility, recipient: t.recipient_name || null, people: ['You', ...t.others.slice(0, 2).map((o) => firstName(o.name))], photo: t.photo || null }} />
+        {foot ? <span style={{ position: 'absolute', left: 8, bottom: 8, background: '#FFFFFF', color: '#000000', fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 999 }}>{foot[0]}</span> : null}
+      </Link>
+    );
+  }
 
   if (t.kind === 'collab') {
     const w = t.others[0] ? firstName(t.others[0].name) : null;

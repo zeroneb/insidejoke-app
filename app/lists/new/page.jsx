@@ -17,7 +17,7 @@ export default async function NewListPage() {
         <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>New list</span>
       </header>
-      <NewListForm me={{ id: me.id, name: me.name, color: me.color, seed: me.seed, photo: me.photo }} friends={friends} />
+      <NewListForm me={{ id: me.id, name: me.name, color: me.color, seed: me.seed, photo: me.photo, handle: me.handle || null }} friends={friends} />
     </main>
   );
 }

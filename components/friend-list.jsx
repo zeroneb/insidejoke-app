@@ -1,4 +1,6 @@
 import { TitleWords } from '@/components/owner-list';
+import { parse as parseDesign } from '@/lib/cover-designs';
+import CoverDesign from '@/components/cover-design';
 import Link from 'next/link';
 import { coverFor, listKind } from '@/lib/cover';
 import { CoverArt } from '@/components/cover-art';
@@ -51,9 +53,25 @@ export default function FriendList({ list, owner, items, me }) {
   const words = String(list.title || '').trim().split(/\s+/);
   const long = (list.title || '').length > 20;
   const cv = coverFor(list, listKind(list, items));
+  const design = parseDesign(list.design);
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      {design ? (
+        <>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
+            <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+            {me && list.visibility !== 'private' ? (
+              <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+            ) : <span style={{ width: 44 }} />}
+          </header>
+          <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: [name], photo: list.photo || null, handle: owner?.handle || null }} />
+          <div style={{ padding: '10px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+            <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: '#000000', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
+            <span className="dot" style={{ fontSize: 14, flexShrink: 0 }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
+          </div>
+        </>
+      ) : (
       <section style={{ position: 'relative', background: cv.bg, color: cv.chrome, height: 420, overflow: 'hidden', flexShrink: 0 }}>
         <CoverArt cv={cv} />
         <header style={{ position: 'relative', zIndex: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
@@ -75,6 +93,7 @@ export default function FriendList({ list, owner, items, me }) {
           <span className="dot" style={{ fontSize: 14, flexShrink: 0, color: cv.chrome }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
         </div>
       </section>
+      )}
 
       <ListProgress items={items} pad="22px 20px 0" />
       {treats.length ? (

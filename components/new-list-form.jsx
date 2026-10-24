@@ -4,7 +4,7 @@ import { useActionState, useState } from 'react';
 import { createList } from '@/lib/actions';
 import { Blob, Avatar } from '@/components/ui';
 import { defaultListTitle } from '@/lib/list-title';
-import { CoverPhotoField } from '@/components/cover-photo';
+import { CoverField } from '@/components/cover-picker';
 
 const OCC = ['Birthday', 'Holidays', 'Just because', 'New place', "Dinner I'm hosting", 'Secret Santa'];
 const VIS = [['public', 'Public', 'On your profile. Anyone you share it with, or who finds it, can give.'], ['private', 'Private', 'Only the people you pick']];
@@ -60,8 +60,9 @@ export default function NewListForm({ me, friends = [] }) {
   const [titleEdited, setTitleEdited] = useState(false);
   const setTitle = (v) => { setTitleRaw(v); setTitleEdited(v.trim() !== ''); };
   const setOcc = (o) => { setOccRaw(o); if (!titleEdited && forWho === 'me') setTitleRaw(defaultListTitle(o)); };
-  const pickFor = (k) => { setForWho(k); if (titleEdited) return; setTitleRaw(k === 'me' ? defaultListTitle(occ) : ''); };
+  const pickFor = (k) => { setForWho(k); if (k !== 'me') setListType('wishes'); if (titleEdited) return; setTitleRaw(k === 'me' ? defaultListTitle(occ) : ''); };
   const [surprise, setSurprise] = useState(false);
+  const [recipient, setRecipient] = useState('');
   const [listType, setListType] = useState('wishes');
   const [extra, setExtra] = useState([]);
   const [adding, setAdding] = useState(false);
@@ -84,11 +85,28 @@ export default function NewListForm({ me, friends = [] }) {
 
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-      <section aria-label="Name" style={{ position: 'relative', height: 250, margin: '6px 16px 0', background: '#13286B', overflow: 'hidden' }}>
-        <Blob seed={22} width={300} height={206} style={{ left: 30, top: 22 }} />
-        <label htmlFor="lname" style={{ position: 'absolute', left: 0, top: 18, width: '100%', textAlign: 'center', fontSize: 12, fontWeight: 700, color: '#FFFFFF' }}>Name your list</label>
-        <input id="lname" name="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={forWho === 'other' ? 'For Mom' : defaultListTitle(occ)} style={{ position: 'absolute', left: 50, right: 50, top: 92, border: 0, borderBottom: '1.5px solid #13286B', background: 'transparent', textAlign: 'center', fontFamily: "'EB Garamond', serif", fontSize: 40, color: '#000000', padding: '4px 0', boxSizing: 'border-box', width: 'calc(100% - 100px)', borderRadius: 0, outline: 'none' }} />
-        <span style={{ position: 'absolute', left: 0, bottom: 16, width: '100%', textAlign: 'center', fontSize: 12, color: '#FFFFFF' }}>Tap to rename anytime</span>
+      <section style={{ padding: '14px 20px 0' }}>
+        <input type="hidden" name="listType" value={listType} />
+        <div role="radiogroup" aria-label="List type" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+          {[['wishes', 'Wishes', 'Things to get. Pick any cover'], ['treats', 'Treat · unlimited', forWho === 'me' ? 'Coffee, rides, nights out' : 'Only on your own lists']].map(([k, l, sub]) => {
+            const on = listType === k, off = k === 'treats' && forWho !== 'me';
+            return (
+              <button key={k} type="button" role="radio" aria-checked={on} disabled={off} onClick={() => setListType(k)} style={{ textAlign: 'left', border: '1.5px solid #000000', background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', opacity: off ? 0.45 : 1, fontFamily: 'inherit', padding: '12px', display: 'flex', flexDirection: 'column', gap: 2, cursor: off ? 'default' : 'pointer', borderRadius: 0 }}>
+                <strong style={{ fontSize: 15 }}>{l}</strong><span style={{ fontSize: 12 }}>{sub}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <CoverField title={title || (forWho === 'other' ? (recipient ? `For ${recipient}` : 'For someone') : defaultListTitle(occ))} onTitle={(t) => setTitle(t)} treat={listType === 'treats' && forWho === 'me'}
+        flags={{ surprise: sur, forOther: forWho === 'other', collab: collabs.length + phones.length > 0, occasion: occ }}
+        ctx={{ visibility: vis, recipient: recipient || null, people: ['You', ...collabs.map((c) => (c.name || '').split(/\s+/)[0])].filter(Boolean), handle: me?.handle || null }} />
+
+      <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <label htmlFor="lname" className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Name your list</label>
+        <input id="lname" name="title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={60} placeholder={forWho === 'other' ? 'For Mom' : defaultListTitle(occ)} style={{ background: '#FFFFFF', border: '1.5px solid #000000', borderRadius: 0, padding: '10px 14px', fontFamily: "'EB Garamond', serif", fontSize: 30, lineHeight: 1.1, width: '100%', boxSizing: 'border-box', outline: 'none' }} />
+        <span style={{ fontSize: 12, color: '#4A4A4A' }}>{listType === 'treats' && forWho === 'me' ? 'Treats are unlimited: friends can send one again and again.' : 'The name goes on your cover as you type. Tap the pencil to edit the cover.'}</span>
       </section>
 
       <Section>
@@ -98,7 +116,7 @@ export default function NewListForm({ me, friends = [] }) {
         {forWho === 'other' ? (
           <div className="pop" style={{ display: 'flex', flexDirection: 'column', gap: 8, background: '#D8F75A', padding: 14 }}>
             <label htmlFor="theirname" style={{ fontSize: 17, fontWeight: 700 }}>Who is it for? Write their name.</label>
-            <input id="theirname" name="recipient" placeholder="Their name, like Mom or Leila" style={{ height: 50, border: '2px solid #000000', background: '#FFFFFF', fontFamily: "'EB Garamond', serif", fontSize: 22, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
+            <input id="theirname" name="recipient" value={recipient} onChange={(e) => setRecipient(e.target.value)} placeholder="Their name, like Mom or Leila" style={{ height: 50, border: '2px solid #000000', background: '#FFFFFF', fontFamily: "'EB Garamond', serif", fontSize: 22, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
             <span style={{ fontSize: 13, lineHeight: 1.4 }}>Their name goes on the list, like “For Mom.” You'll add their number when you hand it off.</span>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, paddingTop: 10, borderTop: '1.5px solid #000000' }}>
               <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 700, fontSize: 16 }}>Keep it a surprise?</span><span style={{ fontSize: 13 }}>They won't see it until you send it.</span></span>
@@ -108,19 +126,6 @@ export default function NewListForm({ me, friends = [] }) {
           </div>
         ) : null}
       </Section>
-
-      <Section>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}><H2>Cover photo</H2><span style={{ fontSize: 12, color: '#4A4A4A' }}>Optional</span></div>
-        <CoverPhotoField shape={forWho === 'me' && listType === 'treats' ? 'diamond' : 'circle'} />
-      </Section>
-
-      {forWho === 'me' ? (
-        <Section>
-          <H2>What goes on it</H2>
-          <input type="hidden" name="listType" value={listType} />
-          <Cards label="What goes on it" opts={[['wishes', 'Wishes', 'Things friends get or chip in on'], ['treats', 'Unlimited', 'Coffee, bagels, flowers: treat me anytime, again and again']]} value={listType} onPick={setListType} />
-        </Section>
-      ) : null}
 
       <Section>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}><H2>Occasion</H2><span style={{ fontSize: 12, color: '#4A4A4A' }}>Optional</span></div>
