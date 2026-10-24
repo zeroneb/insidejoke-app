@@ -4,6 +4,7 @@ import { currentUser } from '@/lib/auth';
 import { all, get } from '@/lib/db';
 import { usd } from '@/components/wallet-ui';
 import { decideReviewAction } from '@/lib/actions-review';
+import { financials, byGiftType } from '@/lib/finance';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Admin · insidejoke', robots: { index: false } };
@@ -15,7 +16,7 @@ const REAL = "u.phone NOT LIKE '+1555%'";
 
 const n = async (sql, ...p) => Number((await get(sql, ...p))?.n || 0);
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }) {
   const me = await currentUser();
   const admins = String(process.env.ADMIN_PHONES || '').split(',').map(digits).filter(Boolean);
   if (!me || !admins.includes(digits(me.phone))) notFound();
@@ -89,6 +90,10 @@ export default async function AdminPage() {
   const small = { fontSize: 12, color: '#4A4A4A' };
   const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : '–');
 
+  const range = (await searchParams)?.range === '30' ? '30' : 'all';
+  const sinceMs = range === '30' ? Date.now() - 30 * DAY : 0;
+  const fin = await financials({ sinceMs });
+  const types = await byGiftType({ sinceMs });
   const reviews = await all(`SELECT r.*, l.title, l.slug, u.name, u.phone FROM cashout_reviews r JOIN lists l ON l.id = r.list_id JOIN users u ON u.id = r.user_id WHERE r.status = 'pending' ORDER BY r.created_at ASC`);
   const reviewBtn = { height: 40, padding: '0 16px', border: '1.5px solid #000', borderRadius: 999, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' };
 
@@ -120,6 +125,45 @@ export default async function AdminPage() {
           })}
         </section>
       ) : null}
+
+      <section aria-label="Financial overview" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+          <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>Money</h2>
+          <nav style={{ display: 'flex', gap: 6 }}>
+            {[['all', 'All time'], ['30', 'Last 30 days']].map(([k, l]) => <a key={k} href={k === 'all' ? '/admin' : '/admin?range=30'} aria-current={range === k ? 'page' : undefined} style={{ border: '1.5px solid #000', borderRadius: 999, padding: '5px 12px', fontSize: 13, fontWeight: 700, textDecoration: 'none', background: range === k ? '#000' : 'transparent', color: range === k ? '#fff' : '#000' }}>{l}</a>)}
+          </nav>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
+          <div style={card}><span style={small}>Gift volume</span><span style={big}>{usd(fin.gifts.cents)}</span><span style={small}>{fin.gifts.n} gifts · {fin.gifts.small} at $5 or less</span></div>
+          <div style={card}><span style={small}>insidejoke revenue</span><span style={big}>{usd(fin.revenue)}</span><span style={small}>{usd(fin.platform)} from 5% · {usd(fin.cashoutFees)} cash-out fees</span></div>
+          <div style={card}><span style={small}>Receiver balances</span><span style={big}>{usd(fin.owed)}</span><span style={small}>Owed to people, on {fin.owedLists} {fin.owedLists === 1 ? 'list' : 'lists'}, before fees</span></div>
+          <div style={card}><span style={small}>Processing costs</span><span style={big}>{usd(fin.processing)}</span><span style={small}>{fin.processingEst ? 'Partly estimated · ' : ''}{usd(fin.recovered)} passed on at cash-out</span></div>
+          <div style={card}><span style={small}>Cash-outs</span><span style={big}>{usd(fin.cashouts.cents)}</span><span style={small}>{fin.cashouts.n} sent · {usd(fin.payoutCosts)} payout costs (est.)</span></div>
+          <div style={card}><span style={small}>Failed payments & refunds</span><span style={big}>{usd(fin.failed.removedCents)}</span><span style={small}>{fin.failed.removedN} removed · {fin.failed.payFails} failed payments · {fin.failed.payoutFails} failed cash-outs</span></div>
+          <div style={{ ...card, background: fin.net < 0 ? '#FFE3DE' : '#E6F98A' }}><span style={small}>Net contribution</span><span style={big}>{usd(fin.net)}</span><span style={small}>Revenue minus processing, payout and account fees, on cashed-out money</span></div>
+        </div>
+        {fin.processingPending ? <span style={small}>{usd(fin.processingPending)} of processing is on gifts not cashed out yet. It's passed on to the receiver when they cash out.</span> : null}
+        <div style={{ ...card, padding: 0, overflowX: 'auto' }}>
+          <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 560, fontSize: 14 }}>
+            <thead><tr style={{ textAlign: 'right', borderBottom: '1.5px solid #000' }}>{['By gift type', 'Gifts', 'Volume', 'Avg gift', '$5 or less', 'Processing', 'Cost %', 'Expected net'].map((h, i) => <th key={h} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 800, textAlign: i ? 'right' : 'left', whiteSpace: 'nowrap' }}>{h}</th>)}</tr></thead>
+            <tbody>
+              {types.map((t) => (
+                <tr key={t.key} style={{ borderTop: '1px solid #D7D7DC', textAlign: 'right' }}>
+                  <td style={{ padding: '10px 12px', textAlign: 'left', fontWeight: 700 }}>{t.label}</td>
+                  <td style={{ padding: '10px 12px' }}>{t.n}</td>
+                  <td style={{ padding: '10px 12px' }}>{usd(t.cents)}</td>
+                  <td style={{ padding: '10px 12px' }}>{usd(t.avg)}</td>
+                  <td style={{ padding: '10px 12px' }}>{t.small}</td>
+                  <td style={{ padding: '10px 12px' }}>{usd(t.processing)}</td>
+                  <td style={{ padding: '10px 12px' }}>{t.cents ? `${(t.costPct * 100).toFixed(1)}%` : '–'}</td>
+                  <td style={{ padding: '10px 12px', fontWeight: 700, color: t.net < 0 ? '#C0261A' : '#000' }}>{usd(t.net)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <span style={small}>Expected net = our 5% + processing passed on − what the provider charged, earned when these gifts are cashed out. The $2.50 cash-out fee and payout costs are per cash-out, so they aren't split by type. Only settled money can be cashed out.</span>
+      </section>
 
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
         <div style={card}><span style={small}>People</span><span style={big}>{users}</span><span style={small}>+{users7} this week</span></div>

@@ -126,7 +126,7 @@ export default async function WalletPage({ searchParams }) {
       {cur.holding ? (
         <div aria-label="Arriving soon" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 6 }}>
           <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Arriving soon</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.holding)}</span></span>
-          <span style={{ fontSize: 13, lineHeight: 1.45 }}>New card gifts can be cashed out 3 days after they're given{cur.holdUntil ? `. The next one is ready ${new Date(cur.holdUntil).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}` : ''}. It keeps everyone's money safe from stolen cards.</span>
+          <span style={{ fontSize: 13, lineHeight: 1.45 }}>New gifts can be cashed out once the payment settles, about 3 days after they're given{cur.holdUntil ? `. The next one is ready ${new Date(cur.holdUntil).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}` : ''}. It keeps everyone's money safe from stolen cards.</span>
         </div>
       ) : null}
       {cur.waiting ? (
