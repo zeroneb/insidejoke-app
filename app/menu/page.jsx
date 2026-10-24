@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Blob } from '@/components/ui';
 
 const SOCIALS = [
-  ['Instagram', '@[handle]', 'https://instagram.com'],
+  ['Instagram', '@clubinsidejoke', 'https://instagram.com/clubinsidejoke'],
   ['X / Twitter', '@clubinsidejoke', 'https://x.com/clubinsidejoke'],
   ['LinkedIn', '[company page]', 'https://linkedin.com'],
   ['Substack', '[newsletter]', 'https://substack.com']

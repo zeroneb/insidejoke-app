@@ -48,7 +48,7 @@ function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
   const ink = (k) => (active === k ? NAVY : W);
   return (
     <nav aria-label="Main" className="nav">
-      <Link href="/home" className="navlogo" aria-label="insidejoke home"><span className="wide" style={{ fontSize: 11, color: W, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 21, color: LIME }}>joke</span></Link>
+      <Link href="/" className="navlogo" aria-label="insidejoke landing page"><span className="wide" style={{ fontSize: 11, color: W, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 21, color: LIME }}>joke</span></Link>
       <span className="ph-only">
       <Tab href="/you" label="Profile and settings" short="Settings" active={active === 'home'}>
         <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('home')} strokeWidth="2" strokeLinecap="round"><path d="M5 7h14" /><path d="M5 12h14" /><path d="M5 17h9" /></svg>
