@@ -101,7 +101,7 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
   const [ring, setRing] = useState(null);
   const wrap = useRef(null);
   const input = useRef(null);
-  const values = slotsFor(d);
+  const values = slotsFor(d, t);
   const max = sel === 'title' ? (c.maxTitle || 40) : c.slots[sel]?.[2] || 40;
   const val = sel === 'title' ? t : (d.s?.[sel] ?? values[sel] ?? '');
   const setVal = (v) => {
