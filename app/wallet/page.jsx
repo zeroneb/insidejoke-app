@@ -151,7 +151,14 @@ export default async function WalletPage({ searchParams }) {
       {cur.cents ? (
       <CashOutForm key={cur.list.id} listId={cur.list.id} shared={cur.shared || cur.closed} net={usd(cur.net)} dest={dest} card={pm?.kind === 'card'} toGo={cur.closed ? 0 : Math.max(0, 2500 - cur.cents)} />
       ) : (
-        <div style={{ padding: '22px 16px 34px', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ padding: '22px 16px 34px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Nothing ready yet: still say where the line is, so the $25 minimum is never a surprise. */}
+          {(cur.holding || cur.waiting) && !cur.closed && cur.holding + cur.waiting < 2500 ? (
+            <>
+              <span style={{ display: 'block', width: '100%', textAlign: 'center', border: `1.5px dashed ${V}`, color: V, fontWeight: 800, fontSize: 16, padding: '16px 0', borderRadius: 999, boxSizing: 'border-box' }}>Cash out at $25 · {whole(2500 - cur.holding - cur.waiting)} to go</span>
+              <span style={{ textAlign: 'center', fontSize: 12 }}>Or archive the list once gifts arrive to cash out what's there.</span>
+            </>
+          ) : null}
           <Link href="/wallet/history" style={{ alignSelf: 'center', fontSize: 13, color: V, textDecoration: 'underline', textUnderlineOffset: 3, padding: '6px 10px' }}>See your history</Link>
         </div>
       )}

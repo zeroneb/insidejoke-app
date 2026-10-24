@@ -38,7 +38,7 @@ export default function CashOutForm({ listId, shared, net, dest, card, toGo = 0 
         ) : (
           <Link href={`/wallet/payout?next=${encodeURIComponent('/wallet?l=' + listId)}`} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: V, color: Y, fontWeight: 800, fontSize: 17, padding: '17px 0', borderRadius: 999 }}>Set up where it lands</Link>
         )}
-        <span style={{ textAlign: 'center', fontSize: 12 }}>{!dest ? 'Once. Then cashing out is one tap.' : card ? 'Usually arrives in minutes' : 'Usually arrives in 1–2 business days'}</span>
+        <span style={{ textAlign: 'center', fontSize: 12 }}>{!dest ? (toGo > 0 && !shared ? `Once. You can cash out when $25 is ready, ${'$' + (toGo / 100).toFixed(2).replace(/\.00$/, '')} to go.` : 'Once. Then cashing out is one tap.') : card ? 'Usually arrives in minutes' : 'Usually arrives in 1–2 business days'}</span>
         <Link href="/wallet/history" style={{ alignSelf: 'center', fontSize: 13, color: V, textDecoration: 'underline', textUnderlineOffset: 3, padding: '6px 10px' }}>See your history</Link>
       </div>
     </form>
