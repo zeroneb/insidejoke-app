@@ -30,13 +30,23 @@ export default function Page() {
         { h: 'Receiving and cashing out', body: (<>
           <ul>
             <li>Money given to your lists is held for you until you cash out to a bank account you link.</li>
-            <li><b>Fee.</b> When you cash out, we take a 7% processing fee from the amount sent. That's the only fee. The fee is shown before you confirm.</li>
+            <li><b>Fees.</b> When you cash out, three things come off the amount sent: the cost of processing each gift (2.9% + 30¢ for a card, 0.8% up to $5 for a bank payment), insidejoke's 5% fee, and a flat $2.50 cash-out fee. Givers never pay a fee. Every fee is shown before you confirm.</li>
+            <li><b>New card gifts.</b> To protect against stolen cards, a gift paid by card can be cashed out 3 days after it's given.</li>
             <li><b>When money can be cashed out.</b> Treats and fully covered wishes can be cashed out anytime. Money toward a wish that isn't fully covered becomes available when that wish is covered, when the list closes (you archive it or its date passes), or when you archive the wish and choose to cash out or move its gifts to another wish.</li>
-            <li><b>Minimum cash-out.</b> You can cash out once you have $25 ready, or anytime a list has closed (archived or its date has passed).</li>
+            <li><b>Minimum cash-out.</b> You can cash out once you have $25 ready, or anytime a list has closed (archived or its date has passed), as long as there is something left after fees.</li><li><b>Review.</b> We may pause a cash-out to check for fraud. We'll text you if we do, and most reviews take about a day.</li>
             <li><b>Bank payments.</b> Gifts paid from a bank account take 3–5 business days to clear and can be cashed out once they have. If a bank payment is returned, the gift is removed.</li>
             <li>To cash out you must complete identity and bank verification with our payment provider. Payouts usually arrive in 1–2 business days but can take longer.</li>
             <li>We may hold or reverse funds connected to fraud, chargebacks, or a breach of these terms.</li>
             <li>You're responsible for any taxes on money you receive.</li>
+          </ul>
+        </>) },
+        { h: 'Refunds and disputed payments', body: (<>
+          <ul>
+            <li><b>Changing your mind.</b> Gifts are final once given. If you gave by mistake (wrong list, wrong amount), contact us before the person cashes out and we'll refund it to the way you paid.</li>
+            <li><b>Before cash-out.</b> If a payment is disputed with the giver's bank, or reported as unauthorized, the gift is removed from the receiver's wallet and returned to the giver's bank. The receiver is told.</li>
+            <li><b>After cash-out.</b> If a disputed gift was already cashed out, the amount is taken from the receiver's future gifts on insidejoke, and we may ask the receiver to repay it. We may pause cash-outs on an account while a dispute is open.</li>
+            <li><b>Fraud.</b> A gift paid with a card or account that wasn't the giver's own is removed, and accounts involved may be closed. We may pause a cash-out to review it before any money moves.</li>
+            <li><b>Items.</b> insidejoke doesn't sell the items on lists. Returns, refunds or problems with an item are between the buyer and the store.</li>
           </ul>
         </>) },
         { h: 'Payments are processed by Stripe', body: (<p>Payment processing services for people who receive money on insidejoke are provided by Stripe and are subject to the <a href="https://stripe.com/connect-account/legal" target="_blank" rel="noreferrer">Stripe Connected Account Agreement</a>, which includes the <a href="https://stripe.com/legal" target="_blank" rel="noreferrer">Stripe Terms of Service</a> (together, the "Stripe Services Agreement"). By cashing out on insidejoke, you agree to be bound by the Stripe Services Agreement, as it may be modified by Stripe from time to time. As a condition of insidejoke enabling payment processing services through Stripe, you agree to provide insidejoke accurate and complete information about you, and you authorize insidejoke to share it and transaction information related to your use of the payment processing services provided by Stripe.</p>) },

@@ -225,7 +225,7 @@ export function HandoffForm({ slug, team, meId, name, list }) {
                 </label>
               ))}
             </div>
-            <span style={{ fontSize: 12, color: '#8A2414' }}>The 7% fee comes out at cash-out.</span>
+            <span style={{ fontSize: 12, color: '#8A2414' }}>Fees come out at cash-out.</span>
           </div>
         ) : null}
         <Opt k="surprise" n="Option two" title={`Send it to ${name} as a surprise`} sub={`${name} gets one text, opens the gifts and notes, and claims them.`} />

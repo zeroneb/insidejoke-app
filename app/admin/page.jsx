@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all, get } from '@/lib/db';
 import { usd } from '@/components/wallet-ui';
+import { decideReviewAction } from '@/lib/actions-review';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Admin · insidejoke', robots: { index: false } };
@@ -88,6 +89,9 @@ export default async function AdminPage() {
   const small = { fontSize: 12, color: '#4A4A4A' };
   const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : '–');
 
+  const reviews = await all(`SELECT r.*, l.title, l.slug, u.name, u.phone FROM cashout_reviews r JOIN lists l ON l.id = r.list_id JOIN users u ON u.id = r.user_id WHERE r.status = 'pending' ORDER BY r.created_at ASC`);
+  const reviewBtn = { height: 40, padding: '0 16px', border: '1.5px solid #000', borderRadius: 999, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' };
+
   return (
     <main className="r3-full dk-wide" style={{ background: '#ECECEF', color: '#000', padding: '20px 16px 120px', display: 'flex', flexDirection: 'column', gap: 26 }}>
       <header style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -95,6 +99,27 @@ export default async function AdminPage() {
         <h1 style={{ margin: 0, fontSize: 40, fontWeight: 400, letterSpacing: '-0.03em' }}>The <span className="serif" style={{ fontStyle: 'italic' }}>numbers</span></h1>
         <span style={small}>Real people only; demo accounts are left out. Visits and pages are in Vercel → Analytics.</span>
       </header>
+
+      {reviews.length ? (
+        <section aria-label="Cash-outs to review" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>Cash-outs to review · {reviews.length}</h2>
+          <span style={small}>Paused because they look like stolen-card patterns. Nothing has been sent. Clear it if it looks like real friends giving.</span>
+          {reviews.map((r) => {
+            let why = []; try { why = JSON.parse(r.reasons); } catch {}
+            return (
+              <div key={r.id} style={{ ...card, background: '#FFF7D6', gap: 8 }}>
+                <span style={{ fontWeight: 800, fontSize: 16 }}>{r.name || 'Someone'} · <a href={`/l/${r.slug}`} style={{ color: '#000' }}>{r.title}</a> · {usd(Number(r.amount_cents))}</span>
+                <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, lineHeight: 1.45 }}>{why.map((w) => <li key={w}>{w}</li>)}</ul>
+                <span style={small}>Paused {new Date(Number(r.created_at)).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })} · {r.phone}</span>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  <form action={decideReviewAction}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="approve" value="1" /><button style={{ ...reviewBtn, background: '#000', color: '#fff' }}>Clear it</button></form>
+                  <form action={decideReviewAction}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="approve" value="0" /><button style={{ ...reviewBtn, background: 'transparent' }}>Keep holding</button></form>
+                </div>
+              </div>
+            );
+          })}
+        </section>
+      ) : null}
 
       <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: 10 }}>
         <div style={card}><span style={small}>People</span><span style={big}>{users}</span><span style={small}>+{users7} this week</span></div>

@@ -21,7 +21,7 @@ export default async function WalletPage({ searchParams }) {
   try { const { all } = await import('@/lib/db'); const ids = (await all('SELECT id FROM lists WHERE owner_id = ?', me.id)).map((r) => r.id); await (await import('@/lib/payments')).settlePendingGifts({ listIds: ids }); } catch {}
   const lists = await walletByList(me.id);
   const pm = await payoutMethod(me.id);
-  const cur = lists.find((l) => l.list.id === sp?.l) || lists.find((l) => l.cents) || lists.find((l) => l.waiting) || lists[0] || null;
+  const cur = lists.find((l) => l.list.id === sp?.l) || lists.find((l) => l.cents) || lists.find((l) => l.waiting || l.holding) || lists[0] || null;
   const ownN = lists.filter((l) => !l.shared).length, sharedN = lists.length - ownN;
   const chipLabel = (l) => (l.shared ? (sharedN === 1 ? 'Collab list' : l.list.title) : ownN === 1 ? 'Your list' : l.list.title);
   const dest = pm ? pm.label.replace(/\s+(checking|savings)\b/i, '') : null;
@@ -83,8 +83,9 @@ export default async function WalletPage({ searchParams }) {
       {header}
       <div className="wal-cols">
       <div className="wal-hero">
-      {cur.cents ? bars('READY', 'TO CASH OUT') : cur.waiting ? bars('NOTHING', 'READY YET') : cur.paid ? bars('ALL', 'CASHED OUT') : bars('NOTHING', 'HERE YET')}
+      {cur.cents ? bars('READY', 'TO CASH OUT') : cur.waiting || cur.holding ? bars('NOTHING', 'READY YET') : cur.paid ? bars('ALL', 'CASHED OUT') : bars('NOTHING', 'HERE YET')}
       {cur.cents ? blobAmt(cur.cents, cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`)
+        : cur.holding ? blobAmt(0, 'New gifts are arriving soon')
         : cur.waiting ? blobAmt(0, 'Gifts on wishes still filling are waiting')
         : cur.paid ? blobAmt(cur.paid, 'cashed out from this list so far')
         : blobAmt(0, 'When friends give toward this list, it lands here')}
@@ -100,10 +101,16 @@ export default async function WalletPage({ searchParams }) {
             <span className="dot" style={{ flexShrink: 0, fontSize: 20 }}>{whole(r.cents)}</span>
           </div>
         ))}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderTop: `1.5px solid ${V}`, borderBottom: `1.5px solid ${V}` }}>
-          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Processing fee</span><span style={{ fontSize: 12 }}>7%, taken once, at cash-out</span></span>
-          <span className="dot" style={{ fontSize: 20 }}>{usd(-cur.fee)}</span>
-        </div>
+        {[
+          ['Card & bank processing', 'What the payments cost to process', cur.processing],
+          ['insidejoke fee', '5%', cur.platform],
+          ['Cash-out fee', 'Flat, once per cash-out', cur.flat]
+        ].map(([name, sub, c], k) => (
+          <div key={name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderTop: `1.5px solid ${V}`, borderBottom: k === 2 ? `1.5px solid ${V}` : 0 }}>
+            <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16 }}>{name}</span><span style={{ fontSize: 12 }}>{sub}</span></span>
+            <span className="dot" style={{ fontSize: 20 }}>{usd(-c)}</span>
+          </div>
+        ))}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0 0' }}>
           <span className="wide" style={{ fontSize: 15, letterSpacing: '0.1em' }}>You get</span>
           <span className="dot" style={{ fontSize: 30 }}>{usd(cur.net)}</span>
@@ -111,10 +118,16 @@ export default async function WalletPage({ searchParams }) {
       </section>
 
       <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10 }}>
-        <p style={{ margin: 0, textAlign: 'center', fontSize: 15, lineHeight: 1.4 }}><span style={{ background: V, color: Y, padding: '2px 6px', WebkitBoxDecorationBreak: 'clone', boxDecorationBreak: 'clone' }}>Your friends paid nothing extra. Every dollar they gave reached you.</span></p>
+        <p style={{ margin: 0, textAlign: 'center', fontSize: 15, lineHeight: 1.4 }}><span style={{ background: V, color: Y, padding: '2px 6px', WebkitBoxDecorationBreak: 'clone', boxDecorationBreak: 'clone' }}>Your friends paid nothing extra. Every fee is shown here before you cash out.</span></p>
       </section>
 
       </>
+      ) : null}
+      {cur.holding ? (
+        <div aria-label="Arriving soon" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 6 }}>
+          <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10 }}><span style={{ fontWeight: 800, fontSize: 16 }}>Arriving soon</span><span className="dot" style={{ fontSize: 20, flexShrink: 0 }}>{whole(cur.holding)}</span></span>
+          <span style={{ fontSize: 13, lineHeight: 1.45 }}>New card gifts can be cashed out 3 days after they're given{cur.holdUntil ? `. The next one is ready ${new Date(cur.holdUntil).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}` : ''}. It keeps everyone's money safe from stolen cards.</span>
+        </div>
       ) : null}
       {cur.waiting ? (
         <details aria-label="Waiting" className="wal-wait" style={{ margin: '22px 20px 0', padding: '14px 16px', border: `1.5px dashed ${V}`, display: 'flex', flexDirection: 'column', gap: 8 }}>
