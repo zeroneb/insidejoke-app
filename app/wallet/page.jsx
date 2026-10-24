@@ -85,8 +85,7 @@ export default async function WalletPage({ searchParams }) {
       <div className="wal-hero">
       {cur.cents ? bars('READY', 'TO CASH OUT') : cur.waiting || cur.holding ? bars('NOTHING', 'READY YET') : cur.paid ? bars('ALL', 'CASHED OUT') : bars('NOTHING', 'HERE YET')}
       {cur.cents ? blobAmt(cur.cents, cur.shared ? `from ${cur.givers} ${cur.givers === 1 ? 'person' : 'people'} who gave` : `from ${cur.givers} ${cur.givers === 1 ? 'friend' : 'friends'}, with love`)
-        : cur.holding ? blobAmt(0, 'New gifts are arriving soon')
-        : cur.waiting ? blobAmt(0, 'Gifts on wishes still filling are waiting')
+        : cur.holding || cur.waiting ? blobAmt(cur.holding + cur.waiting, cur.holding && cur.waiting ? 'in your wallet, not ready to cash out yet' : cur.holding ? 'in your wallet, arriving soon' : 'in your wallet, on wishes still filling')
         : cur.paid ? blobAmt(cur.paid, 'cashed out from this list so far')
         : blobAmt(0, 'When friends give toward this list, it lands here')}
 
