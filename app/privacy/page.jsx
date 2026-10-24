@@ -19,7 +19,7 @@ export default function Page() {
             <li>Things you send us when you contact us.</li>
           </ul>
           <p><b>Payment details.</b> Card and bank details are entered on our payment provider's secure forms. We never see or store your full card or bank account number. We keep a reference to your saved method, its brand and last four digits, and records of gifts and cash-outs.</p>
-          <p><b>Collected automatically.</b> Basic usage and device information (pages visited, browser and device type, approximate location from IP address, referring page), security logs, and a sign-in cookie that keeps you logged in. We use privacy-friendly analytics that do not track you across other sites.</p>
+          <p><b>Collected automatically.</b> Basic usage and device information (pages visited, browser and device type, approximate location from IP address, referring page), security logs, a sign-in cookie that keeps you logged in, and a cookie that remembers which link or site first brought you to insidejoke (kept 30 days, cleared when you sign up). Our payment provider sets its own cookies on the payment screen to prevent fraud. We use privacy-friendly analytics that do not track you across other sites.</p>
           <p><b>From links you add.</b> When you paste a store link, we read that product page (name, price, photo) to fill in your wish.</p>
         </>) },
         { h: 'How we use it', body: (<>

@@ -41,6 +41,14 @@ export default async function AdminPage({ searchParams }) {
     ['Cashed out', await n(`SELECT COUNT(DISTINCT p.user_id) AS n FROM payouts p JOIN users u ON u.id = p.user_id WHERE ${REAL}`)]
   ];
 
+  // Launch tracking: who sent each sign-up (middleware.js), and how far those people got.
+  const sources = await all(`SELECT COALESCE(u.source, 'before tracking') AS source,
+      COUNT(*) AS signed,
+      COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM lists l WHERE l.owner_id = u.id AND l.status <> 'deleted')) AS listed,
+      COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM contributions c JOIN lists l ON l.id = c.list_id WHERE l.owner_id = u.id)) AS got,
+      COUNT(*) FILTER (WHERE EXISTS (SELECT 1 FROM contributions c WHERE c.giver_id = u.id)) AS gave
+    FROM users u WHERE ${REAL} GROUP BY 1 ORDER BY 2 DESC LIMIT 40`).catch(() => []);
+
   // Sign-ups per day, last 14 days.
   const recentUsers = await all(`SELECT u.created_at FROM users u WHERE ${REAL} AND u.created_at > ?`, since(14));
   const days = Array.from({ length: 14 }, (_, i) => {
@@ -199,6 +207,19 @@ export default async function AdminPage({ searchParams }) {
             <span style={{ width: 70, textAlign: 'right', fontSize: 14, fontWeight: 700 }}>{v} <span style={{ fontWeight: 400, ...small }}>{pct(v, users)}</span></span>
           </div>
         ))}
+      </section>
+
+      <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <h2 style={{ margin: 0, fontSize: 18 }}>Where sign-ups came from</h2>
+        <span style={small}>Give each creator or post its own link: add ?ref=name to any insidejoke link, like insidejoke.club/?ref=priya. Credit goes to the first link someone used, for 30 days.</span>
+        <div style={{ background: '#fff', border: '1px solid #000', fontSize: 13, overflowX: 'auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 2fr) repeat(4, minmax(70px, 1fr))', gap: 8, padding: '7px 10px', fontWeight: 700 }}><span>Source</span><span>Signed up</span><span>Made a list</span><span>Got a gift</span><span>Gave a gift</span></div>
+          {sources.length ? sources.map((r) => (
+            <div key={r.source} style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 2fr) repeat(4, minmax(70px, 1fr))', gap: 8, padding: '7px 10px', borderTop: '1px solid #ddd' }}>
+              <span style={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{r.source}</span><span>{Number(r.signed)}</span><span>{Number(r.listed)} <span style={small}>{pct(Number(r.listed), Number(r.signed))}</span></span><span>{Number(r.got)}</span><span>{Number(r.gave)}</span>
+            </div>
+          )) : <div style={{ padding: '7px 10px' }}>No sign-ups yet.</div>}
+        </div>
       </section>
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
