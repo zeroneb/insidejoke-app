@@ -4,7 +4,7 @@ import { Blob } from '@/components/ui';
 
 const SOCIALS = [
   ['Instagram', '@[handle]', 'https://instagram.com'],
-  ['X / Twitter', '@[handle]', 'https://x.com'],
+  ['X / Twitter', '@clubinsidejoke', 'https://x.com/clubinsidejoke'],
   ['LinkedIn', '[company page]', 'https://linkedin.com'],
   ['Substack', '[newsletter]', 'https://substack.com']
 ];
