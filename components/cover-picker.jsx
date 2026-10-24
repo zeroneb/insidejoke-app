@@ -58,12 +58,13 @@ function Sheet({ children, onClose, title }) {
   );
 }
 
-const CHIPS = [['For', null], ['Birthday', 'birthday'], ['Grad', 'grad'], ['New place', 'new place'], ['Wedding', 'wedding'], ['Baby', 'baby'], ['Holidays', 'holidays']];
+const CHIPS = [['For', null], ['All covers', 'all'], ['Birthday', 'birthday'], ['Grad', 'grad'], ['New place', 'new place'], ['Wedding', 'wedding'], ['Baby', 'baby'], ['Holidays', 'holidays']];
 
 // ✦ Change cover: suggested for the name first, every cover, upload.
-export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClose }) {
-  const [chip, setChip] = useState(0);
-  const order = useMemo(() => suggest(chip === 0 ? { ...flags, title } : { title: CHIPS[chip][1] }), [chip, title, flags]);
+export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClose, all = false }) {
+  const [chip, setChip] = useState(all ? 1 : 0);
+  // All covers: every cover we have, the name's suggestions first (Surprise only on surprise lists).
+  const order = useMemo(() => chip === 1 ? suggest({ ...flags, title }) : suggest(chip === 0 ? { ...flags, title } : { title: CHIPS[chip][1] }), [chip, title, flags]);
   const up = useRef(null);
   return (
     <Sheet title="Change cover" onClose={onClose}>
@@ -77,7 +78,7 @@ export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClo
           <button key={c} type="button" aria-pressed={chip === i} onClick={() => setChip(i)} style={{ padding: '10px 16px', borderRadius: 999, border: 0, fontFamily: 'inherit', fontWeight: 700, fontSize: 14, cursor: 'pointer', background: chip === i ? NAVY : '#FFFFFF', color: chip === i ? '#FFFFFF' : '#000000' }}>{i === 0 ? `✦ For “${(title || 'your list').slice(0, 18)}”` : c}</button>
         ))}
       </div>
-      <div style={{ padding: '16px 16px 8px', ...label }}>{chip === 0 ? `Suggested for “${(title || 'your list').slice(0, 24)}”` : `${CHIPS[chip][0]} covers`}</div>
+      <div style={{ padding: '16px 16px 8px', ...label }}>{chip === 0 ? `Suggested for “${(title || 'your list').slice(0, 24)}”` : chip === 1 ? `All covers · ${order.length}` : `${CHIPS[chip][0]} covers`}</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '0 16px 110px' }}>
         {order.map((k) => (
           <button key={k} type="button" onClick={() => onPick(k)} aria-label={`Use ${COVERS[k].label}`} style={{ border: 0, padding: 0, background: 'transparent', cursor: 'pointer', borderRadius: 14, boxShadow: current === k ? `0 0 0 3px ${NAVY}` : 'none' }}>
@@ -205,13 +206,13 @@ export function CoverField({ title, onTitle, treat, flags, ctx }) {
                 <CoverDesign design={{ key: k, pal: 0, s: k === 'photo' ? { y: design?.s?.y } : {} }} title={title || 'Wishes'} ctx={fullCtx} width={86} radius={10} />
               </button>
             ))}
-            <button type="button" onClick={() => setSheet(true)} style={{ ...cell, margin: 3, border: 0, background: '#FFFFFF', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{order.length - 4} more</button>
+            <button type="button" onClick={() => setSheet('all')} style={{ ...cell, margin: 3, border: 0, background: '#FFFFFF', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>More</button>
             <button type="button" onClick={() => up.current?.click()} style={{ ...cell, margin: 3, border: '2px dashed #A9A9B3', background: 'transparent', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}><Cam />Upload</button>
             <input ref={up} type="file" accept="image/*" className="sr" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); }} />
           </div>
         </section>
       ) : null}
-      {sheet ? <CoverSheet title={title} ctx={fullCtx} flags={flags} current={cur.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setDesign({ key: k, pal: 0, s: {} }); setSheet(false); }} /> : null}
+      {sheet ? <CoverSheet all={sheet === 'all'} title={title} ctx={fullCtx} flags={flags} current={cur.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setDesign({ key: k, pal: 0, s: {} }); setSheet(false); }} /> : null}
       {edit ? <CoverEditor design={cur} title={title} ctx={fullCtx} onClose={() => setEdit(false)} onDone={(d, t) => { setDesign(d); onTitle?.(t); setEdit(false); }} /> : null}
     </>
   );
