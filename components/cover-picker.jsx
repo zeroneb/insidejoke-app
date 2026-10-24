@@ -3,7 +3,7 @@
 // open every cover with ✦ Change cover, upload a photo, or tap the pencil to edit any words on the cover.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import CoverDesign from '@/components/cover-design';
-import { COVERS, suggest, swatch, slotsFor } from '@/lib/cover-designs';
+import { COVERS, suggest, swatch, slotsFor, startDesign } from '@/lib/cover-designs';
 import { saveListDesign } from '@/lib/actions';
 
 const NAVY = '#13286B', MUTE = '#4A4A4A';
@@ -86,7 +86,7 @@ export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClo
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '0 16px 110px' }}>
         {order.map((k) => (
           <button key={k} type="button" onClick={() => onPick(k)} aria-label={`Use ${COVERS[k].label}`} style={{ border: 0, padding: 0, background: 'transparent', cursor: 'pointer', borderRadius: 14, boxShadow: current === k ? `0 0 0 3px ${NAVY}` : 'none' }}>
-            <CoverDesign design={{ key: k, pal: 0, s: {} }} title={title} ctx={ctx} fluid radius={14} label={COVERS[k].label} />
+            <CoverDesign design={startDesign(k, title)} title={title} ctx={ctx} fluid radius={14} label={COVERS[k].label} />
           </button>
         ))}
       </div>
@@ -101,7 +101,7 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
   const [t, setT] = useState(title || '');
   const c = COVERS[d.key];
   const slotNames = Object.keys(c.slots);
-  const [sel, setSel] = useState('title');
+  const [sel, setSel] = useState(c.noTitle ? slotNames[0] : 'title');
   const [ring, setRing] = useState(null);
   const wrap = useRef(null);
   const input = useRef(null);
@@ -157,7 +157,7 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
         ) : (
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}><span style={{ fontWeight: 700, fontSize: 14 }}>Colors</span><Swatches k={d.key} pal={d.pal} onPick={(i) => setD((x) => ({ ...x, pal: i }))} /></div>
         )}
-        <span style={{ fontSize: 13, lineHeight: 1.4, color: MUTE }}>{d.key === 'treat' ? 'On a Treat list you can change the name and colors. TREAT TREAT TREAT and the Public / Private label stay put.' : 'Tap any words on the cover to change them. The big title is your list name.'}</span>
+        <span style={{ fontSize: 13, lineHeight: 1.4, color: MUTE }}>{d.key === 'treat' ? 'On a Treat list you can change the name and colors. TREAT TREAT TREAT and the Public / Private label stay put.' : c.noTitle ? 'Tap any words on the cover to change them. Each color has its own language; the lettering is yours to rewrite.' : 'Tap any words on the cover to change them. The big title is your list name.'}</span>
       </section>
       <div style={{ flexGrow: 1, minHeight: 20 }} />
       <div style={{ padding: '0 16px 28px' }}>
@@ -177,7 +177,7 @@ export function CoverField({ title, onTitle, treat, flags, ctx }) {
   const [edit, setEdit] = useState(false);
   const file = useRef(null);
   const up = useRef(null);
-  const auto = { key: order[0], pal: 0, s: {} };
+  const auto = startDesign(order[0], title);
   const cur = treat ? { key: 'treat', pal: design?.key === 'treat' ? design.pal : 0, s: {} } : design && design.key !== 'treat' ? design : auto;
   const fullCtx = { ...ctx, photo: photoUrl };
   useEffect(() => () => { if (photoUrl) URL.revokeObjectURL(photoUrl); }, [photoUrl]);
@@ -206,8 +206,8 @@ export function CoverField({ title, onTitle, treat, flags, ctx }) {
           <div style={{ padding: '0 20px', ...label }}>Covers for “{(title || 'your list').slice(0, 24)}” · tap to try</div>
           <div style={{ display: 'flex', gap: 8, overflowX: 'auto', padding: '4px 20px 6px' }}>
             {strip.map((k) => (
-              <button key={k} type="button" onClick={() => setDesign(k === 'photo' ? { key: 'photo', pal: 0, s: { y: design?.s?.y || '50' } } : { key: k, pal: 0, s: {} })} aria-label={`Use ${COVERS[k].label}`} aria-pressed={cur.key === k} style={{ ...cell, border: 0, padding: 0, cursor: 'pointer', overflow: 'hidden', boxShadow: cur.key === k ? `0 0 0 3px ${NAVY}` : 'none', margin: 3 }}>
-                <CoverDesign design={{ key: k, pal: 0, s: k === 'photo' ? { y: design?.s?.y } : {} }} title={title || 'Wishes'} ctx={fullCtx} width={86} radius={10} />
+              <button key={k} type="button" onClick={() => setDesign(k === 'photo' ? { key: 'photo', pal: 0, s: { y: design?.s?.y || '50' } } : startDesign(k, title))} aria-label={`Use ${COVERS[k].label}`} aria-pressed={cur.key === k} style={{ ...cell, border: 0, padding: 0, cursor: 'pointer', overflow: 'hidden', boxShadow: cur.key === k ? `0 0 0 3px ${NAVY}` : 'none', margin: 3 }}>
+                <CoverDesign design={k === 'photo' ? { key: 'photo', pal: 0, s: { y: design?.s?.y } } : startDesign(k, title)} title={title || 'Wishes'} ctx={fullCtx} width={86} radius={10} />
               </button>
             ))}
             <button type="button" onClick={() => setSheet('all')} style={{ ...cell, margin: 3, border: 0, background: '#FFFFFF', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>More</button>
@@ -216,7 +216,7 @@ export function CoverField({ title, onTitle, treat, flags, ctx }) {
           </div>
         </section>
       ) : null}
-      {sheet ? <CoverSheet all={sheet === 'all'} title={title} ctx={fullCtx} flags={flags} current={cur.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setDesign({ key: k, pal: 0, s: {} }); setSheet(false); }} /> : null}
+      {sheet ? <CoverSheet all={sheet === 'all'} title={title} ctx={fullCtx} flags={flags} current={cur.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setDesign(startDesign(k, title)); setSheet(false); }} /> : null}
       {edit ? <CoverEditor design={cur} title={title} ctx={fullCtx} onClose={() => setEdit(false)} onDone={(d, t) => { setDesign(d); onTitle?.(t); setEdit(false); }} /> : null}
     </>
   );
@@ -257,7 +257,7 @@ export function ListCover({ slug, design: saved, title, ctx, treat }) {
       <CoverDesign design={design} title={name} ctx={fullCtx} fluid />
       <button type="button" aria-label="Edit cover" onClick={() => setEdit(true)} style={pencilBtn}><Pencil /></button>
       {!treat ? <button type="button" onClick={() => setSheet(true)} style={changeBtn}>✦ Change cover</button> : null}
-      {sheet ? <CoverSheet title={name} ctx={fullCtx} flags={{}} current={design.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setSheet(false); save({ key: k, pal: 0, s: {} }, name, null); }} /> : null}
+      {sheet ? <CoverSheet title={name} ctx={fullCtx} flags={{}} current={design.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setSheet(false); save(startDesign(k, name), name, null); }} /> : null}
       {edit ? <CoverEditor design={design} title={name} ctx={fullCtx} done="Save cover" pending={pending} onClose={() => { setEdit(false); setDesign(committed); setPhotoFile(null); }} onDone={async (d, t) => { if (await save(d, t)) setEdit(false); }} /> : null}
     </div>
   );
