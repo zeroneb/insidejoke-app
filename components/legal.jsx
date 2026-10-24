@@ -4,7 +4,7 @@ import { Header } from '@/components/ui';
 
 export const LEGAL = {
   name: process.env.LEGAL_NAME || 'insidejoke',
-  email: process.env.CONTACT_EMAIL || '',
+  email: process.env.CONTACT_EMAIL || 'hey@insidejoke.club',
   state: process.env.LEGAL_STATE || 'New York',
   updated: 'October 23, 2026'
 };
