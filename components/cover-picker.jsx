@@ -78,6 +78,10 @@ export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClo
           <button key={c} type="button" aria-pressed={chip === i} onClick={() => setChip(i)} style={{ padding: '10px 16px', borderRadius: 999, border: 0, fontFamily: 'inherit', fontWeight: 700, fontSize: 14, cursor: 'pointer', background: chip === i ? NAVY : '#FFFFFF', color: chip === i ? '#FFFFFF' : '#000000' }}>{i === 0 ? `✦ For “${(title || 'your list').slice(0, 18)}”` : c}</button>
         ))}
       </div>
+      <div style={{ margin: '14px 16px 0', display: 'flex', alignItems: 'center', gap: 10, background: '#FFFFFF', borderRadius: 12, padding: '10px 12px', fontSize: 13, lineHeight: 1.35 }}>
+        <span aria-hidden="true" style={{ flexShrink: 0, width: 30, height: 30, borderRadius: '50%', background: '#D8F75A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Pencil /></span>
+        <span>Pick one, then tap the pencil on it to change any words on the cover. The big title is your list name.</span>
+      </div>
       <div style={{ padding: '16px 16px 8px', ...label }}>{chip === 0 ? `Suggested for “${(title || 'your list').slice(0, 24)}”` : chip === 1 ? `All covers · ${order.length}` : `${CHIPS[chip][0]} covers`}</div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, padding: '0 16px 110px' }}>
         {order.map((k) => (
