@@ -33,11 +33,13 @@ const EYEBROW = { '#E8642C': '#5A2A10', '#F0895A': '#5A2A10', '#F4D3EE': '#8A2A1
 export default async function ItemView({ slug, itemId }) {
   const list = await listBySlug(slug);
   if (!list) notFound();
-  const it = await ensureItemPhoto(await itemById(itemId));
+  const it = await ensureItemPhoto(await itemById(itemId, { includeRemoved: true }));
   if (!it || it.list_id !== list.id) notFound();
   const owner = await ownerOf(list);
   const me = await currentUser();
   if (!(await (await import('@/lib/access')).canSeeList(list, me))) notFound();
+  // Archived or removed wishes: still viewable by the list's own people (their gifts and notes live here), nobody else.
+  if (it.removed && !(me && (me.id === list.owner_id || (await (await import('@/lib/collab')).isMember(list.id, me.id))))) notFound();
   const isOwner = !!(me && me.id === owner.id);
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : firstName(owner);
   const notes = (await notesFor(it.id, isOwner));
@@ -100,7 +102,9 @@ export default async function ItemView({ slug, itemId }) {
           ) : (
             <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>Given ×{it.timesTreated}.</b> {isOwner ? 'Friends can send it again and again.' : 'Send one anytime, again and again.'}</span>
           )}
-          {true ? (
+          {it.removed ? (
+            <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>Archived.</b> This wish is off the list. Its gifts and notes are kept here.</span>
+          ) : (
             <div style={{ display: 'flex', gap: 10 }}>
               {it.unlimited ? (
                 <Link href={give} style={{ ...btn, background: '#000000', color: '#FFFFFF' }}>Send a treat</Link>
@@ -115,7 +119,7 @@ export default async function ItemView({ slug, itemId }) {
                 </>
               )}
             </div>
-          ) : null}
+          )}
         </div>
         {it.url ? (
           <a href={`/go/${it.id}`} target="_blank" rel="noopener sponsored" style={{ alignSelf: 'flex-start', marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'underline', textUnderlineOffset: 3, fontSize: 15, fontWeight: 700, padding: '10px 0', color: '#000000' }}>See it on {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>

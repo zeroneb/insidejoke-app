@@ -8,6 +8,9 @@ const STALE = /ChunkLoadError|Loading chunk|dynamically imported module|Failed t
 
 export default function ErrorPage({ error, reset }) {
   useEffect(() => {
+    try { fetch('/api/client-error', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true, body: JSON.stringify({ message: `${error?.name || 'Error'}: ${error?.message || ''}`, stack: error?.stack || '', digest: error?.digest || '', path: location.pathname + location.search, ua: navigator.userAgent }) }); } catch {}
+  }, [error]);
+  useEffect(() => {
     const msg = `${error?.name || ''} ${error?.message || ''}`;
     let tried = false;
     try { tried = sessionStorage.getItem('ij-reloaded') === '1'; } catch {}
