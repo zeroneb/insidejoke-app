@@ -123,6 +123,13 @@ export default function NewListForm({ me, friends = [] }) {
               <Switch on={surprise} onChange={setSurprise} label="Keep it a surprise" />
               {surprise ? <input type="hidden" name="surprise" value="1" /> : null}
             </div>
+            {surprise ? (
+              <div className="pop" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <label htmlFor="theirphone" style={{ fontWeight: 700, fontSize: 15 }}>Their number <span style={{ fontWeight: 400, fontSize: 13 }}>(optional)</span></label>
+                <input id="theirphone" name="recipientPhone" inputMode="tel" autoComplete="off" placeholder="(917) 555-0100" className="dot" style={{ height: 48, border: '2px solid #000000', background: '#FFFFFF', fontSize: 18, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
+                <span style={{ fontSize: 13, lineHeight: 1.4 }}>So we can keep it from them: this number can't open the list, even with the link, until you send it. Never texted before then.</span>
+              </div>
+            ) : null}
           </div>
         ) : null}
       </Section>
