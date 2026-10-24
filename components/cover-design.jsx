@@ -7,7 +7,7 @@ export function CoverStyles() {
   return (
     <>
       <link rel="stylesheet" href={FONT_URL} precedence="default" />
-      <style href="cv-keyframes" precedence="default">{`.cvx{position:relative;width:390px;height:480px;overflow:hidden;transform-origin:0 0;font-family:'Inter Tight',sans-serif}.cvx *{box-sizing:border-box}${KEYFRAMES}`}</style>
+      <style href="cv-keyframes" precedence="default">{`.cvx{position:relative;width:390px;height:480px;overflow:hidden;transform-origin:0 0;font-family:'Inter Tight',sans-serif;text-align:left;line-height:normal}.cvx *{box-sizing:border-box}${KEYFRAMES}`}</style>
     </>
   );
 }
