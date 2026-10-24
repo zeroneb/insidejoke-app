@@ -14,8 +14,9 @@ export async function GET(req) {
   const ok = (cronKey && (key === cronKey || auth === `Bearer ${cronKey}`)) || (cronSecret && auth === `Bearer ${cronSecret}`);
   if (!ok) return Response.json({ error: 'unauthorized' }, { status: 401 });
   let bank = null; try { bank = await (await import('@/lib/payments')).settlePendingGifts(); } catch {}
+  let disputes = null; try { disputes = await (await import('@/lib/disputes')).syncDisputes(); } catch {}
   const surprises = await sendDueSurprises();
   const reminders = await runReminders();
   const digest = await runWeeklyThanks();
-  return Response.json({ ok: true, bank, surprises, reminders, digest });
+  return Response.json({ ok: true, bank, disputes, surprises, reminders, digest });
 }

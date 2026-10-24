@@ -5,6 +5,7 @@ import { all, get } from '@/lib/db';
 import { usd } from '@/components/wallet-ui';
 import { decideReviewAction } from '@/lib/actions-review';
 import { financials, byGiftType } from '@/lib/finance';
+import { syncDisputes, disputesForAdmin, isOpen } from '@/lib/disputes';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Admin · insidejoke', robots: { index: false } };
@@ -92,6 +93,8 @@ export default async function AdminPage({ searchParams }) {
 
   const range = (await searchParams)?.range === '30' ? '30' : 'all';
   const sinceMs = range === '30' ? Date.now() - 30 * DAY : 0;
+  try { await syncDisputes(); } catch {}
+  const disputes = await disputesForAdmin();
   const fin = await financials({ sinceMs });
   const types = await byGiftType({ sinceMs });
   const reviews = await all(`SELECT r.*, l.title, l.slug, u.name, u.phone FROM cashout_reviews r JOIN lists l ON l.id = r.list_id JOIN users u ON u.id = r.user_id WHERE r.status = 'pending' ORDER BY r.created_at ASC`);
@@ -126,6 +129,21 @@ export default async function AdminPage({ searchParams }) {
         </section>
       ) : null}
 
+      {disputes.length ? (
+        <section aria-label="Disputes" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>Disputes · {disputes.filter((d) => isOpen(d.status)).length} open</h2>
+          <span style={small}>Respond in Stripe before the deadline with evidence. Strong evidence: the giver verified their phone, how long they've had an account, the note they wrote, and that they know the receiver.</span>
+          {disputes.map((d) => (
+            <div key={d.id} style={{ ...card, background: isOpen(d.status) ? '#FFE3DE' : '#fff', gap: 6 }}>
+              <span style={{ fontWeight: 800, fontSize: 16 }}>{usd(Number(d.amount_cents))} · {d.giver || 'a giver'} → {d.receiver || 'receiver'} · <a href={`/l/${d.slug}`} style={{ color: '#000' }}>{d.title}</a></span>
+              <span style={{ fontSize: 14 }}>{String(d.status).replace(/_/g, ' ')}{d.reason ? ` · ${String(d.reason).replace(/_/g, ' ')}` : ''}{d.paid_out ? ' · already cashed out (comes off their next cash-out)' : ' · taken out of their wallet'}</span>
+              <span style={small}>Giver {d.giver_phone || ''}{d.giver_since ? ` · on insidejoke since ${new Date(Number(d.giver_since)).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}{d.note ? ` · note: “${d.note}”` : ''}</span>
+              {isOpen(d.status) ? <a href={`https://dashboard.stripe.com/disputes/${d.id}`} target="_blank" rel="noreferrer" style={{ alignSelf: 'flex-start', border: '1.5px solid #000', borderRadius: 999, padding: '8px 14px', fontWeight: 800, fontSize: 14, color: '#000', textDecoration: 'none' }}>Respond in Stripe</a> : null}
+            </div>
+          ))}
+        </section>
+      ) : null}
+
       <section aria-label="Financial overview" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>Money</h2>
@@ -139,7 +157,7 @@ export default async function AdminPage({ searchParams }) {
           <div style={card}><span style={small}>Receiver balances</span><span style={big}>{usd(fin.owed)}</span><span style={small}>Owed to people, on {fin.owedLists} {fin.owedLists === 1 ? 'list' : 'lists'}, before fees</span></div>
           <div style={card}><span style={small}>Processing costs</span><span style={big}>{usd(fin.processing)}</span><span style={small}>{fin.processingEst ? 'Partly estimated · ' : ''}{usd(fin.recovered)} passed on at cash-out</span></div>
           <div style={card}><span style={small}>Cash-outs</span><span style={big}>{usd(fin.cashouts.cents)}</span><span style={small}>{fin.cashouts.n} sent · {usd(fin.payoutCosts)} payout costs (est.)</span></div>
-          <div style={card}><span style={small}>Failed payments & refunds</span><span style={big}>{usd(fin.failed.removedCents)}</span><span style={small}>{fin.failed.removedN} removed · {fin.failed.payFails} failed payments · {fin.failed.payoutFails} failed cash-outs</span></div>
+          <div style={card}><span style={small}>Failed payments & refunds</span><span style={big}>{usd(fin.failed.removedCents)}</span><span style={small}>{fin.failed.removedN} removed · {fin.failed.disputes} disputes ({usd(fin.failed.disputeCost)} cost) · {fin.failed.payFails} failed payments · {fin.failed.payoutFails} failed cash-outs</span></div>
           <div style={{ ...card, background: fin.net < 0 ? '#FFE3DE' : '#E6F98A' }}><span style={small}>Net contribution</span><span style={big}>{usd(fin.net)}</span><span style={small}>Revenue minus processing, payout and account fees, on cashed-out money</span></div>
         </div>
         {fin.processingPending ? <span style={small}>{usd(fin.processingPending)} of processing is on gifts not cashed out yet. It's passed on to the receiver when they cash out.</span> : null}

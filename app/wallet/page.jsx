@@ -104,9 +104,10 @@ export default async function WalletPage({ searchParams }) {
         {[
           ['Card & bank processing', 'What the payments cost to process', cur.processing],
           ['insidejoke fee', '5%', cur.platform],
-          ['Cash-out fee', 'Flat, once per cash-out', cur.flat]
-        ].map(([name, sub, c], k) => (
-          <div key={name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderTop: `1.5px solid ${V}`, borderBottom: k === 2 ? `1.5px solid ${V}` : 0 }}>
+          ['Cash-out fee', 'Flat, once per cash-out', cur.flat],
+          ...(cur.debt ? [['Disputed gift repaid', 'A gift you already cashed out was taken back by the giver\'s bank', cur.debt]] : [])
+        ].map(([name, sub, c], k, arr) => (
+          <div key={name} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '13px 0', borderTop: `1.5px solid ${V}`, borderBottom: k === arr.length - 1 ? `1.5px solid ${V}` : 0 }}>
             <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16 }}>{name}</span><span style={{ fontSize: 12 }}>{sub}</span></span>
             <span className="dot" style={{ fontSize: 20 }}>{usd(-c)}</span>
           </div>
