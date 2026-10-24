@@ -21,8 +21,19 @@ export function middleware(req) {
     try { host = new URL(req.headers.get('referer') || '').hostname.replace(/^www\.|^m\.|^l\./, ''); } catch {}
     if (host && !OWN.test(host)) value = { s: clean(host === 't.co' ? 'x.com' : host), c: '', k: 'site' };
   }
-  if (!value) return NextResponse.next();
+  // Signed-out visitors opening a shared list or a profile: remember it (last 5), so signing up later makes them friends.
+  let via = null;
+  if (!req.cookies.get('ij_session') && /^\/(l|join|u)\/[^/]+/.test(url.pathname)) {
+    const p = url.pathname.split('/').slice(0, 3).join('/');
+    let prev = [];
+    try { prev = JSON.parse(req.cookies.get('ij_via')?.value || '[]'); } catch {}
+    if (!Array.isArray(prev)) prev = [];
+    if (!prev.includes(p)) via = [p, ...prev].slice(0, 5);
+  }
+  if (!value && !via) return NextResponse.next();
   const res = NextResponse.next();
+  if (via) res.cookies.set('ij_via', JSON.stringify(via), { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * 30, secure: process.env.NODE_ENV === 'production' });
+  if (!value) return res;
   res.cookies.set(COOKIE, JSON.stringify({ ...value, p: url.pathname.slice(0, 80), t: Date.now() }), {
     httpOnly: true, sameSite: 'lax', path: '/', maxAge: 60 * 60 * 24 * 30, secure: process.env.NODE_ENV === 'production'
   });
