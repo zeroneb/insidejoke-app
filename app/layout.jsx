@@ -4,6 +4,7 @@ import { isTestMode } from '@/lib/texts';
 import { currentUser } from '@/lib/auth';
 import { GlobalNav } from '@/components/nav';
 import { Analytics } from '@vercel/analytics/next';
+import PageBeacon from '@/components/page-beacon';
 
 export const metadata = {
   title: 'insidejoke',
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }) {
         </div>
         <GlobalNav me={me} />
         <Analytics />
+        <PageBeacon />
       </body>
     </html>
   );

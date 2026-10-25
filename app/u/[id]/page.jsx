@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
-import { get } from '@/lib/db';
 import { publicListsOf, between, profileLately, friendCounts } from '@/lib/lists';
 import { ListTile, tileData } from '@/components/list-tile';
 import { PhotoBlob } from '@/components/ui';
@@ -10,6 +9,8 @@ import TextFriendForm from '@/components/text-friend-form';
 import ShareProfile from '@/components/share-profile';
 import { appUrl } from '@/lib/texts';
 import { handleFor } from '@/lib/handles';
+import { isAdmin } from '@/lib/admin';
+import { get, all } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
@@ -40,6 +41,13 @@ export default async function FriendProfile({ params }) {
   // Friends-only profiles: non-friends see the hero and nothing else.
   const locked = !self && !friend && them.profile_public === 0;
   const lists = locked ? [] : await publicListsOf(them.id, friend || self ? me.id : null);
+  // The founder (ADMIN_PHONES) also sees this person's private lists, tagged Private. Nobody else does.
+  const admin = !self && isAdmin(me);
+  if (admin) {
+    const shown = new Set(lists.map((l) => l.id));
+    const extra = await all("SELECT * FROM lists WHERE owner_id = ? AND status = 'open' AND surprise = 0 AND for_who = 'me' AND visibility = 'private' ORDER BY created_at DESC", them.id);
+    lists.push(...extra.filter((l) => !shown.has(l.id)));
+  }
   const tiles = await Promise.all(lists.map((l) => tileData(l, me?.id)));
   tiles.sort((x, y) => (x.kind === 'treat') - (y.kind === 'treat')); // r1: wish lists first, as on the board
   const seen = {};
@@ -77,7 +85,9 @@ export default async function FriendProfile({ params }) {
           {self ? (
             <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
           ) : (
-            <span style={{ fontSize: 14 }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</span>
+            me && fc.n && (!locked || isAdmin(me)) ? (
+              <Link href={`/u/${them.id}/friends`} style={{ fontSize: 14, color: '#000000' }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</Link>
+            ) : <span style={{ fontSize: 14 }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</span>
           )}
           {self ? (
             <>
@@ -122,7 +132,12 @@ export default async function FriendProfile({ params }) {
           <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 30, lineHeight: 1 }}>{possessive(name)} <span style={{ fontWeight: 600 }}>lists</span></h2>
           {tiles.length ? (
             <div className="tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-              {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
+              {tiles.map((t) => admin && t.visibility === 'private' ? (
+                <div key={t.id} style={{ position: 'relative' }}>
+                  <ListTile t={t} i={idx(t.kind) + 1} variant="friend" />
+                  <span style={{ position: 'absolute', right: 8, top: 8, background: '#000000', color: '#FFFFFF', fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', padding: '4px 9px', borderRadius: 999, pointerEvents: 'none' }}>Private · admin view</span>
+                </div>
+              ) : <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
             </div>
           ) : (
             <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>{locked ? `${name} shares their profile with friends only.` : `${name} has no public lists right now.`}</p>
