@@ -24,18 +24,24 @@ export function Fields({ v, set, treat, n }) {
 }
 
 export function Qty({ n, setN, treat, setTreat }) {
-  const help = treat ? 'Unlimited makes it a treat. Friends can give it again and again, and you see a running count.' : n === 1 ? 'Just one. Tap + if you want more of the same thing.' : `One listing for ${n}. Friends see it as one item and fill it toward the total.`;
+  const help = treat ? 'Unlimited makes it a treat. Friends can give it again and again, and you see a running count.' : n === 1 ? 'Just one. Tap + or type a number if you want more of the same thing.' : `One listing for ${n}. Friends see it as one item and fill it toward the total.`;
   const step = { width: 48, height: 48, border: 0, background: 'transparent', fontFamily: 'inherit', fontSize: 22, cursor: 'pointer', color: '#000' };
+  // The number can be typed too: digits only, kept between 1 and 99 (empty while typing is fine until they leave the field).
+  const [typed, setTyped] = useState(null);
+  const type = (v) => { const d = v.replace(/\D/g, '').slice(0, 2); setTyped(d); setTreat(false); if (d) setN(Math.max(1, Math.min(99, +d))); };
   return (
     <section style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
       <span id="qtylabel" style={LBL}>How many?</span>
       <input type="hidden" name="quantity" value={n} />
       {treat ? <input type="hidden" name="unlimited" value="1" /> : null}
       <div role="group" aria-labelledby="qtylabel" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', border: '2px solid #000000', background: treat ? '#D7D7DC' : '#FFFFFF', borderRadius: 999 }}>
-          <button type="button" aria-label="One fewer" onClick={() => { setTreat(false); setN(Math.max(1, n - 1)); }} style={step}>−</button>
-          <span className="dot" aria-live="polite" style={{ minWidth: 44, textAlign: 'center', fontSize: 24 }}>{treat ? '∞' : n}</span>
-          <button type="button" aria-label="One more" onClick={() => { setTreat(false); setN(Math.min(99, n + 1)); }} style={step}>+</button>
+        <div className={treat ? 'qty-off' : undefined} style={{ display: 'flex', alignItems: 'center', border: '2px solid #000000', background: treat ? '#D7D7DC' : '#FFFFFF', borderRadius: 999 }}>
+          <button type="button" aria-label="One fewer" onClick={() => { setTyped(null); setTreat(false); setN(Math.max(1, n - 1)); }} style={step}>−</button>
+          {treat ? <span className="dot" aria-live="polite" style={{ minWidth: 44, textAlign: 'center', fontSize: 24 }}>∞</span> : (
+            <input aria-label="How many" className="dot" inputMode="numeric" pattern="[0-9]*" value={typed ?? String(n)} onChange={(e) => type(e.target.value)} onBlur={() => setTyped(null)} onFocus={(e) => e.target.select()}
+              style={{ width: 44, height: 44, border: 0, padding: 0, background: 'transparent', textAlign: 'center', fontSize: 24, color: '#000', outline: 'none', borderRadius: 0 }} />
+          )}
+          <button type="button" aria-label="One more" onClick={() => { setTyped(null); setTreat(false); setN(Math.min(99, n + 1)); }} style={step}>+</button>
         </div>
         <button type="button" aria-pressed={treat} onClick={() => setTreat(!treat)} style={{ height: 52, border: '2px solid #000000', background: treat ? '#96E084' : 'transparent', color: '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '0 18px', borderRadius: 999, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}><span className="dot" style={{ fontSize: 22, lineHeight: 1 }}>∞</span>Unlimited</button>
       </div>

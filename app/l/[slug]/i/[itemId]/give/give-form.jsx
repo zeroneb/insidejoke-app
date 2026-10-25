@@ -52,6 +52,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
   const [pick, setPick] = useState(initialMode === 'rest' || !chips.length ? 'rest' : chips.includes(2500) ? '2500' : String(chips[0]));
   const [custom, setCustom] = useState('');
   const [units, setUnits] = useState(1);
+  const [typedUnits, setTypedUnits] = useState(null); // what's in the box while typing; 1–20 once they leave it
   const [vis, setVis] = useState('public');
   const [note, setNote] = useState('');
   const [step, setStep] = useState('form');
@@ -164,9 +165,11 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '2px solid #000000', borderBottom: '2px solid #000000', padding: '10px 0' }}>
             <span style={{ fontWeight: 800, fontSize: 17 }}>How many?</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <button type="button" onClick={() => setUnits(Math.max(1, units - 1))} aria-label="One fewer" style={{ width: 44, height: 44, border: '2px solid #000000', background: 'transparent', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', color: '#000000', padding: 0 }}>−</button>
-              <span className="dot" aria-live="polite" style={{ width: 50, textAlign: 'center', fontSize: 28 }}>{units}</span>
-              <button type="button" onClick={() => setUnits(Math.min(20, units + 1))} aria-label="One more" style={{ width: 44, height: 44, border: '2px solid #000000', background: '#000000', color: '#96E084', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>+</button>
+              <button type="button" onClick={() => { setTypedUnits(null); setUnits(Math.max(1, units - 1)); }} aria-label="One fewer" style={{ width: 44, height: 44, border: '2px solid #000000', background: 'transparent', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', color: '#000000', padding: 0 }}>−</button>
+              <input aria-label="How many" className="dot" inputMode="numeric" pattern="[0-9]*" value={typedUnits ?? String(units)} onFocus={(e) => e.target.select()} onBlur={() => setTypedUnits(null)}
+                onChange={(e) => { const d = e.target.value.replace(/\D/g, '').slice(0, 2); setTypedUnits(d); if (d) setUnits(Math.max(1, Math.min(20, +d))); }}
+                style={{ width: 50, height: 44, border: 0, padding: 0, background: 'transparent', textAlign: 'center', fontSize: 28, color: '#000000', outline: 'none', borderRadius: 0 }} />
+              <button type="button" onClick={() => { setTypedUnits(null); setUnits(Math.min(20, units + 1)); }} aria-label="One more" style={{ width: 44, height: 44, border: '2px solid #000000', background: '#000000', color: '#96E084', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>+</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
