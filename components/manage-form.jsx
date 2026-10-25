@@ -1,7 +1,8 @@
 'use client';
 // a2: list settings (from the Option 10 Manage board): rename, visibility, date.
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import { localToday } from '@/lib/time';
 import { saveListSettings } from '@/lib/actions-a2';
 
 const pill = (on) => ({ border: `1.5px solid ${on ? '#E2452B' : '#000000'}`, background: on ? '#F4D3EE' : 'transparent', color: on ? '#E2452B' : '#000000', fontFamily: 'inherit', fontWeight: 700, fontSize: 14, minHeight: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer' });
@@ -12,6 +13,9 @@ export default function ManageForm({ slug, title, visibility, date, surprise, ri
   const [t, setT] = useState(title);
   const [vis, setVis] = useState(visibility);
   const [d, setD] = useState(date || '');
+  const [minDate, setMinDate] = useState(undefined);
+  // Past days can't be picked; a date already saved in the past stays as it is.
+  useEffect(() => { const t = localToday(); setMinDate(date && date < t ? date : t); }, [date]);
   const [r, setR] = useState(ring || '');
   const [tr, setTr] = useState(!!treats);
   const dirty = t !== title || vis !== visibility || d !== (date || '') || r !== (ring || '') || tr !== !!treats;
@@ -50,7 +54,7 @@ export default function ManageForm({ slug, title, visibility, date, surprise, ri
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
         <label htmlFor="mdate" style={LBL}>{surprise ? 'Send it on' : 'Date'} {!surprise ? <span style={{ fontWeight: 400, color: '#4A4A4A' }}>optional</span> : null}</label>
         <div style={{ display: 'flex', gap: 8 }}>
-          <input id="mdate" name="date" type="date" value={d} onChange={(e) => setD(e.target.value)} className="a2-input" style={{ fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18, flexGrow: 1, minWidth: 0 }} />
+          <input id="mdate" name="date" type="date" min={minDate} value={d} onChange={(e) => setD(e.target.value)} className="a2-input" style={{ fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18, flexGrow: 1, minWidth: 0 }} />
           {d && !surprise ? <button type="button" onClick={() => setD('')} style={{ flexShrink: 0, border: '1.5px solid #000', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 13, padding: '0 14px', borderRadius: 999, cursor: 'pointer', color: '#000' }}>No date</button> : null}
         </div>
         <span style={{ fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>{surprise ? 'It goes out at midnight their time.' : d ? 'Reminders go out a week after sharing and 2 hours before.' : 'No date: one reminder goes out a week after you share it.'}</span>

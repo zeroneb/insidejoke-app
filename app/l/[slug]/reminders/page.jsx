@@ -8,6 +8,7 @@ import { remindersFor, giftByAt } from '@/lib/reminders';
 import { setGiftDate } from '@/lib/actions-a4';
 import Nav from '@/components/nav';
 import { Boil, Hdr, RED, DEEP } from '@/components/a4';
+import { earliestToday, PAST_DATE_ERROR } from '@/lib/time';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Gift-by date · insidejoke' };
@@ -15,8 +16,9 @@ export const metadata = { title: 'Gift-by date · insidejoke' };
 const DAY = 86400000, HOUR = 3600000;
 const short = (t) => new Date(t).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-export default async function RemindersPage({ params }) {
+export default async function RemindersPage({ params, searchParams }) {
   const { slug } = await params;
+  const past = (await searchParams)?.past === '1';
   const list = await listBySlug(slug);
   if (!list) notFound();
   const me = await currentUser();
@@ -58,8 +60,9 @@ export default async function RemindersPage({ params }) {
         </label>
         <div className="a4-if a4-if-dateon" style={{ margin: '12px 20px 0', gap: 8, alignItems: 'center' }}>
           <label htmlFor="gdate" className="sr">Gift-by date</label>
-          <input id="gdate" type="date" name="date" defaultValue={list.date || ''} style={{ flexGrow: 1, minWidth: 0, height: 48, border: '2px solid #000', background: '#fff', fontFamily: 'inherit', fontSize: 16, padding: '0 12px', color: '#000', borderRadius: 0 }} />
+          <input id="gdate" type="date" name="date" min={list.date && list.date < earliestToday() ? list.date : earliestToday()} defaultValue={list.date || ''} style={{ flexGrow: 1, minWidth: 0, height: 48, border: '2px solid #000', background: '#fff', fontFamily: 'inherit', fontSize: 16, padding: '0 12px', color: '#000', borderRadius: 0 }} />
         </div>
+        {past ? <div className="err" role="alert" style={{ margin: '10px 20px 0' }}>{PAST_DATE_ERROR}</div> : null}
         <button style={{ alignSelf: 'flex-end', margin: '10px 20px 0', height: 40, border: 0, background: RED, color: '#fff', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '0 18px', borderRadius: 999, cursor: 'pointer' }}>Save</button>
       </form>
 

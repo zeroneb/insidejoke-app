@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
+import { localToday } from '@/lib/time';
 import { createList } from '@/lib/actions';
 import { Blob, Avatar } from '@/components/ui';
 import { defaultListTitle } from '@/lib/list-title';
@@ -72,6 +73,8 @@ export default function NewListForm({ me, friends = [] }) {
   const [picking, setPicking] = useState(false);
   const [phone, setPhone] = useState('');
   const [hasDate, setHasDate] = useState(true);
+  const [minDate, setMinDate] = useState(undefined);
+  useEffect(() => setMinDate(localToday()), []);
   const [vis, setVis] = useState('public');
   const [picked, setPicked] = useState({});
 
@@ -189,7 +192,7 @@ export default function NewListForm({ me, friends = [] }) {
         {showDate ? (
           <div className="pop" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <label htmlFor="ldate" className="sr">Date</label>
-            <input id="ldate" name="date" type="date" required={sur} style={{ height: 48, border: '1.5px solid #000000', background: '#FFFFFF', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
+            <input id="ldate" name="date" type="date" min={minDate} required={sur} style={{ height: 48, border: '1.5px solid #000000', background: '#FFFFFF', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
             <span style={{ fontSize: 13, lineHeight: 1.45 }}>{sur ? 'It goes out at midnight their time. Reminders go to everyone helping: about 3 days before, and a last call the day before. Never to them.' : 'Reminders go to everyone you share it with: a week after sharing and 2 hours before. The list stays open after.'}</span>
           </div>
         ) : <span style={{ fontSize: 13, lineHeight: 1.45, color: '#4A4A4A' }}>No date: one reminder goes out a week after you share it.</span>}
