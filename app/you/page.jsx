@@ -34,9 +34,9 @@ export default async function YouPage() {
     <>
       <main className="withnav" style={{ display: 'flex', flexDirection: 'column' }}>
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 12px' }}>
-          <span style={{ width: 44 }} />
+          <span style={{ width: 48 }} />
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Your profile</span>
-          <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: 'var(--ink, #000)' }} />
+          <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} size={30} style={{ width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: 'var(--ink, #000)' }} />
         </header>
 
         <ProfileHero user={me} owner ring={`insidejoke since ${monthYear(me.created_at)}`} uid="you">
