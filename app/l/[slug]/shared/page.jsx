@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { listBySlug } from '@/lib/lists';
-import { canEdit, teamOf, itemsWithAdder, firstName, whoFor, findMatch } from '@/lib/collab';
+import { canEdit, isInvited, teamOf, itemsWithAdder, firstName, whoFor, findMatch } from '@/lib/collab';
 import { matchAction } from '@/lib/actions-r4';
 import Nav from '@/components/nav';
 import { Boil, Hdr, Who, TallTitle, stat, fmtDate, RED, DEEP } from '@/components/a4';
@@ -21,6 +21,7 @@ export default async function SharedPage({ params, searchParams }) {
   if (me && list.recipient_phone && me.phone === list.recipient_phone && !list.sent_at) redirect('/home'); // no peeking at your own surprise
   // r4: collaborators see the SharedList board (who added what, matches, add a wish or treat); others see give / help build.
   const editor = !!me && (await canEdit(list, me));
+  const invited = !editor && !!me && (await isInvited(list, me));
   const team = await teamOf(list);
   const all = await itemsWithAdder(list);
   const match = editor ? findMatch(all) : null;
@@ -84,7 +85,7 @@ export default async function SharedPage({ params, searchParams }) {
       ) : (
         <div style={{ padding: '22px 16px 30px', display: 'flex', gap: 8 }}>
           {open ? <Link href={`/l/${slug}/i/${open.id}/give`} className="a4-btn" style={{ flex: '1 1 0', fontSize: 16, padding: '16px 0' }}>Give toward a gift</Link> : null}
-          <Link href={`/join/${slug}`} className="a4-ghost" style={{ flex: '1 1 0', fontSize: 16 }}>Help build it</Link>
+          {invited ? <Link href={`/join/${slug}`} className="a4-ghost" style={{ flex: '1 1 0', fontSize: 16 }}>Help build it</Link> : null}
         </div>
       )}
       {list.surprise ? <p style={{ margin: '-14px 20px 30px', textAlign: 'center', fontSize: 12, color: DEEP }}>🤫 It's a surprise. {name} can't see this list.</p> : null}

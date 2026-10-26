@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { listBySlug } from '@/lib/lists';
-import { isMember, teamOf, itemsWithAdder, firstName, whoFor } from '@/lib/collab';
+import { isMember, isInvited, teamOf, itemsWithAdder, firstName, whoFor } from '@/lib/collab';
 import { appUrl } from '@/lib/texts';
 import { joinList } from '@/lib/actions-a4';
 import Nav from '@/components/nav';
@@ -38,12 +38,13 @@ export default async function JoinPage({ params, searchParams }) {
   if (list.recipient_phone && me.phone === list.recipient_phone) redirect('/home');
   if (me.id === list.owner_id) redirect(`/l/${slug}/collab`);
   const member = await isMember(list.id, me.id);
+  const invited = member || (await isInvited(list, me));
   const items = await itemsWithAdder(list);
   return (
     <main className="a4 r4-pink withnav">
       <div className="a4-pop" style={{ display: 'flex', flexDirection: 'column' }}>
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px 0', minHeight: 44 }}>
-          <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>{member ? "Collab · you're in" : "Collab · you're invited"}</span>
+          <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>{member ? "Collab · you're in" : invited ? "Collab · you're invited" : 'Collab · invite only'}</span>
           {member ? <Link href={`/l/${slug}`} style={{ fontSize: 12, color: DEEP }}>Open the list</Link> : null}
         </header>
         <div style={{ position: 'relative', height: 190 }}>
@@ -54,7 +55,7 @@ export default async function JoinPage({ params, searchParams }) {
           {team.filter((m) => m.id !== me.id).map((m, i) => <span key={m.id} className="a4-chip" style={{ marginLeft: i ? -2 : 0 }}>{firstName(m)}</span>)}
           <span className="a4-chip" style={{ marginLeft: -2, background: member ? RED : 'transparent', color: member ? 'var(--inv-fg, #fff)' : RED, borderStyle: member ? 'solid' : 'dashed' }}>{firstName(me)} · you</span>
         </section>
-        <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 14, color: DEEP }}>{firstName(organiser)} started this. {member ? 'You can add, edit and fund.' : 'Join to add, edit and fund.'}</p>
+        <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 14, color: DEEP }}>{firstName(organiser)} started this. {member ? 'You can add, edit and fund.' : invited ? 'Join to add, edit and fund.' : `Only people ${firstName(organiser)} invites can help build it.`}</p>
         <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 14, letterSpacing: '0.14em' }}>On the list</h2>
           {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: 'var(--ink, #000)', fontSize: 15 }}>Nothing yet. Be the first to add something.</p> : null}
@@ -68,6 +69,8 @@ export default async function JoinPage({ params, searchParams }) {
         </section>
         {member ? (
           <Link href={`/l/${slug}/add`} className="a4-btn" style={{ margin: '20px 16px 30px', width: 'auto' }}>Add something {name} would love</Link>
+        ) : !invited ? (
+          <Link href={`/l/${slug}`} className="a4-ghost" style={{ margin: '20px 16px 30px', width: 'auto' }}>See the list</Link>
         ) : (
           <form action={joinList} style={{ margin: '20px 16px 30px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <input type="hidden" name="slug" value={slug} />
