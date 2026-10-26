@@ -34,7 +34,7 @@ export default async function SharedPage({ params, searchParams }) {
   const open = items.find((it) => !it.covered);
   return (
     <main className={`a4 r4-pink${me ? ' withnav' : ''}`}>
-      <Hdr back={me ? '/home' : '/'} right={editor ? <Link href={`/l/${slug}/collab`} aria-label="Collab settings" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="1.73" strokeLinecap="round"><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></svg></Link> : null}>{head}</Hdr>
+      <Hdr back={!me ? '/' : list.owner_id !== me.id ? `/u/${list.owner_id}` : '/home'} right={editor ? <Link href={`/l/${slug}/collab`} aria-label="Collab settings" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="1.73" strokeLinecap="round"><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></svg></Link> : null}>{head}</Hdr>
       <div style={{ position: 'relative', height: 170 }}>
         <Boil seed={9} left={60} top={0} width={270} height={170} />
         <TallTitle text={list.title} size={84} style={{ paddingTop: 20 }} />
