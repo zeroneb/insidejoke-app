@@ -5,162 +5,15 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all, get } from '@/lib/db';
-import { lately, friendsLately, withProgress, friendCounts, commentsFor } from '@/lib/lists';
+import { friendCounts } from '@/lib/lists';
+import { myFeed } from '@/lib/feed';
 import { unreadCount } from '@/lib/notifications';
-import { ago } from '@/lib/time';
-import { Avatar, FaceSm, PhotoBlob } from '@/components/ui';
+import { PhotoBlob } from '@/components/ui';
 import { ListTile, tileData } from '@/components/list-tile';
-import LatelyActions from '@/components/lately-actions';
+import LatelyRows from '@/components/lately-feed';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Home · insidejoke' };
-
-const first = (n) => (n || '').trim().split(/\s+/)[0] || 'A friend';
-
-// r1: reactions per Lately row: most-used emoji, total count, and the viewer's own pick.
-async function reactionsFor(keys, meId) {
-  if (!keys.length) return {};
-  const rows = await all(`SELECT contribution_id, emoji, user_id FROM reactions WHERE contribution_id IN (${keys.map(() => '?').join(',')})`, ...keys);
-  const out = {};
-  for (const r of rows) {
-    const e = (out[r.contribution_id] ||= { count: 0, by: {}, mine: [] });
-    e.count += 1;
-    e.by[r.emoji] = (e.by[r.emoji] || 0) + 1;
-    if (r.user_id === meId) e.mine.push(r.emoji);
-  }
-  for (const e of Object.values(out)) e.list = Object.entries(e.by).sort((x, y) => y[1] - x[1]).map(([emoji, n]) => ({ emoji, n }));
-  return out;
-}
-
-// r1: friends' public wishes that just got fully covered ("Dev's Le Labo candle is all covered").
-async function friendsCovered(meId) {
-  const rows = await all(`SELECT i.*, l.slug, u.id AS giver_id, u.name AS uname, u.color, u.seed, u.photo, MAX(c.created_at) AS last_at
-    FROM contributions c JOIN items i ON i.id = c.item_id JOIN lists l ON l.id = c.list_id JOIN users u ON u.id = l.owner_id
-    JOIN friends f ON f.friend_id = u.id AND f.user_id = ? AND f.status = 'friends'
-    WHERE i.quantity > 0 AND i.removed = 0 AND l.status = 'open' AND l.surprise = 0 AND l.visibility = 'public' AND l.for_who = 'me' AND c.created_at > ?
-    GROUP BY i.id, l.slug, u.id, u.name, u.color, u.seed, u.photo ORDER BY last_at DESC LIMIT 6`, meId, Date.now() - 14 * 24 * 3600 * 1000);
-  const out = [];
-  for (const r of rows) {
-    const it = await withProgress(r);
-    if (!it.covered) continue;
-    const lastC = await get('SELECT id FROM contributions WHERE item_id = ? ORDER BY created_at DESC LIMIT 1', r.id);
-    out.push({ kind: 'fcovered', key: lastC.id, item_id: r.id, item_name: r.name, slug: r.slug, created_at: Number(r.last_at), givers: [{ id: r.giver_id, name: r.uname, color: r.color, seed: r.seed, photo: r.photo }] });
-  }
-  return out;
-}
-
-// Gifts on your lists + things friends added. Treats on the same item are grouped into one row.
-async function buildFeed(me) {
-  const gifts = await lately(me.id);
-  const groups = new Map();
-  const out = [];
-  for (const g of gifts) {
-    if (g.quantity === 0) {
-      const k = g.item_id;
-      if (!groups.has(k)) {
-        const e = { kind: 'treat', key: g.id, item_id: g.item_id, item_name: g.item_name, store: g.store, slug: g.slug, created_at: g.created_at, givers: [], units: 0, note: null, noteBy: null, noteAt: null, private: false };
-        groups.set(k, e);
-        out.push(e);
-      }
-      const e = groups.get(k);
-      if (!e.givers.find((x) => x.id === g.giver_id)) e.givers.push({ id: g.giver_id, name: g.name, color: g.color, seed: g.seed, photo: g.photo });
-      e.units += g.units;
-      if (g.visibility === 'private') e.private = true;
-      if (g.note && !e.note) { e.note = g.note; e.noteBy = g.name; e.noteAt = g.created_at; }
-    } else {
-      const it = await withProgress(await get('SELECT * FROM items WHERE id = ?', g.item_id));
-      const last = (await get('SELECT id FROM contributions WHERE item_id = ? ORDER BY created_at DESC LIMIT 1', g.item_id)).id === g.id;
-      out.push({ kind: 'wish', key: g.id, item_id: g.item_id, item_name: g.item_name, slug: g.slug, created_at: g.created_at, givers: [{ id: g.giver_id, name: g.name, color: g.color, seed: g.seed, photo: g.photo }], note: g.note, pct: it.pct, finished: it.covered && last, private: g.visibility === 'private' });
-    }
-  }
-  for (const a of await friendsLately(me.id)) {
-    out.push({ kind: 'added', key: 'i:' + a.item_id, item_id: a.item_id, item_name: a.item_name, slug: a.slug, title: a.title, created_at: a.created_at, givers: [{ id: a.giver_id, name: a.name, color: a.color, seed: a.seed, photo: a.photo }] });
-  }
-  for (const c of await friendsCovered(me.id)) out.push(c);
-  return out.sort((x, y) => y.created_at - x.created_at).slice(0, 8);
-}
-
-function Who({ g }) {
-  return <Link href={`/u/${g.id}`} style={{ fontWeight: 700, textDecoration: 'none' }}>{first(g.name)}</Link>;
-}
-const possessive = (n) => (n.endsWith('s') ? `${n}’` : `${n}’s`);
-
-// One Lately row, Option 10 Home.
-function Comments({ list, meId }) {
-  if (!list.length) return null;
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4, paddingLeft: 10, borderLeft: '2px solid #D4FA4F' }}>
-      {list.slice(-3).map((m, i) => (
-        <span key={i} style={{ fontSize: 14, lineHeight: 1.35 }}><b>{m.uid === meId ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>
-      ))}
-      {list.length > 3 ? <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{list.length - 3} earlier</span> : null}
-    </div>
-  );
-}
-
-function FeedRow({ f, r, c = [], me, n }) {
-  const g = f.givers;
-  const one = g[0];
-  const from = f.store ? ` from ${f.store}` : '';
-  let text, badge, see = 'See item', href = `/l/${f.slug}/i/${f.item_id}`, when = ago(f.created_at);
-  let lead;
-  if (f.kind === 'treat' && g.length > 1) {
-    const shown = g.slice(0, 2), rest = g.slice(2);
-    lead = (
-      <>
-        <input type="checkbox" id={`o-${f.key}`} className="sr a1-chk" />
-        <span style={{ fontSize: 15, lineHeight: 1.35 }}>
-          {shown.map((x, k) => <span key={x.id}>{k ? (rest.length ? ', ' : ' and ') : ''}<Who g={x} /></span>)}
-          {rest.length ? <> and <label htmlFor={`o-${f.key}`} style={{ fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer' }}>{rest.length} {rest.length === 1 ? 'other' : 'others'}</label></> : null} treated you to {f.item_name}{from}
-        </span>
-        {rest.length ? (
-          <div className="a1-others a1up" style={{ flexWrap: 'wrap', gap: 6, padding: '6px 0 2px' }}>
-            {rest.map((o) => (
-              <Link key={o.id} href={`/u/${o.id}`} style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', background: 'var(--surface, #FFFFFF)', borderRadius: 999, padding: '4px 10px 4px 4px', fontSize: 13, fontWeight: 700 }}><Avatar user={o} size={24} />{first(o.name)}</Link>
-            ))}
-          </div>
-        ) : null}
-      </>
-    );
-    badge = `×${f.units}`;
-    when = f.note ? `This week · ${possessive(first(f.noteBy))} note, ${ago(f.noteAt)}` : `This week · ${ago(f.created_at)}`;
-  } else if (f.kind === 'treat') {
-    text = <>treated you to {f.item_name}{from}{f.private ? '. Private, so only you know who sent it' : ''}</>;
-    badge = `×${f.units}`;
-  } else if (f.kind === 'wish') {
-    text = f.finished ? <>covered the rest of your {f.item_name}</> : <>contributed to your {f.item_name}{f.private ? '. Private, so only you know who sent it' : ''}</>;
-    badge = `${f.pct}%`;
-  } else if (f.kind === 'fcovered') {
-    lead = <span style={{ fontSize: 15, lineHeight: 1.35 }}><Link href={`/u/${one.id}`} style={{ textDecoration: 'none' }}>{possessive(first(one.name))}</Link> {f.item_name} is all covered</span>;
-    badge = '100%';
-  } else {
-    text = <>added {f.item_name} to {f.title}</>;
-    badge = '+1';
-    see = 'See list';
-    href = `/l/${f.slug}`;
-  }
-  const multi = g.length > 1;
-  return (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 0', borderTop: '1px solid var(--line, #000000)' }}>
-      {multi ? (
-        <Link href={`/u/${g[0].id}`} aria-label={`${first(g[0].name)}’s profile`} style={{ position: 'relative', width: 52, height: 40, flexShrink: 0, textDecoration: 'none' }}>
-          <span style={{ position: 'absolute', left: 0, top: 0 }}><FaceSm user={g[0]} size={36} /></span>
-          <span style={{ position: 'absolute', left: 16, top: 8 }}><FaceSm user={g[1]} size={36} /></span>
-        </Link>
-      ) : (
-        <Link href={`/u/${one.id}`} aria-label={`${first(one.name)}’s profile`} style={{ flexShrink: 0, textDecoration: 'none', color: 'var(--ink, #000000)' }}><FaceSm user={one} size={44} /></Link>
-      )}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexGrow: 1, minWidth: 0 }}>
-        {lead || <span style={{ fontSize: 15, lineHeight: 1.35 }}><Who g={one} /> {text}</span>}
-        {f.note ? <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--navy-ink, #13286B)' }}>“{f.note}”</span> : null}
-        <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{when}</span>
-        <Comments list={c} meId={me?.id} />
-        <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} toName={first(f.noteBy || one.name)} delay={n} />
-      </div>
-      <span className="dot" style={{ fontSize: 18, color: '#E8642C', flexShrink: 0 }}>{badge}</span>
-    </div>
-  );
-}
 
 const Camera = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.96" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3" /></svg>;
 const ROW = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', padding: '14px 4px', fontWeight: 700, fontSize: 15 };
@@ -180,9 +33,7 @@ export default async function HomePage() {
   const archived = (await get("SELECT COUNT(*) AS n FROM lists WHERE owner_id = ? AND status = 'archived'", me.id)).n;
   const friends = (await get("SELECT COUNT(*) AS n FROM friends WHERE user_id = ? AND status = 'friends'", me.id)).n;
   const fresh = await unreadCount(me);
-  const feed = await buildFeed(me);
-  const reacts = await reactionsFor(feed.map((f) => f.key), me.id);
-  const comments = await commentsFor(feed.map((f) => f.key));
+  const feed = await myFeed(me);
 
   return (
     <main className="withnav dk-wide home-page" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -239,10 +90,10 @@ export default async function HomePage() {
           <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
           <Link href="/friends" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
         </div>
-        <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Your friends on insidejoke. Tap anyone to see their profile.</p>
-        {feed.map((f, n) => <FeedRow key={f.key} f={f} r={reacts[f.key]} c={comments[f.key] || []} me={me} n={n} />)}
+        <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Gifts on your lists, replies to you, and what you’ve been up to. Friends’ news is in <Link href="/friends" style={{ color: 'var(--ink, #000)' }}>Friends</Link>.</p>
+        <LatelyRows rows={feed} meId={me.id} />
         {feed.length === 0 ? (
-          <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid var(--line, #000000)', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and your friends’ gifts and notes show up here.</p>
+          <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid var(--line, #000000)', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and gifts and notes on it show up here.</p>
         ) : null}
         <p style={{ margin: 0, padding: '14px 0 0', borderTop: '1px solid var(--line, #000000)', fontSize: 13, color: 'var(--muted, #4A4A4A)', display: 'flex', gap: 8, alignItems: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="1.55" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10h16v10H4z" /><path d="M3 7h18v3H3z" /><path d="M12 7v13" /></svg>Surprise gifts stay out of here until the reveal.</p>
       </section>
