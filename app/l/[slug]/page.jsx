@@ -6,7 +6,7 @@ import { listBySlug, itemsFor, owner } from '@/lib/lists';
 import OwnerList from '@/components/owner-list';
 import FriendList from '@/components/friend-list';
 import { Blob } from '@/components/ui';
-import { isMember, latestBlast } from '@/lib/collab';
+import { isMember, latestBlast, teamOf } from '@/lib/collab';
 import { redirect } from 'next/navigation';
 import Link2 from 'next/link';
 import ItemView from '@/components/views/item-view';
@@ -51,7 +51,7 @@ export default async function ListPage({ params, searchParams }) {
   const list = await listBySlug(slug);
   if (!list) notFound();
   const me = await currentUser();
-  if (me && (me.id === list.owner_id || (await isMember(list.id, me.id)))) return withPanel(slug, sp, <OwnerList list={list} items={await itemsFor(list.id)} me={me} blast={await latestBlast(list.id)} />, true);
+  if (me && (me.id === list.owner_id || (await isMember(list.id, me.id)))) return withPanel(slug, sp, <OwnerList list={list} items={await itemsFor(list.id)} me={me} blast={await latestBlast(list.id)} team={await teamOf(list)} />, true);
   const visible = await canSee(list, me);
   if (visible && list.for_who === 'other' && !list.surprise) redirect(`/l/${slug}/shared`);
   if (!visible) {
@@ -69,5 +69,5 @@ export default async function ListPage({ params, searchParams }) {
     );
   }
   if (!(await import('@/lib/admin')).isAdmin(me)) (await import('@/lib/events')).logEvent('list_view', { userId: me?.id || null, ref: list.id, detail: me ? 'signed_in' : 'visitor' });
-  return withPanel(slug, sp, <FriendList list={list} owner={await owner(list)} items={await itemsFor(list.id)} me={me} />, false);
+  return withPanel(slug, sp, <FriendList list={list} owner={await owner(list)} items={await itemsFor(list.id)} me={me} team={await teamOf(list)} />, false);
 }

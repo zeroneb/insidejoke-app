@@ -86,7 +86,9 @@ export function LegacyCover({ list, items, archived, status, left, right, childr
   );
 }
 
-export default function OwnerList({ list, items, me, blast = null }) {
+export default function OwnerList({ list, items, me, blast = null, team = [] }) {
+  // Names on covers that show the team (Bouquet): you first, then everyone making it with you.
+  const people = ['You', ...team.filter((u) => u.id !== me?.id && u.role !== 'viewer').map((u) => String(u.name || '').trim().split(/\s+/)[0] || 'A friend')];
   const slug = list.slug;
   const archived = list.status === 'archived';
   const vis = list.surprise ? 'Surprise' : list.visibility === 'private' ? 'Private' : 'Public';
@@ -105,7 +107,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
             <Link href={`/l/${slug}/share`} style={{ border: '2px solid var(--edge, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
           </header>
           <div style={archived ? { filter: 'grayscale(1)', opacity: 0.7 } : undefined}>
-            <ListCover slug={slug} design={design} title={list.title} treat={design.key === 'treat'} ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: ['You'], photo: list.photo || null, handle: me?.handle || null }} />
+            <ListCover slug={slug} design={design} title={list.title} treat={design.key === 'treat'} ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people, photo: list.photo || null, handle: me?.handle || null }} />
           </div>
           <p style={{ margin: '14px 0 0', padding: '0 20px', fontWeight: 800, fontSize: 14 }}>{status}</p>
           {archived ? <form action={setListArchived} style={{ margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid var(--edge, #000000)', borderRadius: 999, background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: 'var(--ink, #000)' }}>Unarchive</button></form> : null}

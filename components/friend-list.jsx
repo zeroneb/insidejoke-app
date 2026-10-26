@@ -41,7 +41,8 @@ const TREAT_TILES = [['#96E084', '#000000'], ['#F4D3EE', '#E2452B'], ['#A9CDF5',
 
 const money0 = (c) => '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
 
-export default function FriendList({ list, owner, items, me }) {
+export default function FriendList({ list, owner, items, me, team = [] }) {
+  const people = team.filter((u) => u.role !== 'viewer').map((u) => (me && u.id === me.id ? 'You' : String(u.name || '').trim().split(/\s+/)[0] || 'A friend'));
   const slug = list.slug;
   const name = firstName(owner);
   const forName = list.for_who === 'other' && list.recipient_name ? list.recipient_name : name;
@@ -66,7 +67,7 @@ export default function FriendList({ list, owner, items, me }) {
               <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
             ) : <span style={{ width: 44 }} />}
           </header>
-          <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: [name], photo: list.photo || null, handle: owner?.handle || null }} />
+          <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: people.length ? people : [name], photo: list.photo || null, handle: owner?.handle || null }} />
           <div style={{ padding: '10px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
             <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: 'var(--ink, #000000)', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
             <span className="dot" style={{ fontSize: 14, flexShrink: 0 }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
