@@ -1,4 +1,5 @@
 import { TitleWords } from '@/components/owner-list';
+import { coverGround } from '@/lib/cover-designs';
 import { parse as parseDesign } from '@/lib/cover-designs';
 import CoverDesign from '@/components/cover-design';
 import Link from 'next/link';
@@ -59,7 +60,7 @@ export default function FriendList({ list, owner, items, me }) {
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {design ? (
         <>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
+          <header className="bleed-top" style={{ ...coverGround(design), display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
             <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
             {me && list.visibility !== 'private' ? (
               <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>

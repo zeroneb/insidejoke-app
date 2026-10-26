@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { coverGround } from '@/lib/cover-designs';
 import { coverFor, listKind } from '@/lib/cover';
 import { CoverArt } from '@/components/cover-art';
 import { parse as parseDesign } from '@/lib/cover-designs';
@@ -99,7 +100,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {design ? (
         <>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
+          <header className="bleed-top" style={{ ...coverGround(design), display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
             <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
             <Link href={`/l/${slug}/share`} style={{ border: '2px solid var(--edge, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
           </header>

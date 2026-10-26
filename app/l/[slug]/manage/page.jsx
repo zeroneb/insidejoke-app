@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { coverGround } from '@/lib/cover-designs';
 import { Avatar } from '@/components/ui';
 import { membersOf } from '@/lib/collab';
 import { removeMember } from '@/lib/actions-a4';
@@ -46,7 +47,7 @@ export default async function ManagePage({ params, searchParams }) {
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {design ? (
         <>
-          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
+          <header className="bleed-top" style={{ ...coverGround(design), display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
             {back('var(--ink, #000000)')}
             {archiveBtn('var(--edge, #000000)', 'var(--ink, #000000)')}
           </header>
