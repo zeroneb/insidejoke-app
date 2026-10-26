@@ -118,7 +118,7 @@ function FeedRow({ f, r, c = [], meId, n }) {
         <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{when}</span>
         <Visual f={f} href={href} />
         <Comments list={c} meId={meId} />
-        <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} toName={own && !f.noteBy ? '' : first(f.noteBy || one.name)} delay={n} />
+        <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} give={own ? null : f.kind === 'added' ? `/l/${f.slug}/i/${f.item_id}/give` : f.kind === 'list' ? `/l/${f.slug}` : null} toName={own && !f.noteBy ? '' : first(f.noteBy || one.name)} delay={n} />
       </div>
       <span className="dot" style={{ fontSize: 18, color: '#E8642C', flexShrink: 0 }}>{badge}</span>
     </div>

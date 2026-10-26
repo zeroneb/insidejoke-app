@@ -13,7 +13,7 @@ const MORE = ['😍', '🔥', '✨', '🥂', '😂', '🤌', '💐', '🎂', '�
 const PILL = { border: '1.5px solid var(--edge, #000000)', background: 'transparent', height: 40, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontFamily: 'inherit', color: 'var(--ink, #000000)' };
 const Smile = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.64" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2" /><path d="M9 9.5h.01" /><path d="M15 9.5h.01" /></svg>;
 
-export default function LatelyActions({ cid, chips = [], mine = [], href, see = 'See item', toName = 'them', delay = 0 }) {
+export default function LatelyActions({ cid, chips = [], mine = [], href, see = 'See item', give = null, toName = 'them', delay = 0 }) {
   const [pick, setPick] = useState(false);
   const [more, setMore] = useState(false);
   const count = chips.reduce((t, c) => t + c.n, 0);
@@ -39,6 +39,7 @@ export default function LatelyActions({ cid, chips = [], mine = [], href, see = 
         <button type="button" aria-label="Comment" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)} style={{ ...PILL, width: 48, padding: 0, background: open ? 'var(--inv-bg, #000000)' : 'transparent' }}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={open ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)'} strokeWidth="1.64" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
         </button>
+        {give ? <Link href={give} style={{ marginLeft: 2, display: 'flex', alignItems: 'center', height: 40, padding: '0 16px', borderRadius: 999, background: '#D4FA4F', color: '#000000', border: '1.5px solid #000000', textDecoration: 'none', fontWeight: 800, fontSize: 13, whiteSpace: 'nowrap' }}>Give</Link> : null}
         <Link href={href} style={{ marginLeft: 2, display: 'flex', alignItems: 'center', gap: 4, height: 40, padding: '0 14px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap' }}>{see}<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.96" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></Link>
       </div>
       {pick ? (
