@@ -12,9 +12,18 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
-/* The page ground runs to every edge (status bar, overscroll); .app clears the notch when the page draws under it. */
+/* Edge to edge on phones (viewport-fit=cover): every page draws behind the status bar and the bottom toolbar.
+   --sat is the status bar height. The page's first block gets a transparent top border that tall, so its own
+   ground (page grey, lime wallet, pink, a cover…) paints behind the status bar and its content starts below it.
+   A colored top section (.bleed-top: list covers, item header) pulls up over that border and paints it in its color.
+   In test mode the black test bar takes the status bar instead. Laptops have no inset, so all of this is zero there. */
 html { background: var(--page, #ECECEF); }
-.app { padding-top: env(safe-area-inset-top); }
+.app { --sat: env(safe-area-inset-top, 0px); }
+.app:has(> .testbar) { --sat: 0px; }
+.testbar { padding-top: calc(7px + env(safe-area-inset-top, 0px)) !important; }
+.app > :not(.testbar):not(.split):first-child,
+.app > .split:first-child > .split-main > :first-child { border-top: var(--sat) solid transparent; }
+.bleed-top { margin-top: calc(-1 * var(--sat)); border-top: var(--sat) solid transparent; }
 body { background: var(--page, #ECECEF); color: var(--ink); font-family: 'Inter Tight', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: inherit; }
 .app { max-width: 430px; min-height: 100vh; margin: 0 auto; background: var(--bg); position: relative; overflow-x: hidden; display: flex; flex-direction: column; }

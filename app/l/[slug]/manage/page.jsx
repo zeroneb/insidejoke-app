@@ -6,9 +6,11 @@ import { redirect, notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { all } from '@/lib/db';
 import { listBySlug, itemsFor, withProgress } from '@/lib/lists';
+import { coverFor, listKind } from '@/lib/cover';
 import { setListArchived, deleteList } from '@/lib/actions-a2';
-import { Blob } from '@/components/ui';
-import { TitleWords } from '@/components/owner-list';
+import { LegacyCover } from '@/components/owner-list';
+import { ListCover } from '@/components/cover-picker';
+import { parse as parseDesign } from '@/lib/cover-designs';
 import ManageForm from '@/components/manage-form';
 import ManageRows from '@/components/manage-list-r2';
 
@@ -27,23 +29,35 @@ export default async function ManagePage({ params, searchParams }) {
   const people = (await membersOf(list.id)).filter((u) => u.id !== list.owner_id);
   const archivedItems = await Promise.all((await all('SELECT * FROM items WHERE list_id = ? AND removed = 2 ORDER BY created_at DESC', list.id)).map(withProgress));
   const archived = list.status === 'archived';
-  const plain = (it) => ({ id: it.id, name: it.name, color: it.color, store: it.store, url: it.url, photo: it.photo ? 1 : 0, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, covered: it.covered, pct: it.pct, givers: it.givers, timesTreated: it.timesTreated });
+  // The same cover the list page shows: the picked design, else the classic cover for its kind.
+  const design = parseDesign(list.design);
+  const cv = coverFor(list, listKind(list, items));
+  const status = archived ? 'Archived · friends can no longer see this list' : `${list.visibility === 'private' ? 'Only people you pick' : 'Friends can see'} · ${items.length} ${items.length === 1 ? 'thing' : 'things'}`;
+  const back = (c) => <Link href={`/l/${slug}`} aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>;
+  const archiveBtn = (edge, ink) => (
+    <form action={setListArchived}>
+      <input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value={archived ? '0' : '1'} />
+      <button style={{ border: `2px solid ${edge}`, background: 'transparent', color: ink, fontFamily: 'inherit', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999, cursor: 'pointer' }}>{archived ? 'Unarchive list' : 'Archive list'}</button>
+    </form>
+  );
+  const plain = (it) => ({ id: it.id, name: it.name, color: it.color, store: it.store, url: it.url, photo: it.photo || null, price_cents: it.price_cents, quantity: it.quantity, unlimited: it.unlimited, covered: it.covered, pct: it.pct, givers: it.givers, timesTreated: it.timesTreated });
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-      <section style={{ position: 'relative', background: archived ? 'var(--lt, #8C8A86)' : 'var(--lt, #E8642C)', color: 'var(--inv-fg, #FFFFFF)', height: 300, overflow: 'hidden', flexShrink: 0 }}>
-        <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -70, bottom: -80, width: 260, height: 260, borderRadius: '50%', background: 'var(--dk, #13286B)' }} />
-        <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={`/l/${slug}`} aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
-          <form action={setListArchived}>
-            <input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value={archived ? '0' : '1'} />
-            <button style={{ border: '2px solid #FFFFFF', background: 'transparent', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999, cursor: 'pointer' }}>{archived ? 'Unarchive list' : 'Archive list'}</button>
-          </form>
-        </header>
-        <Blob seed={5} width={320} height={190} style={{ left: -24, top: 64 }} />
-        <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: 'var(--ink, #000000)', fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={(list.title || '').length > 22 ? 40 : 50} /></h1>
-        <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: 'var(--navy-ink, #13286B)', fontWeight: 800, fontSize: 14 }}>{archived ? 'Archived · friends can no longer see this list' : `${list.visibility === 'private' ? 'Only people you pick' : 'Friends can see'} · ${items.length} ${items.length === 1 ? 'thing' : 'things'}`}</p>
-      </section>
+      {design ? (
+        <>
+          <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
+            {back('var(--ink, #000000)')}
+            {archiveBtn('var(--edge, #000000)', 'var(--ink, #000000)')}
+          </header>
+          <div style={archived ? { filter: 'grayscale(1)', opacity: 0.7 } : undefined}>
+            <ListCover slug={slug} design={design} title={list.title} treat={design.key === 'treat'} ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: ['You'], photo: list.photo || null, handle: me?.handle || null }} />
+          </div>
+          <p style={{ margin: '14px 0 0', padding: '0 20px', fontWeight: 800, fontSize: 14 }}>{status}</p>
+        </>
+      ) : (
+        <LegacyCover list={list} items={items} archived={archived} status={status} left={back(cv.icon || cv.chrome)} right={archiveBtn(cv.chrome, cv.chrome)} />
+      )}
 
       <ManageRows slug={slug} active={items.map(plain)} archived={archivedItems.map(plain)} />
 

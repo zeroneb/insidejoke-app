@@ -72,7 +72,7 @@ export default function FriendList({ list, owner, items, me }) {
           </div>
         </>
       ) : (
-      <section style={{ position: 'relative', background: cv.bg, color: cv.chrome, height: 420, overflow: 'hidden', flexShrink: 0 }}>
+      <section className="bleed-top" style={{ position: 'relative', background: cv.bg, color: cv.chrome, height: 'calc(420px + var(--sat, 0px))', overflow: 'hidden', flexShrink: 0 }}>
         <CoverArt cv={cv} />
         <header style={{ position: 'relative', zIndex: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
           <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>

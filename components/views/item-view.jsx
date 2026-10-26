@@ -70,7 +70,7 @@ export default async function ItemView({ slug, itemId }) {
 
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-      <section style={{ position: 'relative', background: it.color, height: 380, overflow: 'hidden', flexShrink: 0 }}>
+      <section className="bleed-top" style={{ position: 'relative', background: it.color, height: 'calc(380px + var(--sat, 0px))', overflow: 'hidden', flexShrink: 0 }}>
         <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
           <Link href={back} aria-label={isOwner ? 'Back to my list' : `Back to ${forName}'s list`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.56" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           {isOwner ? (

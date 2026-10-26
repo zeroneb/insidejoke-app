@@ -5,6 +5,7 @@ import { currentUser } from '@/lib/auth';
 import { GlobalNav } from '@/components/nav';
 import { Analytics } from '@vercel/analytics/next';
 import PageBeacon from '@/components/page-beacon';
+import EdgeColors from '@/components/edge-colors';
 
 export const metadata = {
   title: 'insidejoke',
@@ -12,7 +13,8 @@ export const metadata = {
   appleWebApp: { capable: true, title: 'insidejoke', statusBarStyle: 'black-translucent' }
 };
 
-// Edge to edge on phones: the status bar takes the page's own ground (light #ECECEF, dark #161618).
+// Edge to edge on phones (viewport-fit=cover): pages draw behind the status bar. theme-color starts as the page
+// ground (light #ECECEF, dark #161618); EdgeColors then sets it to whatever the page draws at its top edge.
 // Settings › Appearance wins over the phone: Light or Dark pins it, Match phone follows the phone.
 export async function generateViewport() {
   const u = await currentUser().catch(() => null);
@@ -40,6 +42,7 @@ export default async function RootLayout({ children }) {
         <GlobalNav me={me} />
         <Analytics />
         <PageBeacon />
+        <EdgeColors />
       </body>
     </html>
   );

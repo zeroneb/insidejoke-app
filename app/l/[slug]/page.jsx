@@ -57,7 +57,7 @@ export default async function ListPage({ params, searchParams }) {
   if (!visible) {
     return (
       <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-        <section style={{ position: 'relative', background: 'var(--dk, #13286B)', height: 300, overflow: 'hidden' }}>
+        <section className="bleed-top" style={{ position: 'relative', background: 'var(--dk, #13286B)', height: 'calc(300px + var(--sat, 0px))', overflow: 'hidden' }}>
           <Blob seed={5} width={320} height={200} style={{ left: 35, top: 50 }} />
           <h1 className="serif" style={{ position: 'absolute', left: 40, right: 40, top: 112, margin: 0, textAlign: 'center', fontWeight: 400, fontSize: 40, lineHeight: 0.95 }}>Nothing to see <span style={{ fontStyle: 'italic' }}>here</span></h1>
         </section>
