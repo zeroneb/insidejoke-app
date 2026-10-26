@@ -45,7 +45,7 @@ function Visual({ f, href }) {
       </Link>
     );
   }
-  if ((f.kind === 'added' || f.kind === 'fcovered') && f.item_photo) {
+  if (f.kind !== 'list' && f.item_photo) {
     return (
       <Link href={href} aria-label={`See ${f.item_name}`} style={{ display: 'block', marginTop: 6, width: 140, height: 140, borderRadius: 12, overflow: 'hidden', background: 'var(--surface, #FFFFFF)' }}>
         <img src={f.item_photo} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
