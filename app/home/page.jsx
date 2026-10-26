@@ -8,6 +8,7 @@ import { all, get } from '@/lib/db';
 import { friendCounts } from '@/lib/lists';
 import { myFeed } from '@/lib/feed';
 import { unreadCount } from '@/lib/notifications';
+import { unreadDmCount } from '@/lib/dm';
 import { PhotoBlob } from '@/components/ui';
 import { ListTile, tileData } from '@/components/list-tile';
 import LatelyRows from '@/components/lately-feed';
@@ -33,6 +34,7 @@ export default async function HomePage() {
   const archived = (await get("SELECT COUNT(*) AS n FROM lists WHERE owner_id = ? AND status = 'archived'", me.id)).n;
   const friends = (await get("SELECT COUNT(*) AS n FROM friends WHERE user_id = ? AND status = 'friends'", me.id)).n;
   const fresh = await unreadCount(me);
+  const dms = await unreadDmCount(me.id);
   const feed = await myFeed(me);
 
   return (
@@ -42,6 +44,10 @@ export default async function HomePage() {
         <Link href="/" className="dk-hide" style={{ textDecoration: 'none', color: 'var(--navy-ink, #13286B)' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
         <span style={{ display: 'flex', alignItems: 'center' }}>
         <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} size={30} style={{ width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: 'var(--ink, #000)' }} />
+        <Link href="/messages" aria-label={dms ? `Messages, ${dms} new` : 'Messages'} style={{ position: 'relative', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.56" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
+          {dms ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: 'var(--lt, #E8642C)' }} /> : null}
+        </Link>
         <Link href="/notifications" aria-label={fresh ? `Notifications, ${fresh} new` : 'Notifications'} style={{ position: 'relative', width: 48, height: 48, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.56" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
           {fresh ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: 'var(--lt, #E8642C)' }} /> : null}
@@ -90,7 +96,7 @@ export default async function HomePage() {
           <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
           <Link href="/friends?view=list" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
         </div>
-        <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Gifts on your lists, replies to you, and what you’ve been up to. Friends’ news is in <Link href="/friends" style={{ color: 'var(--ink, #000)' }}>Friends</Link>.</p>
+        <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Gifts, treats and notes on your lists.</p>
         <LatelyRows rows={feed} meId={me.id} />
         {feed.length === 0 ? (
           <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid var(--line, #000000)', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and gifts and notes on it show up here.</p>

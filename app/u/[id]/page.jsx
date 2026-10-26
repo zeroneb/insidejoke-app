@@ -5,7 +5,6 @@ import { publicListsOf, between, profileLately, friendCounts } from '@/lib/lists
 import { ListTile, tileData } from '@/components/list-tile';
 import { PhotoBlob } from '@/components/ui';
 import { addFriend, unfriend } from '@/lib/actions-a1';
-import TextFriendForm from '@/components/text-friend-form';
 import ShareProfile from '@/components/share-profile';
 import { appUrl } from '@/lib/texts';
 import { handleFor } from '@/lib/handles';
@@ -74,7 +73,7 @@ export default async function FriendProfile({ params }) {
           <Link href={me ? '/friends' : '/'} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Profile</span>
           {friend ? (
-            <a href="#text" aria-label={`Text ${name}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></a>
+            <Link href={`/messages/${them.id}`} aria-label={`Message ${name}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
 
@@ -99,7 +98,10 @@ export default async function FriendProfile({ params }) {
             </>
           ) : friend ? (
             <>
-              <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: 'var(--lt, #D4FA4F)' }}><Check />Friends<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.96" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+                <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: 'var(--lt, #D4FA4F)' }}><Check />Friends<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.96" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
+                <Link href={`/messages/${them.id}`} style={{ ...PILL, background: 'transparent' }}>Message</Link>
+              </div>
               <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>On insidejoke together</span>
             </>
           ) : me ? (
@@ -114,12 +116,6 @@ export default async function FriendProfile({ params }) {
             </>
           )}
         </section>
-
-        {friend ? (
-          <section id="text" className="a1-target" style={{ margin: '20px 20px 0' }}>
-            <TextFriendForm userId={them.id} name={name} />
-          </section>
-        ) : null}
 
         {me && !self ? (
           <section aria-label={`${name} and you`} style={{ margin: '24px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', borderTop: '1.5px solid var(--line, #000000)', borderBottom: '1.5px solid var(--line, #000000)' }}>
