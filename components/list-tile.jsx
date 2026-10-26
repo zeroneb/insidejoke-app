@@ -93,7 +93,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   if (t.kind === 'surprise') {
     const who = firstName(t.recipient_name);
     return (
-      <Link href={href} aria-label={`${t.title}, surprise hidden from ${who}, with ${t.givers} friends, ${t.pct}% covered`} style={{ ...base, background: 'var(--lt, #A9CDF5)', color: 'var(--inv-fg, #FFFFFF)' }}>
+      <Link href={href} aria-label={`${t.title}, surprise hidden from ${who}, with ${t.givers} friends, ${t.pct}% covered`} style={{ ...base, background: 'var(--lt, #A9CDF5)', color: '#000000' }}>
         <div aria-hidden="true" style={{ position: 'absolute', right: 10, top: 10, width: 12, height: 12, borderRadius: '50%', background: 'var(--lt, #C8743A)' }} />
         {t.photo ? <PhotoShape src={t.photo} size={150} color="#E7B48A" style={{ right: -40, bottom: -30 }} /> : null}
         <Cake style={{ right: 2, bottom: 32 }} w={104} h={122} sparkle />

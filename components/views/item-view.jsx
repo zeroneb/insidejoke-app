@@ -136,7 +136,7 @@ export default async function ItemView({ slug, itemId }) {
         <div style={{ position: 'relative', width: 132, height: 132, flexShrink: 0 }}>
           <svg aria-hidden="true" style={{ position: 'absolute', inset: 0, transform: 'rotate(-90deg)' }} width="132" height="132" viewBox="0 0 132 132"><circle cx="66" cy="66" r="58" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="12" /><circle className="ip-dialarc" cx="66" cy="66" r="58" fill="none" stroke="#D8F75A" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${(C * dialPct / 100).toFixed(1)} 1000`} /></svg>
           <svg aria-hidden="true" style={{ position: 'absolute', left: 22, top: 22 }} width="88" height="88" viewBox="0 0 200 200"><path className="b1" d={ba} fill="#D8F75A" /><path className="b2" d={bb} fill="#D8F75A" /><path className="b3" d={bc} fill="#D8F75A" /></svg>
-          <span className="dot" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: 'var(--ink, #000000)' }}>{it.unlimited ? `×${it.timesTreated}` : `${it.pct}%`}</span>
+          <span className="dot" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: '#000000' }}>{it.unlimited ? `×${it.timesTreated}` : `${it.pct}%`}</span>
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6, minWidth: 0 }}>
           <span className="serif" style={{ fontSize: 28, lineHeight: 1 }}>{headline[0]} <span style={{ fontWeight: 600 }}>{headline[1]}</span></span>
