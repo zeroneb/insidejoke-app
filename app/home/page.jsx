@@ -93,7 +93,7 @@ function Comments({ list, meId }) {
       {list.slice(-3).map((m, i) => (
         <span key={i} style={{ fontSize: 14, lineHeight: 1.35 }}><b>{m.uid === meId ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>
       ))}
-      {list.length > 3 ? <span style={{ fontSize: 12, color: '#4A4A4A' }}>{list.length - 3} earlier</span> : null}
+      {list.length > 3 ? <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{list.length - 3} earlier</span> : null}
     </div>
   );
 }
@@ -116,7 +116,7 @@ function FeedRow({ f, r, c = [], me, n }) {
         {rest.length ? (
           <div className="a1-others a1up" style={{ flexWrap: 'wrap', gap: 6, padding: '6px 0 2px' }}>
             {rest.map((o) => (
-              <Link key={o.id} href={`/u/${o.id}`} style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', background: '#FFFFFF', borderRadius: 999, padding: '4px 10px 4px 4px', fontSize: 13, fontWeight: 700 }}><Avatar user={o} size={24} />{first(o.name)}</Link>
+              <Link key={o.id} href={`/u/${o.id}`} style={{ display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', background: 'var(--surface, #FFFFFF)', borderRadius: 999, padding: '4px 10px 4px 4px', fontSize: 13, fontWeight: 700 }}><Avatar user={o} size={24} />{first(o.name)}</Link>
             ))}
           </div>
         ) : null}
@@ -141,19 +141,19 @@ function FeedRow({ f, r, c = [], me, n }) {
   }
   const multi = g.length > 1;
   return (
-    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 0', borderTop: '1px solid #000000' }}>
+    <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 0', borderTop: '1px solid var(--line, #000000)' }}>
       {multi ? (
         <Link href={`/u/${g[0].id}`} aria-label={`${first(g[0].name)}’s profile`} style={{ position: 'relative', width: 52, height: 40, flexShrink: 0, textDecoration: 'none' }}>
           <span style={{ position: 'absolute', left: 0, top: 0 }}><FaceSm user={g[0]} size={36} /></span>
           <span style={{ position: 'absolute', left: 16, top: 8 }}><FaceSm user={g[1]} size={36} /></span>
         </Link>
       ) : (
-        <Link href={`/u/${one.id}`} aria-label={`${first(one.name)}’s profile`} style={{ flexShrink: 0, textDecoration: 'none', color: '#000000' }}><FaceSm user={one} size={44} /></Link>
+        <Link href={`/u/${one.id}`} aria-label={`${first(one.name)}’s profile`} style={{ flexShrink: 0, textDecoration: 'none', color: 'var(--ink, #000000)' }}><FaceSm user={one} size={44} /></Link>
       )}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flexGrow: 1, minWidth: 0 }}>
         {lead || <span style={{ fontSize: 15, lineHeight: 1.35 }}><Who g={one} /> {text}</span>}
-        {f.note ? <span style={{ fontSize: 15, fontWeight: 700, color: '#13286B' }}>“{f.note}”</span> : null}
-        <span style={{ fontSize: 12, color: '#4A4A4A' }}>{when}</span>
+        {f.note ? <span style={{ fontSize: 15, fontWeight: 700, color: 'var(--navy-ink, #13286B)' }}>“{f.note}”</span> : null}
+        <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{when}</span>
         <Comments list={c} meId={me?.id} />
         <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} toName={first(f.noteBy || one.name)} delay={n} />
       </div>
@@ -162,7 +162,7 @@ function FeedRow({ f, r, c = [], me, n }) {
   );
 }
 
-const Camera = () => <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3" /></svg>;
+const Camera = () => <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3" /></svg>;
 const ROW = { display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', padding: '14px 4px', fontWeight: 700, fontSize: 15 };
 
 export default async function HomePage() {
@@ -188,12 +188,12 @@ export default async function HomePage() {
     <main className="withnav dk-wide home-page" style={{ display: 'flex', flexDirection: 'column' }}>
       <div className="home-col">
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 12px 0 20px' }}>
-        <Link href="/" className="dk-hide" style={{ textDecoration: 'none', color: '#13286B' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
+        <Link href="/" className="dk-hide" style={{ textDecoration: 'none', color: 'var(--navy-ink, #13286B)' }}><span className="wide" style={{ fontSize: 18, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 22 }}>joke</span></Link>
         <span style={{ display: 'flex', alignItems: 'center' }}>
-        <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: '#000' }} />
+        <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(me)) || 'u/' + me.id}`} name={me.name} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer', color: 'var(--ink, #000)' }} />
         <Link href="/notifications" aria-label={fresh ? `Notifications, ${fresh} new` : 'Notifications'} style={{ position: 'relative', width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
-          {fresh ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: '#E8642C' }} /> : null}
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z" /><path d="M10 20a2 2 0 0 0 4 0" /></svg>
+          {fresh ? <span aria-hidden="true" className="r1-pop" style={{ position: 'absolute', top: 8, right: 8, width: 10, height: 10, borderRadius: '50%', background: 'var(--lt, #E8642C)' }} /> : null}
         </Link>
         </span>
       </header>
@@ -201,13 +201,13 @@ export default async function HomePage() {
       <section style={{ padding: '18px 20px 0', display: 'flex', alignItems: 'center', gap: 16 }}>
         <Link href="/you/settings" aria-label={me.photo ? 'Change your profile photo' : 'Add a profile photo'} style={{ position: 'relative', width: 96, height: 96, flexShrink: 0, textDecoration: 'none' }}>
           <PhotoBlob user={me} owner size={96} pad={10} uid="homeme" fontSize={46} />
-          <span style={{ position: 'absolute', right: -2, bottom: 2, width: 28, height: 28, borderRadius: '50%', background: '#13286B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Camera /></span>
+          <span style={{ position: 'absolute', right: -2, bottom: 2, width: 28, height: 28, borderRadius: '50%', background: 'var(--dk, #13286B)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Camera /></span>
         </Link>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, minWidth: 0 }}>
           <h1 style={{ margin: 0, fontWeight: 400, fontSize: 28, letterSpacing: '-0.02em', lineHeight: 1 }}>{me.name || 'Hi there'}</h1>
-          {me.bio ? <span style={{ fontSize: 15 }}>{me.bio}</span> : <Link href="/you/settings" style={{ fontSize: 15, color: '#4A4A4A' }}>Add a line about you</Link>}
+          {me.bio ? <span style={{ fontSize: 15 }}>{me.bio}</span> : <Link href="/you/settings" style={{ fontSize: 15, color: 'var(--muted, #4A4A4A)' }}>Add a line about you</Link>}
           <span style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 2 }}>
-            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink, #000000)' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
           </span>
         </div>
       </section>
@@ -215,19 +215,19 @@ export default async function HomePage() {
       <section style={{ padding: '26px 16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 4px' }}>
           <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 34, lineHeight: 1 }}>My <span style={{ fontWeight: 600 }}>lists</span></h2>
-          <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: 14, textDecoration: 'none', padding: '10px 0' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
+          <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 700, fontSize: 14, textDecoration: 'none', padding: '10px 0' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
         </div>
         <div className="home-grid tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
           {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind)} variant="home" />)}
           {tiles.length === 0 ? (
-            <Link href="/lists/new" style={{ height: 230, textDecoration: 'none', border: '1.5px dashed #000000', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, fontSize: 15, textAlign: 'center', padding: 12 }}>
-              <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+            <Link href="/lists/new" style={{ height: 230, textDecoration: 'none', border: '1.5px dashed var(--line, #000000)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, fontSize: 15, textAlign: 'center', padding: 12 }}>
+              <svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
               Make your first list
             </Link>
           ) : null}
         </div>
-        <Link href="/home/archived" style={{ ...ROW, borderTop: '1.5px solid #000000', borderBottom: '1.5px solid #000000' }}><span style={{ display: 'flex', alignItems: 'center', gap: 10 }}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h18v13H3z" /><path d="M2 4h20v3H2z" /><path d="M10 12h4" /></svg>Archived</span><span className="dot" style={{ fontSize: 16 }}>{archived}</span></Link>
-        <Link href="/wallet/history" style={{ ...ROW, borderBottom: '1.5px solid #000000', marginTop: -12 }}><span style={{ display: 'flex', alignItems: 'center', gap: 10 }}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>History<span style={{ fontWeight: 400, fontSize: 13, color: '#4A4A4A' }}>given, received, cash-outs</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg></Link>
+        <Link href="/home/archived" style={{ ...ROW, borderTop: '1.5px solid var(--line, #000000)', borderBottom: '1.5px solid var(--line, #000000)' }}><span style={{ display: 'flex', alignItems: 'center', gap: 10 }}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h18v13H3z" /><path d="M2 4h20v3H2z" /><path d="M10 12h4" /></svg>Archived</span><span className="dot" style={{ fontSize: 16 }}>{archived}</span></Link>
+        <Link href="/wallet/history" style={{ ...ROW, borderBottom: '1.5px solid var(--line, #000000)', marginTop: -12 }}><span style={{ display: 'flex', alignItems: 'center', gap: 10 }}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>History<span style={{ fontWeight: 400, fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>given, received, cash-outs</span></span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg></Link>
       </section>
 
       </div>
@@ -236,12 +236,12 @@ export default async function HomePage() {
           <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
           <Link href="/friends" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
         </div>
-        <p style={{ margin: '0 0 12px', fontSize: 13, color: '#4A4A4A' }}>Your friends on insidejoke. Tap anyone to see their profile.</p>
+        <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Your friends on insidejoke. Tap anyone to see their profile.</p>
         {feed.map((f, n) => <FeedRow key={f.key} f={f} r={reacts[f.key]} c={comments[f.key] || []} me={me} n={n} />)}
         {feed.length === 0 ? (
-          <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid #000000', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and your friends’ gifts and notes show up here.</p>
+          <p style={{ margin: 0, padding: '14px 0', borderTop: '1px solid var(--line, #000000)', fontSize: 15, lineHeight: 1.45 }}>Nothing yet. Share a list and your friends’ gifts and notes show up here.</p>
         ) : null}
-        <p style={{ margin: 0, padding: '14px 0 0', borderTop: '1px solid #000000', fontSize: 13, color: '#4A4A4A', display: 'flex', gap: 8, alignItems: 'center' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10h16v10H4z" /><path d="M3 7h18v3H3z" /><path d="M12 7v13" /></svg>Surprise gifts stay out of here until the reveal.</p>
+        <p style={{ margin: 0, padding: '14px 0 0', borderTop: '1px solid var(--line, #000000)', fontSize: 13, color: 'var(--muted, #4A4A4A)', display: 'flex', gap: 8, alignItems: 'center' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 10h16v10H4z" /><path d="M3 7h18v3H3z" /><path d="M12 7v13" /></svg>Surprise gifts stay out of here until the reveal.</p>
       </section>
       <div style={{ height: 24 }} />
     </main>

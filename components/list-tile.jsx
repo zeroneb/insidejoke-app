@@ -69,7 +69,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     return (
       <Link href={href} aria-label={`${t.title}, ${things}`} style={{ ...base, padding: 0 }}>
         <CoverDesign design={design} title={t.title} fluid height={h} label={t.title} ctx={{ visibility: t.visibility, recipient: t.recipient_name || null, people: ['You', ...t.others.slice(0, 2).map((o) => firstName(o.name))], photo: t.photo || null }} />
-        {foot ? <span style={{ position: 'absolute', left: 8, bottom: 8, background: '#FFFFFF', color: '#000000', fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 999 }}>{foot[0]}</span> : null}
+        {foot ? <span style={{ position: 'absolute', left: 8, bottom: 8, background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 999 }}>{foot[0]}</span> : null}
       </Link>
     );
   }
@@ -78,7 +78,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
     const w = t.others[0] ? firstName(t.others[0].name) : null;
     const names = ['You', ...t.others.slice(0, 2).map((o) => firstName(o.name))];
     return (
-      <Link href={href} aria-label={`${t.title}, collab${w ? ' with ' + w : ''}`} style={{ ...base, justifyContent: 'space-between', background: '#F4D3EE', color: '#E2452B', borderTop: '1.5px solid #E2452B', borderBottom: '1.5px solid #E2452B' }}>
+      <Link href={href} aria-label={`${t.title}, collab${w ? ' with ' + w : ''}`} style={{ ...base, justifyContent: 'space-between', background: 'var(--lt, #F4D3EE)', color: '#E2452B', borderTop: '1.5px solid #E2452B', borderBottom: '1.5px solid #E2452B' }}>
         {t.photo ? <PhotoShape src={t.photo} size={150} color="#FFFFFF" style={{ right: -36, top: 40 }} /> : null}
         <Bouquet ink="#E2452B" style={{ right: -4, top: 34 }} w={116} h={158} sparkle />
         <span style={{ ...plainCap, letterSpacing: '0.08em', textTransform: 'uppercase', fontStyle: 'italic' }}>Collab ✦ Collab</span>
@@ -93,13 +93,13 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   if (t.kind === 'surprise') {
     const who = firstName(t.recipient_name);
     return (
-      <Link href={href} aria-label={`${t.title}, surprise hidden from ${who}, with ${t.givers} friends, ${t.pct}% covered`} style={{ ...base, background: '#A9CDF5', color: '#FFFFFF' }}>
-        <div aria-hidden="true" style={{ position: 'absolute', right: 10, top: 10, width: 12, height: 12, borderRadius: '50%', background: '#C8743A' }} />
+      <Link href={href} aria-label={`${t.title}, surprise hidden from ${who}, with ${t.givers} friends, ${t.pct}% covered`} style={{ ...base, background: 'var(--lt, #A9CDF5)', color: 'var(--inv-fg, #FFFFFF)' }}>
+        <div aria-hidden="true" style={{ position: 'absolute', right: 10, top: 10, width: 12, height: 12, borderRadius: '50%', background: 'var(--lt, #C8743A)' }} />
         {t.photo ? <PhotoShape src={t.photo} size={150} color="#E7B48A" style={{ right: -40, bottom: -30 }} /> : null}
         <Cake style={{ right: 2, bottom: 32 }} w={104} h={122} sparkle />
-        <span style={{ ...plainCap, color: '#8A4E20' }}>Surprise · hidden from {who}</span>
+        <span style={{ ...plainCap, color: 'var(--warm-ink, #8A4E20)' }}>Surprise · hidden from {who}</span>
         <span className="wide" style={{ position: 'relative', marginTop: 8, fontSize: 21, letterSpacing: '0.06em', lineHeight: 1.05, maxWidth: '90%', overflowWrap: 'anywhere' }}>{t.title}</span>
-        <span style={{ position: 'relative', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: '#8A4E20' }}><span style={{ fontSize: 11, fontWeight: 700 }}>with {t.givers} {t.givers === 1 ? 'friend' : 'friends'}</span><span className="dot" style={{ fontSize: 16 }}>{t.pct}%</span></span>
+        <span style={{ position: 'relative', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: 'var(--warm-ink, #8A4E20)' }}><span style={{ fontSize: 11, fontWeight: 700 }}>with {t.givers} {t.givers === 1 ? 'friend' : 'friends'}</span><span className="dot" style={{ fontSize: 16 }}>{t.pct}%</span></span>
       </Link>
     );
   }
@@ -128,7 +128,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
         <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color: c.title, fontSize: home ? 30 : 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
         {home ? (
           <span aria-hidden="true" style={{ position: 'relative', display: 'flex', gap: 1 }}>
-            {['a1', 'a2', 'a3'].map((k) => <svg key={k} className={k} width="14" height="16" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="#000000" /></svg>)}
+            {['a1', 'a2', 'a3'].map((k) => <svg key={k} className={k} width="14" height="16" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="var(--ink, #000000)" /></svg>)}
           </span>
         ) : (
           <span style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>

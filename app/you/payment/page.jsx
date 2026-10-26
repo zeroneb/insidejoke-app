@@ -14,7 +14,7 @@ export default async function PaymentPage({ searchParams }) {
   const pm = await paymentMethod(me.id);
   const next = /^\/[^/]/.test(sp?.next || '') ? sp.next : '/you/settings';
   return (
-    <main className="r3-full" style={{ background: '#ECECEF', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <main className="r3-full" style={{ background: 'var(--ground, #ECECEF)', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <PaymentForm next={next} current={pm ? { kind: pm.kind, label: pm.label } : null} />
     </main>
   );

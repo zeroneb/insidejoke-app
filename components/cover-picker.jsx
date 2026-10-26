@@ -6,13 +6,14 @@ import CoverDesign from '@/components/cover-design';
 import { COVERS, suggest, swatch, slotsFor, startDesign } from '@/lib/cover-designs';
 import { saveListDesign } from '@/lib/actions';
 
-const NAVY = '#13286B', MUTE = '#4A4A4A';
+// NAVY: text, icons, rings (flips light in dark mode). NAVY_BG: a navy fill, stays navy with white text.
+const NAVY = 'var(--navy-ink, #13286B)', NAVY_BG = '#13286B', MUTE = 'var(--muted, #4A4A4A)';
 const Pencil = () => <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z" /><path d="M14 6l3 3" /></svg>;
 const Cam = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>;
-const X = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
+const X = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
 const label = { fontFamily: "'Archivo', sans-serif", fontStretch: '125%', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase' };
-const pencilBtn = { position: 'absolute', right: 14, top: 14, width: 44, height: 44, borderRadius: '50%', background: '#FFFFFF', border: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,0,0,.15)', cursor: 'pointer', zIndex: 2 };
-const changeBtn = { position: 'absolute', right: 14, bottom: 14, display: 'flex', alignItems: 'center', gap: 8, background: '#FFFFFF', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '10px 14px', borderRadius: 999, border: 0, cursor: 'pointer', zIndex: 2 };
+const pencilBtn = { position: 'absolute', right: 14, top: 14, width: 44, height: 44, borderRadius: '50%', background: 'var(--surface, #FFFFFF)', border: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,0,0,.15)', cursor: 'pointer', zIndex: 2 };
+const changeBtn = { position: 'absolute', right: 14, bottom: 14, display: 'flex', alignItems: 'center', gap: 8, background: 'var(--surface, #FFFFFF)', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '10px 14px', borderRadius: 999, border: 0, cursor: 'pointer', zIndex: 2 };
 
 // Phone photos can be bigger than an upload allows: shrink in the browser first (longest side 1600px, JPEG).
 async function shrink(f) {
@@ -50,8 +51,8 @@ function Sheet({ children, onClose, title }) {
   return (
     <div role="dialog" aria-modal="true" aria-label={title} style={{ position: 'fixed', inset: 0, zIndex: 80, display: 'flex', justifyContent: 'center' }}>
       <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(19,40,107,.35)' }} />
-      <div className="a1-sheet" style={{ position: 'absolute', top: 44, bottom: 0, width: '100%', maxWidth: 480, background: '#ECECEF', borderRadius: '24px 24px 0 0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 0' }}><span style={{ width: 40, height: 5, borderRadius: 3, background: '#C4C4CC' }} /></div>
+      <div className="a1-sheet" style={{ position: 'absolute', top: 44, bottom: 0, width: '100%', maxWidth: 480, background: 'var(--ground, #ECECEF)', borderRadius: '24px 24px 0 0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '10px 0 0' }}><span style={{ width: 40, height: 5, borderRadius: 3, background: 'var(--lt, #C4C4CC)' }} /></div>
         {children}
       </div>
     </div>
@@ -75,11 +76,11 @@ export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClo
       </div>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, padding: '12px 16px 0' }}>
         {CHIPS.map(([c], i) => (
-          <button key={c} type="button" aria-pressed={chip === i} onClick={() => setChip(i)} style={{ padding: '10px 16px', borderRadius: 999, border: 0, fontFamily: 'inherit', fontWeight: 700, fontSize: 14, cursor: 'pointer', background: chip === i ? NAVY : '#FFFFFF', color: chip === i ? '#FFFFFF' : '#000000' }}>{i === 0 ? `✦ For “${(title || 'your list').slice(0, 18)}”` : c}</button>
+          <button key={c} type="button" aria-pressed={chip === i} onClick={() => setChip(i)} style={{ padding: '10px 16px', borderRadius: 999, border: 0, fontFamily: 'inherit', fontWeight: 700, fontSize: 14, cursor: 'pointer', background: chip === i ? NAVY_BG : 'var(--surface, #FFFFFF)', color: chip === i ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)' }}>{i === 0 ? `✦ For “${(title || 'your list').slice(0, 18)}”` : c}</button>
         ))}
       </div>
-      <div style={{ margin: '14px 16px 0', display: 'flex', alignItems: 'center', gap: 10, background: '#FFFFFF', borderRadius: 12, padding: '10px 12px', fontSize: 13, lineHeight: 1.35 }}>
-        <span aria-hidden="true" style={{ flexShrink: 0, width: 30, height: 30, borderRadius: '50%', background: '#D8F75A', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Pencil /></span>
+      <div style={{ margin: '14px 16px 0', display: 'flex', alignItems: 'center', gap: 10, background: 'var(--surface, #FFFFFF)', borderRadius: 12, padding: '10px 12px', fontSize: 13, lineHeight: 1.35 }}>
+        <span aria-hidden="true" style={{ flexShrink: 0, width: 30, height: 30, borderRadius: '50%', background: 'var(--lt, #D8F75A)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Pencil /></span>
         <span>Pick one, then tap the pencil on it to change any words on the cover. The big title is your list name.</span>
       </div>
       <div style={{ padding: '16px 16px 8px', ...label }}>{chip === 0 ? `Suggested for “${(title || 'your list').slice(0, 24)}”` : chip === 1 ? `All covers · ${order.length}` : `${CHIPS[chip][0]} covers`}</div>
@@ -90,7 +91,7 @@ export function CoverSheet({ title, ctx, flags, current, onPick, onUpload, onClo
           </button>
         ))}
       </div>
-      <button type="button" onClick={() => up.current?.click()} style={{ position: 'sticky', bottom: 26, alignSelf: 'center', marginTop: -84, display: 'flex', alignItems: 'center', gap: 10, background: '#FFFFFF', color: '#000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 17, padding: '16px 26px', borderRadius: 14, border: 0, boxShadow: '0 10px 30px rgba(0,0,0,.18)', cursor: 'pointer' }}><Cam />Upload image</button>
+      <button type="button" onClick={() => up.current?.click()} style={{ position: 'sticky', bottom: 26, alignSelf: 'center', marginTop: -84, display: 'flex', alignItems: 'center', gap: 10, background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', fontFamily: 'inherit', fontWeight: 800, fontSize: 17, padding: '16px 26px', borderRadius: 14, border: 0, boxShadow: '0 10px 30px rgba(0,0,0,.18)', cursor: 'pointer' }}><Cam />Upload image</button>
     </Sheet>
   );
 }
@@ -129,7 +130,7 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
   return (
     <Sheet title="Edit cover" onClose={onClose}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 20px 0 8px' }}>
-        <button type="button" onClick={onClose} aria-label="Back" className="iconbtn" style={{ border: 0, background: 'transparent' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+        <button type="button" onClick={onClose} aria-label="Back" className="iconbtn" style={{ border: 0, background: 'transparent' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
         <span style={{ fontWeight: 800, fontSize: 16 }}>Edit cover</span>
         <span style={{ width: 44 }} />
       </div>
@@ -142,12 +143,12 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
       <section style={{ padding: '16px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
         {slotNames.length ? (
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-            {['title', ...slotNames].map((n) => <button key={n} type="button" aria-pressed={sel === n} onClick={() => setSel(n)} style={{ border: `1.5px solid ${NAVY}`, background: sel === n ? NAVY : 'transparent', color: sel === n ? '#FFFFFF' : NAVY, fontFamily: 'inherit', fontWeight: 700, fontSize: 13, padding: '6px 12px', borderRadius: 999, cursor: 'pointer' }}>{names[n]}</button>)}
+            {['title', ...slotNames].map((n) => <button key={n} type="button" aria-pressed={sel === n} onClick={() => setSel(n)} style={{ border: `1.5px solid ${NAVY}`, background: sel === n ? NAVY_BG : 'transparent', color: sel === n ? 'var(--inv-fg, #FFFFFF)' : NAVY, fontFamily: 'inherit', fontWeight: 700, fontSize: 13, padding: '6px 12px', borderRadius: 999, cursor: 'pointer' }}>{names[n]}</button>)}
           </div>
         ) : null}
         <label htmlFor="cv-slot" className="sr">{names[sel]}</label>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <input ref={input} id="cv-slot" value={val} onChange={(e) => setVal(e.target.value)} maxLength={max} dir="auto" style={{ flexGrow: 1, minWidth: 0, background: '#FFFFFF', border: 0, borderRadius: 999, padding: '12px 18px', fontFamily: 'inherit', fontSize: 16, boxShadow: `0 0 0 2px ${NAVY}`, outline: 'none' }} />
+          <input ref={input} id="cv-slot" value={val} onChange={(e) => setVal(e.target.value)} maxLength={max} dir="auto" style={{ flexGrow: 1, minWidth: 0, background: 'var(--surface, #FFFFFF)', border: 0, borderRadius: 999, padding: '12px 18px', fontFamily: 'inherit', fontSize: 16, boxShadow: `0 0 0 2px ${NAVY}`, outline: 'none' }} />
           <span style={{ fontSize: 13, color: MUTE, flexShrink: 0 }}>{val.length}/{max}</span>
         </div>
         {d.key === 'photo' ? (
@@ -161,7 +162,7 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
       </section>
       <div style={{ flexGrow: 1, minHeight: 20 }} />
       <div style={{ padding: '0 16px 28px' }}>
-        <button type="button" disabled={pending} onClick={() => onDone(d, t.trim() || title)} style={{ display: 'block', width: '100%', textAlign: 'center', background: NAVY, color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 17, padding: '17px 0', borderRadius: 999, border: 0, cursor: 'pointer' }}>{pending ? 'Saving…' : done}</button>
+        <button type="button" disabled={pending} onClick={() => onDone(d, t.trim() || title)} style={{ display: 'block', width: '100%', textAlign: 'center', background: NAVY_BG, color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 17, padding: '17px 0', borderRadius: 999, border: 0, cursor: 'pointer' }}>{pending ? 'Saving…' : done}</button>
       </div>
     </Sheet>
   );
@@ -210,7 +211,7 @@ export function CoverField({ title, onTitle, treat, flags, ctx }) {
                 <CoverDesign design={k === 'photo' ? { key: 'photo', pal: 0, s: { y: design?.s?.y } } : startDesign(k, title)} title={title || 'Wishes'} ctx={fullCtx} width={86} radius={10} />
               </button>
             ))}
-            <button type="button" onClick={() => setSheet('all')} style={{ ...cell, margin: 3, border: 0, background: '#FFFFFF', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>More</button>
+            <button type="button" onClick={() => setSheet('all')} style={{ ...cell, margin: 3, border: 0, background: 'var(--surface, #FFFFFF)', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 15, cursor: 'pointer' }}>More</button>
             <button type="button" onClick={() => up.current?.click()} style={{ ...cell, margin: 3, border: '2px dashed #A9A9B3', background: 'transparent', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}><Cam />Upload</button>
             <input ref={up} type="file" accept="image/*" className="sr" tabIndex={-1} aria-hidden="true" onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); }} />
           </div>

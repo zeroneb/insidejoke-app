@@ -33,7 +33,7 @@ function last14() {
 const Who = ({ id, name, fallback = 'Someone', bold = false }) => {
   const label = name || fallback;
   const inner = bold ? <b>{label}</b> : label;
-  return id ? <a href={`/u/${id}`} style={{ color: '#000' }}>{inner}</a> : inner;
+  return id ? <a href={`/u/${id}`} style={{ color: 'var(--ink, #000)' }}>{inner}</a> : inner;
 };
 
 export default async function AdminPage({ searchParams }) {
@@ -116,9 +116,9 @@ export default async function AdminPage({ searchParams }) {
   const topPages = await ev("SELECT ref, COUNT(*) AS n FROM app_events WHERE kind = 'page_view' AND at > ? GROUP BY ref ORDER BY n DESC LIMIT 12", wk);
   try { errors = await all('SELECT * FROM app_errors ORDER BY at DESC LIMIT 25'); } catch {}
 
-  const card = { border: '1.5px solid #000', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4, background: '#fff' };
+  const card = { border: '1.5px solid var(--line, #000)', padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 4, background: 'var(--surface, #fff)' };
   const big = { fontSize: 28, fontWeight: 800, letterSpacing: '-0.02em' };
-  const small = { fontSize: 12, color: '#4A4A4A' };
+  const small = { fontSize: 12, color: 'var(--muted, #4A4A4A)' };
   const pct = (a, b) => (b ? `${Math.round((a / b) * 100)}%` : '–');
 
   const range = (await searchParams)?.range === '30' ? '30' : 'all';
@@ -128,10 +128,10 @@ export default async function AdminPage({ searchParams }) {
   const fin = await financials({ sinceMs });
   const types = await byGiftType({ sinceMs });
   const reviews = await all(`SELECT r.*, l.title, l.slug, u.id AS uid, u.name, u.phone FROM cashout_reviews r JOIN lists l ON l.id = r.list_id JOIN users u ON u.id = r.user_id WHERE r.status = 'pending' ORDER BY r.created_at ASC`);
-  const reviewBtn = { height: 40, padding: '0 16px', border: '1.5px solid #000', borderRadius: 999, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' };
+  const reviewBtn = { height: 40, padding: '0 16px', border: '1.5px solid var(--edge, #000)', borderRadius: 999, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' };
 
   return (
-    <main className="r3-full dk-wide" style={{ background: '#ECECEF', color: '#000', padding: '20px 16px 120px', display: 'flex', flexDirection: 'column', gap: 26 }}>
+    <main className="r3-full dk-wide" style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000)', padding: '20px 16px 120px', display: 'flex', flexDirection: 'column', gap: 26 }}>
       <header style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Only you see this</span>
         <h1 style={{ margin: 0, fontSize: 40, fontWeight: 400, letterSpacing: '-0.03em' }}>The <span className="serif" style={{ fontStyle: 'italic' }}>numbers</span></h1>
@@ -145,12 +145,12 @@ export default async function AdminPage({ searchParams }) {
           {reviews.map((r) => {
             let why = []; try { why = JSON.parse(r.reasons); } catch {}
             return (
-              <div key={r.id} style={{ ...card, background: '#FFF7D6', gap: 8 }}>
-                <span style={{ fontWeight: 800, fontSize: 16 }}><Who id={r.uid} name={r.name} /> · <a href={`/l/${r.slug}`} style={{ color: '#000' }}>{r.title}</a> · {usd(Number(r.amount_cents))}</span>
+              <div key={r.id} style={{ ...card, background: 'var(--lt, #FFF7D6)', gap: 8 }}>
+                <span style={{ fontWeight: 800, fontSize: 16 }}><Who id={r.uid} name={r.name} /> · <a href={`/l/${r.slug}`} style={{ color: 'var(--ink, #000)' }}>{r.title}</a> · {usd(Number(r.amount_cents))}</span>
                 <ul style={{ margin: 0, paddingLeft: 18, fontSize: 14, lineHeight: 1.45 }}>{why.map((w) => <li key={w}>{w}</li>)}</ul>
                 <span style={small}>Paused {when(r.created_at)} · {r.phone}</span>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  <form action={decideReviewAction}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="approve" value="1" /><button style={{ ...reviewBtn, background: '#000', color: '#fff' }}>Clear it</button></form>
+                  <form action={decideReviewAction}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="approve" value="1" /><button style={{ ...reviewBtn, background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)' }}>Clear it</button></form>
                   <form action={decideReviewAction}><input type="hidden" name="id" value={r.id} /><input type="hidden" name="approve" value="0" /><button style={{ ...reviewBtn, background: 'transparent' }}>Keep holding</button></form>
                 </div>
               </div>
@@ -164,11 +164,11 @@ export default async function AdminPage({ searchParams }) {
           <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>Disputes · {disputes.filter((d) => isOpen(d.status)).length} open</h2>
           <span style={small}>Respond in Stripe before the deadline with evidence. Strong evidence: the giver verified their phone, how long they've had an account, the note they wrote, and that they know the receiver.</span>
           {disputes.map((d) => (
-            <div key={d.id} style={{ ...card, background: isOpen(d.status) ? '#FFE3DE' : '#fff', gap: 6 }}>
-              <span style={{ fontWeight: 800, fontSize: 16 }}>{usd(Number(d.amount_cents))} · <Who id={d.giver_id} name={d.giver} fallback="a giver" /> → <Who id={d.receiver_id} name={d.receiver} fallback="receiver" /> · <a href={`/l/${d.slug}`} style={{ color: '#000' }}>{d.title}</a></span>
+            <div key={d.id} style={{ ...card, background: isOpen(d.status) ? 'var(--lt, #FFE3DE)' : 'var(--surface, #fff)', gap: 6 }}>
+              <span style={{ fontWeight: 800, fontSize: 16 }}>{usd(Number(d.amount_cents))} · <Who id={d.giver_id} name={d.giver} fallback="a giver" /> → <Who id={d.receiver_id} name={d.receiver} fallback="receiver" /> · <a href={`/l/${d.slug}`} style={{ color: 'var(--ink, #000)' }}>{d.title}</a></span>
               <span style={{ fontSize: 14 }}>{String(d.status).replace(/_/g, ' ')}{d.reason ? ` · ${String(d.reason).replace(/_/g, ' ')}` : ''}{d.paid_out ? ' · already cashed out (comes off their next cash-out)' : ' · taken out of their wallet'}</span>
               <span style={small}>Giver {d.giver_phone || ''}{d.giver_since ? ` · on insidejoke since ${new Date(Number(d.giver_since)).toLocaleDateString('en-US', { timeZone: TZ, month: 'short', day: 'numeric', year: 'numeric' })}` : ''}{d.note ? ` · note: “${d.note}”` : ''}</span>
-              {isOpen(d.status) ? <a href={`https://dashboard.stripe.com/disputes/${d.id}`} target="_blank" rel="noreferrer" style={{ alignSelf: 'flex-start', border: '1.5px solid #000', borderRadius: 999, padding: '8px 14px', fontWeight: 800, fontSize: 14, color: '#000', textDecoration: 'none' }}>Respond in Stripe</a> : null}
+              {isOpen(d.status) ? <a href={`https://dashboard.stripe.com/disputes/${d.id}`} target="_blank" rel="noreferrer" style={{ alignSelf: 'flex-start', border: '1.5px solid var(--edge, #000)', borderRadius: 999, padding: '8px 14px', fontWeight: 800, fontSize: 14, color: 'var(--ink, #000)', textDecoration: 'none' }}>Respond in Stripe</a> : null}
             </div>
           ))}
         </section>
@@ -178,7 +178,7 @@ export default async function AdminPage({ searchParams }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>Money</h2>
           <nav style={{ display: 'flex', gap: 6 }}>
-            {[['all', 'All time'], ['30', 'Last 30 days']].map(([k, l]) => <a key={k} href={k === 'all' ? '/admin' : '/admin?range=30'} aria-current={range === k ? 'page' : undefined} style={{ border: '1.5px solid #000', borderRadius: 999, padding: '5px 12px', fontSize: 13, fontWeight: 700, textDecoration: 'none', background: range === k ? '#000' : 'transparent', color: range === k ? '#fff' : '#000' }}>{l}</a>)}
+            {[['all', 'All time'], ['30', 'Last 30 days']].map(([k, l]) => <a key={k} href={k === 'all' ? '/admin' : '/admin?range=30'} aria-current={range === k ? 'page' : undefined} style={{ border: '1.5px solid var(--inv-bg, #000)', borderRadius: 999, padding: '5px 12px', fontSize: 13, fontWeight: 700, textDecoration: 'none', background: range === k ? 'var(--inv-bg, #000)' : 'transparent', color: range === k ? 'var(--inv-fg, #fff)' : 'var(--ink, #000)' }}>{l}</a>)}
           </nav>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 10 }}>
@@ -188,12 +188,12 @@ export default async function AdminPage({ searchParams }) {
           <div style={card}><span style={small}>Processing costs</span><span style={big}>{usd(fin.processing)}</span><span style={small}>{fin.processingEst ? 'Partly estimated · ' : ''}{usd(fin.recovered)} passed on at cash-out</span></div>
           <div style={card}><span style={small}>Cash-outs</span><span style={big}>{usd(fin.cashouts.cents)}</span><span style={small}>{fin.cashouts.n} sent · {usd(fin.payoutCosts)} payout costs (est.)</span></div>
           <div style={card}><span style={small}>Failed payments & refunds</span><span style={big}>{usd(fin.failed.removedCents)}</span><span style={small}>{fin.failed.removedN} removed · {fin.failed.disputes} disputes ({usd(fin.failed.disputeCost)} cost) · {fin.failed.payFails} failed payments · {fin.failed.payoutFails} failed cash-outs</span></div>
-          <div style={{ ...card, background: fin.net < 0 ? '#FFE3DE' : '#E6F98A' }}><span style={small}>Net contribution</span><span style={big}>{usd(fin.net)}</span><span style={small}>Revenue minus processing, payout and account fees, on cashed-out money</span></div>
+          <div style={{ ...card, background: fin.net < 0 ? 'var(--lt, #FFE3DE)' : 'var(--lt, #E6F98A)' }}><span style={small}>Net contribution</span><span style={big}>{usd(fin.net)}</span><span style={small}>Revenue minus processing, payout and account fees, on cashed-out money</span></div>
         </div>
         {fin.processingPending ? <span style={small}>{usd(fin.processingPending)} of processing is on gifts not cashed out yet. It's passed on to the receiver when they cash out.</span> : null}
         <div style={{ ...card, padding: 0, overflowX: 'auto' }}>
           <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 560, fontSize: 14 }}>
-            <thead><tr style={{ textAlign: 'right', borderBottom: '1.5px solid #000' }}>{['By gift type', 'Gifts', 'Volume', 'Avg gift', '$5 or less', 'Processing', 'Cost %', 'Expected net'].map((h, i) => <th key={h} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 800, textAlign: i ? 'right' : 'left', whiteSpace: 'nowrap' }}>{h}</th>)}</tr></thead>
+            <thead><tr style={{ textAlign: 'right', borderBottom: '1.5px solid var(--line, #000)' }}>{['By gift type', 'Gifts', 'Volume', 'Avg gift', '$5 or less', 'Processing', 'Cost %', 'Expected net'].map((h, i) => <th key={h} style={{ padding: '10px 12px', fontSize: 12, fontWeight: 800, textAlign: i ? 'right' : 'left', whiteSpace: 'nowrap' }}>{h}</th>)}</tr></thead>
             <tbody>
               {types.map((t) => (
                 <tr key={t.key} style={{ borderTop: '1px solid #D7D7DC', textAlign: 'right' }}>
@@ -204,7 +204,7 @@ export default async function AdminPage({ searchParams }) {
                   <td style={{ padding: '10px 12px' }}>{t.small}</td>
                   <td style={{ padding: '10px 12px' }}>{usd(t.processing)}</td>
                   <td style={{ padding: '10px 12px' }}>{t.cents ? `${(t.costPct * 100).toFixed(1)}%` : '–'}</td>
-                  <td style={{ padding: '10px 12px', fontWeight: 700, color: t.net < 0 ? '#C0261A' : '#000' }}>{usd(t.net)}</td>
+                  <td style={{ padding: '10px 12px', fontWeight: 700, color: t.net < 0 ? '#C0261A' : 'var(--ink, #000)' }}>{usd(t.net)}</td>
                 </tr>
               ))}
             </tbody>
@@ -225,7 +225,7 @@ export default async function AdminPage({ searchParams }) {
         {funnel.map(([label, v]) => (
           <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ width: 150, flexShrink: 0, fontSize: 14 }}>{label}</span>
-            <span style={{ flexGrow: 1, height: 18, background: '#fff', border: '1px solid #000', position: 'relative' }}><span style={{ position: 'absolute', inset: 0, width: pct(v, users) === '–' ? 0 : pct(v, users), background: '#13286B' }} /></span>
+            <span style={{ flexGrow: 1, height: 18, background: 'var(--surface, #fff)', border: '1px solid var(--line, #000)', position: 'relative' }}><span style={{ position: 'absolute', inset: 0, width: pct(v, users) === '–' ? 0 : pct(v, users), background: 'var(--dk, #13286B)' }} /></span>
             <span style={{ width: 70, textAlign: 'right', fontSize: 14, fontWeight: 700 }}>{v} <span style={{ fontWeight: 400, ...small }}>{pct(v, users)}</span></span>
           </div>
         ))}
@@ -234,10 +234,10 @@ export default async function AdminPage({ searchParams }) {
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h2 style={{ margin: 0, fontSize: 18 }}>Where sign-ups came from</h2>
         <span style={small}>Give each creator or post its own link: add ?ref=name to any insidejoke link, like insidejoke.club/?ref=priya. Credit goes to the first link someone used, for 30 days.</span>
-        <div style={{ background: '#fff', border: '1px solid #000', fontSize: 13, overflowX: 'auto' }}>
+        <div style={{ background: 'var(--surface, #fff)', border: '1px solid var(--line, #000)', fontSize: 13, overflowX: 'auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 2fr) repeat(4, minmax(70px, 1fr))', gap: 8, padding: '7px 10px', fontWeight: 700 }}><span>Source</span><span>Signed up</span><span>Made a list</span><span>Got a gift</span><span>Gave a gift</span></div>
           {sources.length ? sources.map((r) => (
-            <div key={r.source} style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 2fr) repeat(4, minmax(70px, 1fr))', gap: 8, padding: '7px 10px', borderTop: '1px solid #ddd' }}>
+            <div key={r.source} style={{ display: 'grid', gridTemplateColumns: 'minmax(120px, 2fr) repeat(4, minmax(70px, 1fr))', gap: 8, padding: '7px 10px', borderTop: '1px solid var(--line, #ddd)' }}>
               <span style={{ fontWeight: 700, overflowWrap: 'anywhere' }}>{r.source}</span><span>{Number(r.signed)}</span><span>{Number(r.listed)} <span style={small}>{pct(Number(r.listed), Number(r.signed))}</span></span><span>{Number(r.got)}</span><span>{Number(r.gave)}</span>
             </div>
           )) : <div style={{ padding: '7px 10px' }}>No sign-ups yet.</div>}
@@ -250,7 +250,7 @@ export default async function AdminPage({ searchParams }) {
           {days.map((d) => (
             <div key={d.label} title={`${d.label}: ${d.n}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
               <span style={{ fontSize: 11 }}>{d.n || ''}</span>
-              <span style={{ width: '100%', height: `${(d.n / maxDay) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? '#13286B' : '#bbb' }} />
+              <span style={{ width: '100%', height: `${(d.n / maxDay) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? 'var(--dk, #13286B)' : 'var(--lt, #bbb)' }} />
             </div>
           ))}
         </div>
@@ -259,8 +259,8 @@ export default async function AdminPage({ searchParams }) {
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h2 style={{ margin: 0, fontSize: 18 }}>Recent activity</h2>
-        <div style={{ background: '#fff', border: '1px solid #000', fontSize: 13 }}>
-          {feed.length ? feed.map((f, i) => <div key={i} style={{ padding: '7px 10px', borderTop: i ? '1px solid #ddd' : 0 }}><span style={{ color: '#4A4A4A' }}>{when(f.at)}</span> · <Who id={f.uid} name={f.who} bold /> {f.what} {f.thing ? <i>{String(f.thing).slice(0, 60)}</i> : null}</div>) : <div style={{ padding: 10, ...small }}>Nothing yet.</div>}
+        <div style={{ background: 'var(--surface, #fff)', border: '1px solid var(--line, #000)', fontSize: 13 }}>
+          {feed.length ? feed.map((f, i) => <div key={i} style={{ padding: '7px 10px', borderTop: i ? '1px solid var(--line, #ddd)' : 0 }}><span style={{ color: 'var(--muted, #4A4A4A)' }}>{when(f.at)}</span> · <Who id={f.uid} name={f.who} bold /> {f.what} {f.thing ? <i>{String(f.thing).slice(0, 60)}</i> : null}</div>) : <div style={{ padding: 10, ...small }}>Nothing yet.</div>}
         </div>
       </section>
 
@@ -271,15 +271,15 @@ export default async function AdminPage({ searchParams }) {
           {vdays.map((d) => (
             <div key={d.label} title={`${d.label}: ${d.n} visits, ${d.people} signed in`} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
               <span style={{ fontSize: 11 }}>{d.n || ''}</span>
-              <span style={{ width: '100%', height: `${(d.n / maxV) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? '#5546A0' : '#bbb' }} />
+              <span style={{ width: '100%', height: `${(d.n / maxV) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? 'var(--dk, #5546A0)' : 'var(--lt, #bbb)' }} />
             </div>
           ))}
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', ...small }}><span>{vdays[0].label}</span><span>Today</span></div>
         <h3 style={{ margin: '8px 0 0', fontSize: 15 }}>Top pages this week</h3>
         {topPages.length ? (
-          <div style={{ background: '#fff', border: '1px solid #000', fontSize: 13 }}>
-            {topPages.map((t, i) => <div key={t.ref} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, padding: '7px 10px', borderTop: i ? '1px solid #ddd' : 0 }}><a href={t.ref} style={{ color: '#000', overflowWrap: 'anywhere' }}>{t.ref}</a><b>{Number(t.n)}</b></div>)}
+          <div style={{ background: 'var(--surface, #fff)', border: '1px solid var(--line, #000)', fontSize: 13 }}>
+            {topPages.map((t, i) => <div key={t.ref} style={{ display: 'flex', justifyContent: 'space-between', gap: 10, padding: '7px 10px', borderTop: i ? '1px solid var(--line, #ddd)' : 0 }}><a href={t.ref} style={{ color: 'var(--ink, #000)', overflowWrap: 'anywhere' }}>{t.ref}</a><b>{Number(t.n)}</b></div>)}
           </div>
         ) : <span style={small}>No visits counted yet.</span>}
       </section>
@@ -292,7 +292,7 @@ export default async function AdminPage({ searchParams }) {
           <div style={card}><span style={small}>Sign-ups from a shared link</span><span style={big}>{cnt(signups, 'from_share')}</span><span style={small}>{cnt(signups, 'direct')} signed up directly</span></div>
         </div>
         <div style={{ fontSize: 13 }}>Store link clicks: <b>{outbound.reduce((a, r) => a + Number(r.n), 0)}</b>{outbound.length ? ' · ' + outbound.map((r) => `${String(r.detail).replace(/^www\./, '')} ${Number(r.n)}`).join(' · ') : ''}</div>
-        {topViewed.length ? <div style={{ fontSize: 13 }}>Most viewed: {topViewed.map((t, i) => <span key={t.slug}>{i ? ' · ' : ''}<a href={`/l/${t.slug}`} style={{ color: '#000' }}>{t.title}</a> ({Number(t.n)})</span>)}</div> : null}
+        {topViewed.length ? <div style={{ fontSize: 13 }}>Most viewed: {topViewed.map((t, i) => <span key={t.slug}>{i ? ' · ' : ''}<a href={`/l/${t.slug}`} style={{ color: 'var(--ink, #000)' }}>{t.title}</a> ({Number(t.n)})</span>)}</div> : null}
       </section>
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -301,14 +301,14 @@ export default async function AdminPage({ searchParams }) {
           {gdays.map((d) => (
             <div key={d.label} title={`${d.label}: ${d.n} gifts, ${usd(d.cents)}`} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, height: '100%', justifyContent: 'flex-end' }}>
               <span style={{ fontSize: 11 }}>{d.n || ''}</span>
-              <span style={{ width: '100%', height: `${(d.n / maxG) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? '#E8642C' : '#bbb' }} />
+              <span style={{ width: '100%', height: `${(d.n / maxG) * 80}%`, minHeight: d.n ? 3 : 1, background: d.n ? 'var(--lt, #E8642C)' : 'var(--lt, #bbb)' }} />
             </div>
           ))}
         </div>
         <h3 style={{ margin: '8px 0 0', fontSize: 15 }}>Payments that failed ({payFails.length})</h3>
-        {payFails.length ? payFails.map((f, i) => <div key={i} style={{ fontSize: 13 }}>{when(f.at)} · <Who id={f.user_id} name={f.name} /> · <span style={{ color: '#B3261E' }}>{String(f.detail).slice(0, 140)}</span></div>) : <span style={small}>None.</span>}
+        {payFails.length ? payFails.map((f, i) => <div key={i} style={{ fontSize: 13 }}>{when(f.at)} · <Who id={f.user_id} name={f.name} /> · <span style={{ color: 'var(--warm-ink, #B3261E)' }}>{String(f.detail).slice(0, 140)}</span></div>) : <span style={small}>None.</span>}
         <h3 style={{ margin: '8px 0 0', fontSize: 15 }}>Cash-outs that failed ({payoutFails.length})</h3>
-        {payoutFails.length ? payoutFails.map((f, i) => <div key={i} style={{ fontSize: 13 }}>{when(f.at)} · <Who id={f.user_id} name={f.name} /> · <span style={{ color: '#B3261E' }}>{String(f.detail).slice(0, 140)}</span></div>) : <span style={small}>None.</span>}
+        {payoutFails.length ? payoutFails.map((f, i) => <div key={i} style={{ fontSize: 13 }}>{when(f.at)} · <Who id={f.user_id} name={f.name} /> · <span style={{ color: 'var(--warm-ink, #B3261E)' }}>{String(f.detail).slice(0, 140)}</span></div>) : <span style={small}>None.</span>}
       </section>
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -316,10 +316,10 @@ export default async function AdminPage({ searchParams }) {
         <span style={{ fontSize: 14 }}>{linkRows.length} read · <b>{linkFails.length}</b> missing something {linkRows.length ? `(${Math.round(((linkRows.length - linkFails.length) / linkRows.length) * 100)}% complete)` : ''}</span>
         {linkFails.slice(0, 25).map((r, i) => (
           <div key={i} style={{ fontSize: 13, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <span style={{ color: '#4A4A4A' }}>{when(r.at)}</span>
+            <span style={{ color: 'var(--muted, #4A4A4A)' }}>{when(r.at)}</span>
             <b>{r.d.host || ''}</b>
-            <span style={{ color: '#B3261E' }}>missing {[!r.d.name && 'name', !r.d.price && 'price', !r.d.photo && 'photo'].filter(Boolean).join(', ')}</span>
-            <a href={r.ref} target="_blank" rel="noreferrer" style={{ color: '#000', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 360 }}>{r.ref}</a>
+            <span style={{ color: 'var(--warm-ink, #B3261E)' }}>missing {[!r.d.name && 'name', !r.d.price && 'price', !r.d.photo && 'photo'].filter(Boolean).join(', ')}</span>
+            <a href={r.ref} target="_blank" rel="noreferrer" style={{ color: 'var(--ink, #000)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 360 }}>{r.ref}</a>
           </div>
         ))}
       </section>
@@ -328,13 +328,13 @@ export default async function AdminPage({ searchParams }) {
         <h2 style={{ margin: 0, fontSize: 18 }}>Texts, last 7 days</h2>
         <span style={{ fontSize: 14 }}>{['sent', 'failed', 'test', 'held'].map((k) => `${cnt(texts, k)} ${k}`).join(' · ')}</span>
         <span style={small}>"test" means test mode (shown in the Outbox, not texted). "held" means texting isn't switched on.</span>
-        {textFails.map((t, i) => <div key={i} style={{ fontSize: 13 }}>{when(t.created_at)} · {t.kind} to ••{String(t.to_phone).slice(-4)} <span style={{ color: '#B3261E' }}>failed</span></div>)}
+        {textFails.map((t, i) => <div key={i} style={{ fontSize: 13 }}>{when(t.created_at)} · {t.kind} to ••{String(t.to_phone).slice(-4)} <span style={{ color: 'var(--warm-ink, #B3261E)' }}>failed</span></div>)}
       </section>
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h2 style={{ margin: 0, fontSize: 18 }}>Recent errors ({errors.length})</h2>
         {errors.length ? errors.map((e) => (
-          <details key={e.id} style={{ background: '#fff', border: '1px solid #000', padding: '8px 10px', fontSize: 13 }}>
+          <details key={e.id} style={{ background: 'var(--surface, #fff)', border: '1px solid var(--line, #000)', padding: '8px 10px', fontSize: 13 }}>
             <summary style={{ cursor: 'pointer' }}>{when(e.at)} · {e.method} {e.path} · <b>{String(e.message).slice(0, 120)}</b>{e.digest ? ` · digest ${e.digest}` : ''}</summary>
             <pre style={{ whiteSpace: 'pre-wrap', fontSize: 11, margin: '8px 0 0' }}>{e.stack}</pre>
           </details>
@@ -344,18 +344,18 @@ export default async function AdminPage({ searchParams }) {
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h2 style={{ margin: 0, fontSize: 18 }}>People ({people.length})</h2>
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13, background: '#fff' }}>
-            <thead><tr>{['Name', 'Phone', 'Joined', 'Lists', 'Wishes', 'Received', 'Given'].map((h) => <th key={h} style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '1.5px solid #000', whiteSpace: 'nowrap' }}>{h}</th>)}</tr></thead>
+          <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 13, background: 'var(--surface, #fff)' }}>
+            <thead><tr>{['Name', 'Phone', 'Joined', 'Lists', 'Wishes', 'Received', 'Given'].map((h) => <th key={h} style={{ textAlign: 'left', padding: '8px 10px', borderBottom: '1.5px solid var(--line, #000)', whiteSpace: 'nowrap' }}>{h}</th>)}</tr></thead>
             <tbody>
               {people.map((p) => (
                 <tr key={p.id}>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd', whiteSpace: 'nowrap' }}><a href={`/u/${p.id}`} style={{ color: '#000' }}>{p.name || '(no name)'}</a></td>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd', whiteSpace: 'nowrap' }}>{p.phone}</td>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd', whiteSpace: 'nowrap' }}>{new Date(Number(p.created_at)).toLocaleDateString('en-US', { timeZone: TZ, month: 'short', day: 'numeric' })}</td>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd' }}>{Number(p.lists)}</td>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd' }}>{Number(p.items)}</td>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd' }}>{usd(Number(p.received))}</td>
-                  <td style={{ padding: '7px 10px', borderBottom: '1px solid #ddd' }}>{usd(Number(p.given))}</td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)', whiteSpace: 'nowrap' }}><a href={`/u/${p.id}`} style={{ color: 'var(--ink, #000)' }}>{p.name || '(no name)'}</a></td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)', whiteSpace: 'nowrap' }}>{p.phone}</td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)', whiteSpace: 'nowrap' }}>{new Date(Number(p.created_at)).toLocaleDateString('en-US', { timeZone: TZ, month: 'short', day: 'numeric' })}</td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)' }}>{Number(p.lists)}</td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)' }}>{Number(p.items)}</td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)' }}>{usd(Number(p.received))}</td>
+                  <td style={{ padding: '7px 10px', borderBottom: '1px solid var(--line, #ddd)' }}>{usd(Number(p.given))}</td>
                 </tr>
               ))}
             </tbody>

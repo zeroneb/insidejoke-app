@@ -17,9 +17,9 @@ export default async function WeeklyThanksPage() {
   const n = people.length;
   const first = ((me.name || 'Me').trim().split(/\s+/)[0]);
   return (
-    <main className="r3-full" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
+    <main className="r3-full" style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>This week's treats</span>
         <span style={{ width: 44 }} />
       </header>
@@ -34,18 +34,18 @@ export default async function WeeklyThanksPage() {
         <>
           <section aria-label="Who treated you" style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column' }}>
             {people.map((f) => (
-              <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: '1px solid #000000' }}>
+              <div key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: '1px solid var(--line, #000000)' }}>
                 <Avatar user={f} size={36} />
                 <span style={{ flexGrow: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: 1 }}><span style={{ fontSize: 15, fontWeight: 700 }}>{f.name || 'A friend'}</span><span style={{ fontSize: 13 }}>{f.what}</span></span>
-                <span className="dot" style={{ flexShrink: 0, fontSize: 18, color: '#13286B' }}>×{f.times}</span>
+                <span className="dot" style={{ flexShrink: 0, fontSize: 18, color: 'var(--navy-ink, #13286B)' }}>×{f.times}</span>
               </div>
             ))}
-            <div style={{ borderTop: '1px solid #000000' }} />
+            <div style={{ borderTop: '1px solid var(--line, #000000)' }} />
           </section>
           <WeeklyForm count={n} first={first} link={`${appUrl()}/u/${me.id}`} />
         </>
       ) : null}
-      <section style={{ margin: '26px 20px 0', paddingTop: 16, borderTop: '1.5px solid #000000', display: 'flex', flexDirection: 'column', gap: 10 }}>
+      <section style={{ margin: '26px 20px 0', paddingTop: 16, borderTop: '1.5px solid var(--line, #000000)', display: 'flex', flexDirection: 'column', gap: 10 }}>
         <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45 }}>Wishes still get their own thank-you when they're covered.</p>
         <Link href="/home" style={{ alignSelf: 'flex-start', fontSize: 14, textDecoration: 'underline', textUnderlineOffset: 3, padding: '6px 0' }}>{n ? 'Skip this week' : 'Back home'}</Link>
       </section>

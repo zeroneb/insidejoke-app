@@ -38,7 +38,7 @@ function Boil({ paths, color, style, width, height }) {
   );
 }
 
-const X = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
+const X = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
 const Arrows = () => (
   <span aria-hidden="true" style={{ display: 'flex', gap: 1 }}>
     {['a1', 'a2', 'a3'].map((c) => <svg key={c} className={c} width="10" height="12" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="#96E084" /></svg>)}
@@ -99,11 +99,11 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
   if (onPay) {
     const cardShort = pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 12;
     return (
-      <form action={action} className="r3-full" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+      <form action={action} className="r3-full" style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
         {hidden}
         <StripeAuth need={state?.needAuth} />
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <button type="button" onClick={() => setStep('form')} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+          <button type="button" onClick={() => setStep('form')} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>One-time setup</span>
           <div style={{ width: 44 }} />
         </header>
@@ -111,9 +111,9 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
           <h1 style={{ margin: 0, fontWeight: 400, fontSize: 44, lineHeight: 0.98, letterSpacing: '-0.04em' }}>Set up paying <span className="serif" style={{ fontStyle: 'italic' }}>once</span></h1>
           <p style={{ margin: '12px 0 0', fontSize: 16, lineHeight: 1.4 }}>After this, every gift is one tap.</p>
         </section>
-        <section style={{ position: 'relative', margin: '22px 16px 0', background: '#13286B', color: '#FFFFFF', height: 210, overflow: 'hidden' }}>
+        <section style={{ position: 'relative', margin: '22px 16px 0', background: 'var(--dk, #13286B)', color: 'var(--inv-fg, #FFFFFF)', height: 210, overflow: 'hidden' }}>
           <Boil paths={tri(22)} color="#D8F75A" style={{ left: '50%', marginLeft: -139, top: 18 }} width={280} height={175} />
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#000000', textAlign: 'center', padding: '0 70px' }}>
+          <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: 'var(--ink, #000000)', textAlign: 'center', padding: '0 70px' }}>
             <span style={{ fontSize: 13 }}>Your {treat ? 'treat' : 'gift'} to {forName}</span>
             <span className="dot" style={{ fontSize: dollars(cents).length > 4 ? 52 : 64, lineHeight: 1 }}>${dollars(cents)}</span>
             <span style={{ fontSize: 13 }}>{treat ? `${item.name}${units > 1 ? ` ×${units}` : ''}` : `toward the ${item.store ? item.store + ' ' : ''}${short}`}</span>
@@ -125,11 +125,11 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
         </div>
         <div style={{ padding: '22px 16px 0' }}>
           {err}
-          <button type="submit" disabled={pending || cardShort} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 0, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || cardShort ? 0.5 : 1 }}>
+          <button type="submit" disabled={pending || cardShort} style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || cardShort ? 0.5 : 1 }}>
             {pending ? 'Paying…' : pay.kind === 'apple' ? `Pay $${dollars(cents)} with Apple Pay` : `Pay $${dollars(cents)}`}
           </button>
         </div>
-        <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: '#3A3A3A' }}>Saved for next time. Change it anytime in settings.</p>
+        <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: 'var(--sub, #3A3A3A)' }}>Saved for next time. Change it anytime in settings.</p>
         <div style={{ height: 36 }} />
       </form>
     );
@@ -144,54 +144,54 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
     const tileSize = longest > 7 ? Math.max(30, Math.floor(52 * 7 / longest)) : 52;
     const V = [['public', 'Public', `Your name + note on ${forName}'s list`], ['private', 'Private', `Only ${forName} sees it's you`]];
     return (
-      <form action={action} className="r3-full" style={{ background: '#96E084', color: '#000000', display: 'flex', flexDirection: 'column', overflow: 'hidden', flexGrow: 1 }}>
+      <form action={action} className="r3-full" style={{ background: 'var(--lt, #96E084)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', overflow: 'hidden', flexGrow: 1 }}>
         {hidden}
         <StripeAuth need={state?.needAuth} />
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={`/l/${slug}`} aria-label="Close" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
-          <span className="wide" style={{ fontSize: 12, letterSpacing: '0.18em', borderTop: '2px solid #000000', borderBottom: '2px solid #000000', padding: '5px 10px' }}>Treat · unlimited</span>
+          <Link href={`/l/${slug}`} aria-label="Close" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
+          <span className="wide" style={{ fontSize: 12, letterSpacing: '0.18em', borderTop: '2px solid var(--line, #000000)', borderBottom: '2px solid var(--line, #000000)', padding: '5px 10px' }}>Treat · unlimited</span>
           <div style={{ width: 44 }} />
         </header>
 
         <section aria-label={`${item.name}, treated ${item.timesTreated} times`} style={{ position: 'relative', height: 330, marginTop: 6 }}>
           <Boil paths={tri(5)} color="#FFFFFF" style={{ left: 14, top: 10 }} width={360} height={310} />
-          <div aria-hidden="true" style={{ position: 'absolute', left: 80, top: 50, width: 230, height: 230, background: '#E8642C', transform: 'rotate(45deg)' }} />
+          <div aria-hidden="true" style={{ position: 'absolute', left: 80, top: 50, width: 230, height: 230, background: 'var(--lt, #E8642C)', transform: 'rotate(45deg)' }} />
           <p className="dot" aria-hidden="true" style={{ position: 'absolute', left: 0, right: 0, top: words.length > 1 ? 96 : 120, margin: 0, textAlign: 'center', fontSize: tileSize, lineHeight: 0.95 }}>{words.map((w, i) => <span key={i}>{i ? <br /> : null}{w}</span>)}</p>
           <p key={item.timesTreated} className="dot pop" style={{ position: 'absolute', right: 18, top: 230, margin: 0, fontSize: 50 }}>×{item.timesTreated}</p>
           <p style={{ position: 'absolute', left: 20, top: 250, margin: 0, fontWeight: 700, fontSize: 14, lineHeight: 1.3, maxWidth: 150 }}>{item.store ? <>{item.store}<br /></> : null}for {forName}</p>
         </section>
 
         <section style={{ padding: '0 20px', display: 'flex', flexDirection: 'column', gap: 18 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '2px solid #000000', borderBottom: '2px solid #000000', padding: '10px 0' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '2px solid var(--line, #000000)', borderBottom: '2px solid var(--line, #000000)', padding: '10px 0' }}>
             <span style={{ fontWeight: 800, fontSize: 17 }}>How many?</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <button type="button" onClick={() => { setTypedUnits(null); setUnits(Math.max(1, units - 1)); }} aria-label="One fewer" style={{ width: 44, height: 44, border: '2px solid #000000', background: 'transparent', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', color: '#000000', padding: 0 }}>−</button>
+              <button type="button" onClick={() => { setTypedUnits(null); setUnits(Math.max(1, units - 1)); }} aria-label="One fewer" style={{ width: 44, height: 44, border: '2px solid var(--edge, #000000)', background: 'transparent', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', color: 'var(--ink, #000000)', padding: 0 }}>−</button>
               <input aria-label="How many" className="dot" inputMode="numeric" pattern="[0-9]*" value={typedUnits ?? String(units)} onFocus={(e) => e.target.select()} onBlur={() => setTypedUnits(null)}
                 onChange={(e) => { const d = e.target.value.replace(/\D/g, '').slice(0, 2); setTypedUnits(d); if (d) setUnits(Math.max(1, Math.min(20, +d))); }}
-                style={{ width: 50, height: 44, border: 0, padding: 0, background: 'transparent', textAlign: 'center', fontSize: 28, color: '#000000', outline: 'none', borderRadius: 0 }} />
-              <button type="button" onClick={() => { setTypedUnits(null); setUnits(Math.min(20, units + 1)); }} aria-label="One more" style={{ width: 44, height: 44, border: '2px solid #000000', background: '#000000', color: '#96E084', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>+</button>
+                style={{ width: 50, height: 44, border: 0, padding: 0, background: 'transparent', textAlign: 'center', fontSize: 28, color: 'var(--ink, #000000)', outline: 'none', borderRadius: 0 }} />
+              <button type="button" onClick={() => { setTypedUnits(null); setUnits(Math.min(20, units + 1)); }} aria-label="One more" style={{ width: 44, height: 44, border: '2px solid var(--inv-bg, #000000)', background: '#000000', color: '#96E084', borderRadius: '50%', fontSize: 22, fontFamily: 'inherit', cursor: 'pointer', padding: 0 }}>+</button>
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             <label htmlFor="note" style={{ fontWeight: 800, fontSize: 15 }}>Add a note</label>
-            <input id="note" value={note} onChange={(e) => setNote(e.target.value.slice(0, 280))} placeholder="rough monday, eat this" style={{ height: 50, boxSizing: 'border-box', border: '2px solid #000000', background: '#FFFFFF', color: '#000000', fontFamily: "'EB Garamond', serif", fontStyle: 'italic', fontSize: 19, padding: '0 14px', borderRadius: 0, width: '100%' }} />
+            <input id="note" value={note} onChange={(e) => setNote(e.target.value.slice(0, 280))} placeholder="rough monday, eat this" style={{ height: 50, boxSizing: 'border-box', border: '2px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', fontFamily: "'EB Garamond', serif", fontStyle: 'italic', fontSize: 19, padding: '0 14px', borderRadius: 0, width: '100%' }} />
           </div>
           <div role="radiogroup" aria-label="Who sees it" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 8 }}>
             {V.map(([k, label, sub]) => {
               const on = vis === k;
               return (
-                <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setVis(k)} style={{ textAlign: 'left', border: '2px solid #000000', background: on ? '#000000' : 'transparent', color: on ? '#96E084' : '#000000', fontFamily: 'inherit', padding: 12, display: 'flex', flexDirection: 'column', gap: 4, cursor: 'pointer' }}>
+                <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setVis(k)} style={{ textAlign: 'left', border: '2px solid var(--inv-bg, #000000)', background: on ? '#000000' : 'transparent', color: on ? '#96E084' : 'var(--ink, #000000)', fontFamily: 'inherit', padding: 12, display: 'flex', flexDirection: 'column', gap: 4, cursor: 'pointer' }}>
                   <span style={{ fontWeight: 800, fontSize: 16 }}>{label}</span><span style={{ fontSize: 12, lineHeight: 1.3 }}>{sub}</span>
                 </button>
               );
             })}
           </div>
-          <div style={{ background: '#AAB4EC', color: '#1530C8', padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 800, fontSize: 15 }}><span>{forName} gets</span><span style={{ background: '#D4FA4F', padding: '4px 8px' }}>${dollars(cents)} · 100%</span></div>
+          <div style={{ background: 'var(--lt, #AAB4EC)', color: 'var(--navy-ink, #1530C8)', padding: '12px 14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontWeight: 800, fontSize: 15 }}><span>{forName} gets</span><span style={{ background: 'var(--lt, #D4FA4F)', padding: '4px 8px' }}>${dollars(cents)} · 100%</span></div>
           {err}
           {signedIn ? (
-            <button type="submit" onClick={goPay} disabled={pending} style={{ height: 58, border: 0, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 17, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', opacity: pending ? 0.6 : 1 }}>{pending ? 'Sending…' : <>Treat {forName} · ${dollars(cents)}<Arrows /></>}</button>
+            <button type="submit" onClick={goPay} disabled={pending} style={{ height: 58, border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 17, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, cursor: 'pointer', opacity: pending ? 0.6 : 1 }}>{pending ? 'Sending…' : <>Treat {forName} · ${dollars(cents)}<Arrows /></>}</button>
           ) : (
-            <Link href={signupHref} style={{ height: 58, textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 800, fontSize: 17, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>Confirm your number to give<Arrows /></Link>
+            <Link href={signupHref} style={{ height: 58, textDecoration: 'none', background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontWeight: 800, fontSize: 17, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10 }}>Confirm your number to give<Arrows /></Link>
           )}
           <span style={{ textAlign: 'center', fontSize: 13 }}>{signedIn ? 'No fees for you. Ever.' : "One code, no password. That's your account."}</span>
         </section>
@@ -205,7 +205,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
   const V = [['public', 'Public', 'Your name and note show on the item'], ['private', 'Private', `Only ${forName} sees your name and note`]];
   const amt = dollars(cents);
   return (
-    <form action={action} className="r3-full" style={{ background: '#E3C552', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <form action={action} className="r3-full" style={{ background: 'var(--lt, #E3C552)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       {hidden}
       <StripeAuth need={state?.needAuth} />
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px', gap: 6 }}>
@@ -229,21 +229,21 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
       <div role="radiogroup" aria-label="Amount" style={{ padding: '14px 20px 0', display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: 8 }}>
         {[...chips.map((c) => [String(c), '$' + c / 100]), ['rest', 'The rest']].map(([k, label]) => {
           const on = pick === k;
-          return <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setPick(k)} style={{ height: 46, border: '1.5px solid #000000', background: on ? '#000000' : 'transparent', color: on ? '#FFFFFF' : '#000000', fontFamily: 'inherit', fontSize: 15, borderRadius: 999, cursor: 'pointer', padding: 0 }}>{label}</button>;
+          return <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setPick(k)} style={{ height: 46, border: '1.5px solid var(--inv-bg, #000000)', background: on ? 'var(--inv-bg, #000000)' : 'transparent', color: on ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)', fontFamily: 'inherit', fontSize: 15, borderRadius: 999, cursor: 'pointer', padding: 0 }}>{label}</button>;
         })}
       </div>
       <div style={{ padding: '10px 20px 0', display: 'flex', gap: 8, alignItems: 'stretch' }}>
         <label htmlFor="custom" className="sr">Your own amount</label>
-        <span style={{ flex: '1 1 0', minWidth: 0, display: 'flex', alignItems: 'center', gap: 6, height: 46, boxSizing: 'border-box', border: '1.5px solid #000000', background: onCustom ? '#D8F75A' : '#FFFFFF', borderRadius: 999, padding: '0 16px' }}>
+        <span style={{ flex: '1 1 0', minWidth: 0, display: 'flex', alignItems: 'center', gap: 6, height: 46, boxSizing: 'border-box', border: '1.5px solid var(--edge, #000000)', background: onCustom ? 'var(--lt, #D8F75A)' : 'var(--surface, #FFFFFF)', borderRadius: 999, padding: '0 16px' }}>
           <span className="dot" style={{ fontSize: 18 }}>$</span>
-          <input id="custom" value={custom} inputMode="decimal" placeholder="Your own amount" onChange={(e) => setCustom(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (custom) setPick('custom'); } }} style={{ flex: '1 1 0', width: '100%', minWidth: 0, border: 0, background: 'transparent', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18, color: '#000000', outline: 'none' }} />
+          <input id="custom" value={custom} inputMode="decimal" placeholder="Your own amount" onChange={(e) => setCustom(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); if (custom) setPick('custom'); } }} style={{ flex: '1 1 0', width: '100%', minWidth: 0, border: 0, background: 'transparent', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18, color: 'var(--ink, #000000)', outline: 'none' }} />
         </span>
-        <button type="button" onClick={() => custom && setPick('custom')} aria-pressed={onCustom} style={{ flexShrink: 0, height: 46, border: '1.5px solid #000000', background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontSize: 15, padding: '0 16px', borderRadius: 999, cursor: 'pointer', whiteSpace: 'nowrap' }}>Use this</button>
+        <button type="button" onClick={() => custom && setPick('custom')} aria-pressed={onCustom} style={{ flexShrink: 0, height: 46, border: '1.5px solid var(--inv-bg, #000000)', background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontSize: 15, padding: '0 16px', borderRadius: 999, cursor: 'pointer', whiteSpace: 'nowrap' }}>Use this</button>
       </div>
 
       <section style={{ padding: '24px 20px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
         <label htmlFor="note" style={{ fontSize: 15 }}>Add a note for {forName}</label>
-        <textarea id="note" rows={3} value={note} onChange={(e) => setNote(e.target.value.slice(0, 280))} placeholder="for every winter walk" style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #000000', background: '#FFFFFF', color: '#000000', resize: 'none', fontFamily: "'EB Garamond', serif", fontStyle: 'italic', fontSize: 19, lineHeight: 1.3, padding: '12px 14px', borderRadius: 0 }} />
+        <textarea id="note" rows={3} value={note} onChange={(e) => setNote(e.target.value.slice(0, 280))} placeholder="for every winter walk" style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', resize: 'none', fontFamily: "'EB Garamond', serif", fontStyle: 'italic', fontSize: 19, lineHeight: 1.3, padding: '12px 14px', borderRadius: 0 }} />
       </section>
 
       <section role="radiogroup" aria-label="Who sees your contribution" style={{ padding: '22px 20px 0', display: 'flex', flexDirection: 'column' }}>
@@ -251,15 +251,15 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
         {V.map(([k, label, sub]) => {
           const on = vis === k;
           return (
-            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setVis(k)} style={{ display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left', border: 0, borderTop: '1px solid #000000', background: on ? '#D8F75A' : 'transparent', color: '#000000', fontFamily: 'inherit', padding: `14px ${on ? '12px' : '0'}`, cursor: 'pointer' }}>
-              <span style={{ width: 22, height: 22, flexShrink: 0, borderRadius: '50%', border: '1.5px solid #000000', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 12, height: 12, borderRadius: '50%', background: on ? '#000000' : 'transparent' }} /></span>
-              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}><span style={{ fontSize: 18 }}>{label}</span><span style={{ fontSize: 13, color: '#3A3220' }}>{sub}</span></span>
+            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => setVis(k)} style={{ display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left', border: 0, borderTop: '1px solid var(--line, #000000)', background: on ? 'var(--lt, #D8F75A)' : 'transparent', color: 'var(--ink, #000000)', fontFamily: 'inherit', padding: `14px ${on ? '12px' : '0'}`, cursor: 'pointer' }}>
+              <span style={{ width: 22, height: 22, flexShrink: 0, borderRadius: '50%', border: '1.5px solid var(--edge, #000000)', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 12, height: 12, borderRadius: '50%', background: on ? 'var(--inv-bg, #000000)' : 'transparent' }} /></span>
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}><span style={{ fontSize: 18 }}>{label}</span><span style={{ fontSize: 13, color: 'var(--warm-ink, #3A3220)' }}>{sub}</span></span>
             </button>
           );
         })}
       </section>
 
-      <section style={{ margin: '22px 20px 0', borderTop: '1px solid #000000', paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 500, fontSize: 13 }}>
+      <section style={{ margin: '22px 20px 0', borderTop: '1px solid var(--line, #000000)', paddingTop: 12, display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 500, fontSize: 13 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700 }}><span>Your contribution</span><span>${cents2(cents)}</span></div>
         <span>No fee added. All of it goes to {forName}.</span>
       </section>
@@ -267,10 +267,10 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
       <div style={{ padding: '22px 16px 32px', display: 'flex', flexDirection: 'column', gap: 10 }}>
         {err}
         {signedIn ? (
-          <button type="submit" onClick={goPay} disabled={pending || tooSmall} style={{ display: 'block', width: '100%', textAlign: 'center', border: 0, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || tooSmall ? 0.5 : 1 }}>{pending ? 'Sending…' : `Contribute $${amt}`}</button>
+          <button type="submit" onClick={goPay} disabled={pending || tooSmall} style={{ display: 'block', width: '100%', textAlign: 'center', border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || tooSmall ? 0.5 : 1 }}>{pending ? 'Sending…' : `Contribute $${amt}`}</button>
         ) : (
           <>
-            <Link href={signupHref} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontSize: 17, padding: '17px 0', borderRadius: 999 }}>Confirm your number to give</Link>
+            <Link href={signupHref} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontSize: 17, padding: '17px 0', borderRadius: 999 }}>Confirm your number to give</Link>
             <span style={{ textAlign: 'center', fontSize: 13 }}>One code, no password. That's your account.</span>
           </>
         )}

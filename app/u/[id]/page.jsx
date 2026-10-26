@@ -24,9 +24,9 @@ const first = (n) => (n || '').trim().split(/\s+/)[0] || 'them';
 const possessive = (n) => (n.endsWith('s') ? `${n}’` : `${n}’s`);
 const shortDate = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-const Check = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg>;
-const Plus = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
-const PILL = { marginTop: 6, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid #000000', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: '#000', textDecoration: 'none', boxSizing: 'border-box' };
+const Check = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg>;
+const Plus = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
+const PILL = { marginTop: 6, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid var(--edge, #000000)', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: 'var(--ink, #000)', textDecoration: 'none', boxSizing: 'border-box' };
 
 // a1/r1: a friend's profile, Option 10 FriendProfile.
 export default async function FriendProfile({ params }) {
@@ -71,10 +71,10 @@ export default async function FriendProfile({ params }) {
     <>
       <main className={me ? 'withnav' : ''} style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={me ? '/friends' : '/'} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={me ? '/friends' : '/'} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Profile</span>
           {friend ? (
-            <a href="#text" aria-label={`Text ${name}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></a>
+            <a href="#text" aria-label={`Text ${name}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></a>
           ) : <span style={{ width: 44 }} />}
         </header>
 
@@ -83,10 +83,10 @@ export default async function FriendProfile({ params }) {
           <h1 style={{ margin: '6px 0 0', fontWeight: 400, fontSize: 34, letterSpacing: '-0.02em', lineHeight: 1 }}>{(them.name || 'Someone').trim().split(/\s+/)[0]}{(them.name || '').trim().split(/\s+/).length > 1 ? <> <span className="serif" style={{ fontStyle: 'italic' }}>{them.name.trim().split(/\s+/).slice(1).join(' ')}</span></> : null}</h1>
           {them.bio ? <span style={{ fontSize: 15 }}>{them.bio}</span> : null}
           {self ? (
-            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: '#000000' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink, #000000)' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
           ) : (
             me && fc.n && (!locked || isAdmin(me)) ? (
-              <Link href={`/u/${them.id}/friends`} style={{ fontSize: 14, color: '#000000' }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</Link>
+              <Link href={`/u/${them.id}/friends`} style={{ fontSize: 14, color: 'var(--ink, #000000)' }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</Link>
             ) : <span style={{ fontSize: 14 }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</span>
           )}
           {self ? (
@@ -95,22 +95,22 @@ export default async function FriendProfile({ params }) {
                 <Link href="/you/settings" style={{ ...PILL, background: 'transparent' }}>Edit</Link>
                 <ShareProfile iconOnly url={`${appUrl()}/${(await handleFor(them)) || 'u/' + them.id}`} name={them.name} style={{ ...PILL, width: 44, padding: 0, justifyContent: 'center', background: 'transparent' }} />
               </div>
-              <span style={{ fontSize: 12, color: '#4A4A4A' }}>This is how others see your profile.</span>
+              <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>This is how others see your profile.</span>
             </>
           ) : friend ? (
             <>
-              <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: '#D4FA4F' }}><Check />Friends<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.2" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
-              <span style={{ fontSize: 12, color: '#4A4A4A' }}>On insidejoke together</span>
+              <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: 'var(--lt, #D4FA4F)' }}><Check />Friends<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
+              <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>On insidejoke together</span>
             </>
           ) : me ? (
             <>
               <form action={addFriend}><input type="hidden" name="userId" value={them.id} /><button style={{ ...PILL, background: 'transparent' }}><Plus />Add friend</button></form>
-              <span style={{ fontSize: 12, color: '#4A4A4A' }}>Not friends right now. {name} wasn’t notified.</span>
+              <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Not friends right now. {name} wasn’t notified.</span>
             </>
           ) : (
             <>
               <Link href={`/signup?next=/u/${them.id}`} style={{ ...PILL, background: 'transparent' }}><Plus />Add friend</Link>
-              <span style={{ fontSize: 12, color: '#4A4A4A' }}>Sign up with your number to be friends with {name}.</span>
+              <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Sign up with your number to be friends with {name}.</span>
             </>
           )}
         </section>
@@ -122,9 +122,9 @@ export default async function FriendProfile({ params }) {
         ) : null}
 
         {me && !self ? (
-          <section aria-label={`${name} and you`} style={{ margin: '24px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', borderTop: '1.5px solid #000000', borderBottom: '1.5px solid #000000' }}>
-            <div style={{ padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 2, borderRight: '1.5px solid #000000' }}><span className="dot" style={{ fontSize: 30, color: '#E8642C' }}>{fromThem}</span><span style={{ fontSize: 13 }}>{fromThem === 1 ? 'gift' : 'gifts'} {possessive(name)} sent you</span></div>
-            <div style={{ padding: '14px 0 14px 16px', display: 'flex', flexDirection: 'column', gap: 2 }}><span className="dot" style={{ fontSize: 30, color: '#13286B' }}>{toThem}</span><span style={{ fontSize: 13 }}>you’ve sent {name}</span></div>
+          <section aria-label={`${name} and you`} style={{ margin: '24px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr', borderTop: '1.5px solid var(--line, #000000)', borderBottom: '1.5px solid var(--line, #000000)' }}>
+            <div style={{ padding: '14px 0', display: 'flex', flexDirection: 'column', gap: 2, borderRight: '1.5px solid var(--line, #000000)' }}><span className="dot" style={{ fontSize: 30, color: '#E8642C' }}>{fromThem}</span><span style={{ fontSize: 13 }}>{fromThem === 1 ? 'gift' : 'gifts'} {possessive(name)} sent you</span></div>
+            <div style={{ padding: '14px 0 14px 16px', display: 'flex', flexDirection: 'column', gap: 2 }}><span className="dot" style={{ fontSize: 30, color: 'var(--navy-ink, #13286B)' }}>{toThem}</span><span style={{ fontSize: 13 }}>you’ve sent {name}</span></div>
           </section>
         ) : null}
 
@@ -135,25 +135,25 @@ export default async function FriendProfile({ params }) {
               {tiles.map((t) => admin && t.visibility === 'private' ? (
                 <div key={t.id} style={{ position: 'relative' }}>
                   <ListTile t={t} i={idx(t.kind) + 1} variant="friend" />
-                  <span style={{ position: 'absolute', right: 8, top: 8, background: '#000000', color: '#FFFFFF', fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', padding: '4px 9px', borderRadius: 999, pointerEvents: 'none' }}>Private · admin view</span>
+                  <span style={{ position: 'absolute', right: 8, top: 8, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', padding: '4px 9px', borderRadius: 999, pointerEvents: 'none' }}>Private · admin view</span>
                 </div>
               ) : <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
             </div>
           ) : (
             <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>{locked ? `${name} shares their profile with friends only.` : `${name} has no public lists right now.`}</p>
           )}
-          {!friend && !self && tiles.length ? <p style={{ margin: 0, fontSize: 13, color: '#4A4A4A', lineHeight: 1.4 }}>You only see {possessive(name)} public lists now.</p> : null}
+          {!friend && !self && tiles.length ? <p style={{ margin: 0, fontSize: 13, color: 'var(--muted, #4A4A4A)', lineHeight: 1.4 }}>You only see {possessive(name)} public lists now.</p> : null}
         </section>
 
         {recent.length ? (
           <section aria-label={`What ${name} has been up to`} style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column' }}>
             <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 15, letterSpacing: '0.12em' }}>Lately</h2>
             {recent.map((e) => (
-              <Link key={e.key} href={e.href} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid #000000', color: '#000000', textDecoration: 'none' }}>
+              <Link key={e.key} href={e.href} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid var(--line, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none' }}>
                 <span style={{ fontSize: 14, lineHeight: 1.35 }}>
                   {e.kind === 'list' ? <>Started a new list, <b>{e.title}</b></> : e.kind === 'added' ? <>Added <b>{e.item}</b> to {e.title}</> : <><b>{e.item}</b> is covered</>}
                 </span>
-                <span style={{ flexShrink: 0, fontSize: 12, color: '#4A4A4A' }}>{shortDate(e.at)}</span>
+                <span style={{ flexShrink: 0, fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{shortDate(e.at)}</span>
               </Link>
             ))}
           </section>
@@ -163,9 +163,9 @@ export default async function FriendProfile({ params }) {
           <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column' }}>
             <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 15, letterSpacing: '0.12em' }}>Between you two</h2>
             {timeline.map((b) => (
-              <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid #000000' }}>
+              <div key={b.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid var(--line, #000000)' }}>
                 <span style={{ fontSize: 14, lineHeight: 1.35 }}>{b.text}</span>
-                <span style={{ flexShrink: 0, fontSize: 12, color: '#4A4A4A' }}>{b.when}</span>
+                <span style={{ flexShrink: 0, fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{b.when}</span>
               </div>
             ))}
           </section>
@@ -175,12 +175,12 @@ export default async function FriendProfile({ params }) {
         {friend ? (
           <div id="friend-options" className="a1-sheetwrap">
             <a href="#" aria-label="Close" style={{ position: 'absolute', inset: 0, background: 'rgba(19,40,107,0.45)' }} />
-            <div className="a1sheet" role="dialog" aria-label="Friend options" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: '#FFFFFF', padding: '22px 20px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em', color: '#13286B' }}>{them.name}</span>
+            <div className="a1sheet" role="dialog" aria-label="Friend options" style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: 'var(--surface, #FFFFFF)', padding: '22px 20px 26px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <span className="a1-cap">{them.name}</span>
               <p style={{ margin: 0, fontSize: 24, lineHeight: 1.15, letterSpacing: '-0.02em' }}>Unfriend <span className="it">{name}?</span></p>
-              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: '#2A2A2A' }}>{name} won’t be notified. {name} leaves your Lately feed, and you only see their public lists. Add {name} back anytime from this profile.</p>
-              <form action={unfriend} style={{ display: 'flex' }}><input type="hidden" name="userId" value={them.id} /><button style={{ flexGrow: 1, height: 52, border: 0, background: '#E2452B', color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 16, borderRadius: 999, cursor: 'pointer' }}>Unfriend</button></form>
-              <a href="#" style={{ height: 50, border: '1.5px solid #000000', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, borderRadius: 999, textDecoration: 'none', color: '#000' }}>Keep as friend</a>
+              <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: 'var(--sub, #2A2A2A)' }}>{name} won’t be notified. {name} leaves your Lately feed, and you only see their public lists. Add {name} back anytime from this profile.</p>
+              <form action={unfriend} style={{ display: 'flex' }}><input type="hidden" name="userId" value={them.id} /><button style={{ flexGrow: 1, height: 52, border: 0, background: 'var(--dk, #E2452B)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 16, borderRadius: 999, cursor: 'pointer' }}>Unfriend</button></form>
+              <a href="#" style={{ height: 50, border: '1.5px solid var(--edge, #000000)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, borderRadius: 999, textDecoration: 'none', color: 'var(--ink, #000)' }}>Keep as friend</a>
             </div>
           </div>
         ) : null}

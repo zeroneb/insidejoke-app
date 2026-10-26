@@ -8,10 +8,20 @@ import PageBeacon from '@/components/page-beacon';
 
 export const metadata = {
   title: 'insidejoke',
-  description: "Let's celebrate you, and life."
+  description: "Let's celebrate you, and life.",
+  appleWebApp: { capable: true, title: 'insidejoke', statusBarStyle: 'black-translucent' }
 };
 
-export const viewport = { width: 'device-width', initialScale: 1, viewportFit: 'cover' };
+// Edge to edge on phones: the status bar takes the page's own ground (light #ECECEF, dark #161618).
+// Settings › Appearance wins over the phone: Light or Dark pins it, Match phone follows the phone.
+export async function generateViewport() {
+  const u = await currentUser().catch(() => null);
+  const t = u?.theme;
+  const themeColor = t === 'dark' ? '#161618' : t === 'auto'
+    ? [{ media: '(prefers-color-scheme: light)', color: '#ECECEF' }, { media: '(prefers-color-scheme: dark)', color: '#161618' }]
+    : '#ECECEF';
+  return { width: 'device-width', initialScale: 1, viewportFit: 'cover', themeColor, colorScheme: t === 'dark' ? 'dark' : t === 'auto' ? 'light dark' : 'light' };
+}
 
 export default async function RootLayout({ children }) {
   const test = isTestMode();

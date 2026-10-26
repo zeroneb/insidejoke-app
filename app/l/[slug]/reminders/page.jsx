@@ -49,25 +49,25 @@ export default async function RemindersPage({ params, searchParams }) {
       <Hdr back={list.for_who === 'other' ? `/l/${slug}/collab` : `/l/${slug}`}>{list.title} · settings</Hdr>
       <section style={{ position: 'relative', padding: '10px 20px 0', height: 150 }}>
         <Boil seed={17} left={10} top={0} width={260} height={150} />
-        <h1 style={{ position: 'relative', margin: '30px 0 0 14px', fontWeight: 400, fontSize: 42, lineHeight: 0.95, letterSpacing: '-0.03em', color: '#000' }}>Gift-by <span className="serif" style={{ fontStyle: 'italic' }}>date</span></h1>
+        <h1 style={{ position: 'relative', margin: '30px 0 0 14px', fontWeight: 400, fontSize: 42, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--ink, #000)' }}>Gift-by <span className="serif" style={{ fontStyle: 'italic' }}>date</span></h1>
       </section>
 
       <form action={setGiftDate} style={{ display: 'flex', flexDirection: 'column' }}>
         <input type="hidden" name="slug" value={slug} />
         <label htmlFor="dateOn" style={{ margin: '16px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, borderTop: `1.5px solid ${RED}`, borderBottom: `1.5px solid ${RED}`, padding: '14px 0', cursor: 'pointer' }}>
-          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16, color: '#000' }}>Set a gift-by date</span><span style={{ fontSize: 12, color: DEEP }}>Optional. A nudge, not a cutoff.</span></span>
+          <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16, color: 'var(--ink, #000)' }}>Set a gift-by date</span><span style={{ fontSize: 12, color: DEEP }}>Optional. A nudge, not a cutoff.</span></span>
           <span className="a4-sw"><input id="dateOn" name="on" type="checkbox" role="switch" defaultChecked={!!list.date} /><span /></span>
         </label>
         <div className="a4-if a4-if-dateon" style={{ margin: '12px 20px 0', gap: 8, alignItems: 'center' }}>
           <label htmlFor="gdate" className="sr">Gift-by date</label>
-          <input id="gdate" type="date" name="date" min={list.date && list.date < earliestToday() ? list.date : earliestToday()} defaultValue={list.date || ''} style={{ flexGrow: 1, minWidth: 0, height: 48, border: '2px solid #000', background: '#fff', fontFamily: 'inherit', fontSize: 16, padding: '0 12px', color: '#000', borderRadius: 0 }} />
+          <input id="gdate" type="date" name="date" min={list.date && list.date < earliestToday() ? list.date : earliestToday()} defaultValue={list.date || ''} style={{ flexGrow: 1, minWidth: 0, height: 48, border: '2px solid var(--line, #000)', background: 'var(--surface, #fff)', fontFamily: 'inherit', fontSize: 16, padding: '0 12px', color: 'var(--ink, #000)', borderRadius: 0 }} />
         </div>
         {past ? <div className="err" role="alert" style={{ margin: '10px 20px 0' }}>{PAST_DATE_ERROR}</div> : null}
-        <button style={{ alignSelf: 'flex-end', margin: '10px 20px 0', height: 40, border: 0, background: RED, color: '#fff', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '0 18px', borderRadius: 999, cursor: 'pointer' }}>Save</button>
+        <button style={{ alignSelf: 'flex-end', margin: '10px 20px 0', height: 40, border: 0, background: RED, color: 'var(--inv-fg, #fff)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '0 18px', borderRadius: 999, cursor: 'pointer' }}>Save</button>
       </form>
 
       {at ? (
-        <section className="pop" style={{ margin: '16px 16px 0', background: RED, color: '#fff', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <section className="pop" style={{ margin: '16px 16px 0', background: RED, color: 'var(--inv-fg, #fff)', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
           <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em' }}>{dateLabel}</span>
           <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
             {count.map(([v, u]) => <span key={u} style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span className="dot" style={{ fontSize: 52, lineHeight: 0.9, color: '#F4D3EE' }}>{v}</span><span style={{ fontSize: 12, fontWeight: 700 }}>{u}</span></span>)}
@@ -84,9 +84,9 @@ export default async function RemindersPage({ params, searchParams }) {
         {rem.map((r) => (
           <div key={r.when} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 0', borderTop: `1.5px solid ${RED}` }}>
             <span className="dot" style={{ flexShrink: 0, width: 64, fontSize: 15, lineHeight: 1.2 }}>{r.when}</span>
-            <span style={{ display: 'flex', flexDirection: 'column', gap: 4, color: '#000' }}>
+            <span style={{ display: 'flex', flexDirection: 'column', gap: 4, color: 'var(--ink, #000)' }}>
               <span style={{ fontWeight: 800, fontSize: 15 }}>{r.title}</span>
-              <span style={{ fontSize: 13, lineHeight: 1.4, color: '#6A2A20' }}>{r.sub}</span>
+              <span style={{ fontSize: 13, lineHeight: 1.4, color: 'var(--warm-ink, #6A2A20)' }}>{r.sub}</span>
               {r.st ? <span style={{ fontSize: 12, fontWeight: 700, color: RED }}>{r.st}</span> : null}
             </span>
           </div>
@@ -94,7 +94,7 @@ export default async function RemindersPage({ params, searchParams }) {
         <p style={{ margin: '4px 0 0', paddingTop: 12, borderTop: `1.5px solid ${RED}`, fontSize: 12, lineHeight: 1.45, color: DEEP }}>Reminders never single anyone out. People who already gave get a progress update instead, and anyone can opt out.</p>
       </section>
 
-      <section style={{ margin: '22px 16px 0', background: '#fff', padding: 16, display: 'flex', flexDirection: 'column', gap: 10, color: '#000' }}>
+      <section style={{ margin: '22px 16px 0', background: 'var(--surface, #fff)', padding: 16, display: 'flex', flexDirection: 'column', gap: 10, color: 'var(--ink, #000)' }}>
         <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em', color: RED }}>Text blast</span>
         <span style={{ fontSize: 14, lineHeight: 1.4 }}>Send your own note to everyone the list was shared with.</span>
         {lastBlast ? <span style={{ fontSize: 13, fontWeight: 700, color: '#2E9B47' }}>Last one went to {lastBlast.recipients} {lastBlast.recipients === 1 ? 'person' : 'people'} · {short(lastBlast.created_at)}</span> : null}

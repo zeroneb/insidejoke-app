@@ -49,7 +49,7 @@ export default async function BlastPage({ params, searchParams }) {
       {items.map((it) => (
         <div key={it.id} className="a4-row">
           <Who user={{ id: it.adder_id, name: it.adder_name, color: it.adder_color, seed: it.adder_seed }} me={me} size={36} />
-          <span style={{ flexGrow: 1, minWidth: 0, fontWeight: 800, fontSize: 15, color: '#000' }}>{it.name}</span>
+          <span style={{ flexGrow: 1, minWidth: 0, fontWeight: 800, fontSize: 15, color: 'var(--ink, #000)' }}>{it.name}</span>
           <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
         </div>
       ))}
@@ -77,12 +77,12 @@ export default async function BlastPage({ params, searchParams }) {
             <TallTitle text={list.title} size={84} oneLine style={{ paddingTop: 16 }} />
           </div>
           {blast ? (
-            <section className="pop" aria-label="Pinned message" style={{ margin: '18px 16px 0', background: '#fff', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10, color: '#000', borderTop: `4px solid ${RED}` }}>
+            <section className="pop" aria-label="Pinned message" style={{ margin: '18px 16px 0', background: 'var(--surface, #fff)', padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10, color: 'var(--ink, #000)', borderTop: `4px solid ${RED}` }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <Who user={{ id: blast.from_id, name: blast.name, color: blast.color, seed: blast.seed }} me={me} size={40} />
                 <span className="serif" style={{ fontSize: 20, lineHeight: 1.25 }}>{blast.body}</span>
               </div>
-              <form action={unpinBlastAction} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12, color: '#4A4A4A' }}>
+              <form action={unpinBlastAction} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>
                 <input type="hidden" name="slug" value={slug} /><input type="hidden" name="blastId" value={blast.id} />
                 <span>Pinned · sent by text to {blast.recipients} · {ago(blast.created_at)}</span>
                 <button style={{ border: 0, background: 'transparent', color: RED, fontFamily: 'inherit', fontSize: 13, fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: 3, padding: '10px 0 10px 10px', cursor: 'pointer' }}>Unpin</button>
@@ -95,10 +95,10 @@ export default async function BlastPage({ params, searchParams }) {
           {shown ? (
             <section style={{ margin: '22px 16px 0', display: 'flex', flexDirection: 'column', gap: 8 }}>
               <h2 className="wide" style={{ margin: 0, fontSize: 13, letterSpacing: '0.16em' }}>What people get</h2>
-              <div style={{ background: '#ECECEC', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6, color: '#000' }}>
-                <span style={{ textAlign: 'center', fontSize: 11, color: '#6A6A6A' }}>Text message · insidejoke</span>
-                <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: '#FFFFFF', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4 }}>From {firstName(me)}, on “{list.title}”: {shown.body} {link}</div>
-                <span style={{ alignSelf: 'flex-start', fontSize: 11, color: '#6A6A6A' }}>Reply STOP to opt out</span>
+              <div style={{ background: 'var(--surface2, #ECECEC)', borderRadius: 18, padding: 14, display: 'flex', flexDirection: 'column', gap: 6, color: 'var(--ink, #000)' }}>
+                <span style={{ textAlign: 'center', fontSize: 11, color: 'var(--mute2, #6A6A6A)' }}>Text message · insidejoke</span>
+                <div style={{ alignSelf: 'flex-start', maxWidth: '88%', background: 'var(--surface, #FFFFFF)', borderRadius: '18px 18px 18px 4px', padding: '10px 13px', fontSize: 14, lineHeight: 1.4 }}>From {firstName(me)}, on “{list.title}”: {shown.body} {link}</div>
+                <span style={{ alignSelf: 'flex-start', fontSize: 11, color: 'var(--mute2, #6A6A6A)' }}>Reply STOP to opt out</span>
               </div>
             </section>
           ) : null}

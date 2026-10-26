@@ -43,7 +43,7 @@ export default function StripePay() {
           appearance: {
             theme: dark ? 'night' : 'flat',
             variables: { fontFamily: 'Inter Tight, system-ui, sans-serif', borderRadius: '0px', colorPrimary: '#000000', colorBackground: dark ? '#1A1A1A' : '#FFFFFF', fontSizeBase: '16px' },
-            rules: { '.Input': { border: '1.5px solid ' + (dark ? '#FFFFFF' : '#000000') } }
+            rules: { '.Input': { border: '1.5px solid ' + (dark ? '#FFFFFF' : 'var(--line, #000000)') } }
           },
           fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;700&display=swap' }]
         });
@@ -76,9 +76,9 @@ export default function StripePay() {
       <span style={{ fontSize: 15 }}>How do you want to pay?</span>
       <input ref={hidden} type="hidden" name="paymentMethodId" defaultValue="" />
       <div ref={box} style={{ minHeight: ready ? 0 : 120 }} />
-      {!ready && !err ? <span style={{ fontSize: 13, color: '#4A4A4A' }}>Loading the secure card form…</span> : null}
+      {!ready && !err ? <span style={{ fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Loading the secure card form…</span> : null}
       {err ? <p className="err" style={{ margin: 0 }}>{err}</p> : null}
-      <span style={{ fontSize: 12, color: '#4A4A4A' }}>Secure payment. insidejoke never sees your card number.</span>
+      <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Secure payment. insidejoke never sees your card number.</span>
     </div>
   );
 }

@@ -71,7 +71,7 @@ function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
       <Link href={me ? '/home' : `/login?next=${encodeURIComponent(path)}`} aria-label={me ? 'You' : 'Log in'} aria-current={active === 'you' ? 'page' : undefined} className="navtab navme">
         <span style={{ width: 42, height: 42, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {!me ? (
-            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.9" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
+            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.9" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
           ) : me.photo ? <img src={me.photo} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={30} owner />}
         </span>
         <span className="navlabel" aria-hidden="true" style={{ color: W }}>{me ? 'You' : 'Log in'}</span>

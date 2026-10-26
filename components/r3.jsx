@@ -18,7 +18,7 @@ export function R3Sketch({ name = '', unlimited = false }) {
   );
   if (sketchKey(name, unlimited) === 'boots') {
     return (
-      <svg role="img" aria-label={`Hand-drawn ${name}`} style={{ position: 'absolute', left: '50%', marginLeft: -100, top: 10 }} width="200" height="210" viewBox="0 0 200 210" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <svg role="img" aria-label={`Hand-drawn ${name}`} style={{ position: 'absolute', left: '50%', marginLeft: -100, top: 10 }} width="200" height="210" viewBox="0 0 200 210" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
         {filter}
         <g filter="url(#r3wob)">{BOOT.map((d, i) => <path key={i} d={d} />)}</g>
       </svg>

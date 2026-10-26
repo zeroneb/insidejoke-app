@@ -57,7 +57,7 @@ export default async function Outbox() {
               <div className="dev-body">{linkify(r.body)}</div>
             </div>
           ))}
-          <div style={{ borderTop: '1px solid #000' }} />
+          <div style={{ borderTop: '1px solid var(--line, #000)' }} />
         </div>
       </div>
     </main>

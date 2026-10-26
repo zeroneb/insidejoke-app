@@ -23,7 +23,7 @@ async function withPanel(slug, sp, view, canAdd) {
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 16px', gap: 8 }}>
         <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em' }}>Add an item</span>
-        <Link2 href={`/l/${slug}`} aria-label="Close" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link2>
+        <Link2 href={`/l/${slug}`} aria-label="Close" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link2>
       </header>
       <AddItemForm slug={slug} initialTreat={sp?.treat === '1'} />
     </main>
@@ -57,7 +57,7 @@ export default async function ListPage({ params, searchParams }) {
   if (!visible) {
     return (
       <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
-        <section style={{ position: 'relative', background: '#13286B', height: 300, overflow: 'hidden' }}>
+        <section style={{ position: 'relative', background: 'var(--dk, #13286B)', height: 300, overflow: 'hidden' }}>
           <Blob seed={5} width={320} height={200} style={{ left: 35, top: 50 }} />
           <h1 className="serif" style={{ position: 'absolute', left: 40, right: 40, top: 112, margin: 0, textAlign: 'center', fontWeight: 400, fontSize: 40, lineHeight: 0.95 }}>Nothing to see <span style={{ fontStyle: 'italic' }}>here</span></h1>
         </section>

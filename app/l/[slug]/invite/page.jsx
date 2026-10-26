@@ -32,7 +32,7 @@ export default async function InvitePage({ params }) {
       <Hdr back={`/l/${slug}/collab`}>{list.title} · invite</Hdr>
       <section style={{ position: 'relative', padding: '14px 20px 0', height: 150 }}>
         <Boil seed={14} left={10} top={0} width={250} height={150} />
-        <h1 style={{ position: 'relative', margin: '30px 0 0 14px', fontWeight: 400, fontSize: 42, lineHeight: 0.95, letterSpacing: '-0.03em', color: '#000' }}>Who's in <span className="serif" style={{ fontStyle: 'italic' }}>on it?</span></h1>
+        <h1 style={{ position: 'relative', margin: '30px 0 0 14px', fontWeight: 400, fontSize: 42, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--ink, #000)' }}>Who's in <span className="serif" style={{ fontStyle: 'italic' }}>on it?</span></h1>
       </section>
       <p style={{ margin: '10px 20px 0', fontSize: 14, lineHeight: 1.4, color: DEEP }}>Pick from your friends or type a number. insidejoke texts them the link, and they can add and give right away.</p>
       <ContactPicker slug={slug} friends={friends} link={`${appUrl()}/join/${slug}`} name={name} surprise={!!list.surprise} />

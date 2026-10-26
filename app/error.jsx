@@ -26,10 +26,10 @@ export default function ErrorPage({ error, reset }) {
       <h1 style={{ margin: 0, fontWeight: 400, fontSize: 40, lineHeight: 1, letterSpacing: '-0.03em' }}>Something <span className="serif" style={{ fontStyle: 'italic' }}>hiccuped.</span></h1>
       <p style={{ margin: 0, fontSize: 16, lineHeight: 1.45 }}>Nothing you did. Try again, and if it keeps happening, reload the page.</p>
       <div style={{ display: 'flex', gap: 10 }}>
-        <button onClick={() => reset()} style={{ border: 0, background: '#000', color: '#fff', fontFamily: 'inherit', fontWeight: 700, fontSize: 16, padding: '14px 22px', borderRadius: 999, cursor: 'pointer' }}>Try again</button>
-        <button onClick={() => window.location.reload()} style={{ border: '1.5px solid #000', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 16, padding: '14px 22px', borderRadius: 999, cursor: 'pointer', color: '#000' }}>Reload</button>
+        <button onClick={() => reset()} style={{ border: 0, background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)', fontFamily: 'inherit', fontWeight: 700, fontSize: 16, padding: '14px 22px', borderRadius: 999, cursor: 'pointer' }}>Try again</button>
+        <button onClick={() => window.location.reload()} style={{ border: '1.5px solid var(--edge, #000)', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 16, padding: '14px 22px', borderRadius: 999, cursor: 'pointer', color: 'var(--ink, #000)' }}>Reload</button>
       </div>
-      {error?.digest ? <span style={{ fontSize: 12, color: '#4A4A4A' }}>Code {error.digest}</span> : null}
+      {error?.digest ? <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Code {error.digest}</span> : null}
     </main>
   );
 }

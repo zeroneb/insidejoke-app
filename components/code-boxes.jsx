@@ -21,7 +21,7 @@ export default function CodeBoxes({ name = 'code', autoSubmit = true, height = 6
           const active = i === typed.length || (typed.length === 6 && i === 5 && false);
           return (
             <button type="button" key={i} onClick={() => { setTyped(typed.slice(0, i)); ref.current?.focus(); }} aria-label={`Digit ${i + 1}${v ? ', ' + v : ', empty'}`}
-              style={{ height, border: '1.5px solid #000000', background: active ? activeBg : '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height, border: '1.5px solid var(--line, #000000)', background: active ? activeBg : 'var(--surface, #FFFFFF)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 0, cursor: 'pointer', fontFamily: 'inherit' }}>
               <span className={'dot' + (active ? ' caret' : '')} style={{ fontSize, lineHeight: 1 }}>{active ? '|' : v}</span>
             </button>
           );

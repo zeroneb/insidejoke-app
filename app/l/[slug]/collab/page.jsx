@@ -50,7 +50,7 @@ export default async function CollabPage({ params }) {
       </section>
       <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 14, color: DEEP }}>Collab list · {both} can add, edit and fund</p>
 
-      <section style={{ margin: '24px 16px 0', background: '#fff', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, color: '#000' }}>
+      <section style={{ margin: '24px 16px 0', background: 'var(--surface, #fff)', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12, color: 'var(--ink, #000)' }}>
         <h2 className="wide" style={{ margin: 0, fontSize: 15, letterSpacing: '0.14em', color: RED }}>Invite by text</h2>
         <InviteBox slug={slug} preview={preview} />
       </section>
@@ -62,12 +62,12 @@ export default async function CollabPage({ params }) {
           <h2 className="wide" style={{ margin: 0, fontSize: 15, letterSpacing: '0.14em' }}>On the list</h2>
           <Link href={`/l/${slug}/add`} style={{ fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '8px 0' }}>+ Add</Link>
         </div>
-        {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: '#000', fontSize: 15 }}>Nothing yet. Add the first thing {name} would love.</p> : null}
+        {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: 'var(--ink, #000)', fontSize: 15 }}>Nothing yet. Add the first thing {name} would love.</p> : null}
         {items.map((it) => (
           <Link key={it.id} href={`/l/${slug}/i/${it.id}`} className="a4-row">
             <Who user={{ id: it.adder_id, name: it.adder_name, color: it.adder_color, seed: it.adder_seed }} me={me} size={50} />
             <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1, minWidth: 0 }}>
-              <span style={{ fontWeight: 800, fontSize: 15, color: '#000' }}>{it.name}{it.unlimited ? ' (treat)' : ''}</span>
+              <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ink, #000)' }}>{it.name}{it.unlimited ? ' (treat)' : ''}</span>
               <span style={{ fontSize: 12 }}>added by {it.adder_id === me.id ? 'you' : firstName({ name: it.adder_name })}{it.store ? ` · ${it.store}` : ''}</span>
             </span>
             <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
@@ -82,7 +82,7 @@ export default async function CollabPage({ params }) {
           ...(list.handoff === 'surprise' ? [[`/l/${slug}/surprise`, 'The surprise', 'Card, voice notes and when it goes out']] : []),
           [`/l/${slug}/reminders`, 'Gift-by date & reminders', list.date ? `Gift-by ${fmtDate(list.date)}` : 'No date yet']].map(([href, t, s]) => (
           <Link key={href} href={href} className="a4-row" style={{ justifyContent: 'space-between' }}>
-            <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16, color: '#000' }}>{t}</span><span style={{ fontSize: 12, color: DEEP }}>{s}</span></span>
+            <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span style={{ fontWeight: 800, fontSize: 16, color: 'var(--ink, #000)' }}>{t}</span><span style={{ fontSize: 12, color: DEEP }}>{s}</span></span>
             <Arrow />
           </Link>
         ))}

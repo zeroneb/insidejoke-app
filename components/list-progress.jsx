@@ -16,8 +16,8 @@ export default function ListProgress({ items, pad = '18px 20px 0' }) {
         <span className="dot" style={{ fontSize: 17 }}>{all ? 'ALL WISHES COVERED' : `${pct}% OF WISHES COVERED`}</span>
         <span style={{ fontSize: 13, fontWeight: 700, flexShrink: 0 }}>{done} of {total} done</span>
       </div>
-      <div style={{ height: 12, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}>
-        <div className="grow" style={{ width: `${all ? 100 : pct}%`, height: '100%', borderRadius: 999, background: all ? '#2E9B47' : '#5546A0' }} />
+      <div style={{ height: 12, borderRadius: 999, background: 'var(--surface2, #D7D7DC)', overflow: 'hidden' }}>
+        <div className="grow" style={{ width: `${all ? 100 : pct}%`, height: '100%', borderRadius: 999, background: all ? 'var(--lt, #2E9B47)' : 'var(--dk, #5546A0)' }} />
       </div>
     </section>
   );

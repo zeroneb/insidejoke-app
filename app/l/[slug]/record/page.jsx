@@ -28,11 +28,11 @@ export default async function RecordPage({ params, searchParams }) {
       <Hdr back={`/l/${slug}/surprise`} ink="#000" wide>{list.title} · {list.surprise ? 'secret' : 'card'}</Hdr>
       <section style={{ position: 'relative', padding: '18px 20px 0', height: 190 }}>
         <Boil seed={44} fill="#F4D3EE" left={-20} top={4} width={300} height={180} />
-        <h1 style={{ position: 'relative', margin: '34px 0 0 10px', fontWeight: 400, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em', color: '#000' }}>Say it<br /><span className="serif" style={{ fontStyle: 'italic' }}>out loud</span></h1>
+        <h1 style={{ position: 'relative', margin: '34px 0 0 10px', fontWeight: 400, fontSize: 44, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--ink, #000)' }}>Say it<br /><span className="serif" style={{ fontStyle: 'italic' }}>out loud</span></h1>
       </section>
-      <p style={{ margin: '6px 20px 0', fontSize: 15, lineHeight: 1.45, color: '#000' }}>{mode === 'card' ? `Add a note, a voice note or a short video to ${name}'s card.` : `Add a voice note or a short video to ${name}'s surprise card.`} Only {name} sees it, when the surprise opens.</p>
+      <p style={{ margin: '6px 20px 0', fontSize: 15, lineHeight: 1.45, color: 'var(--ink, #000)' }}>{mode === 'card' ? `Add a note, a voice note or a short video to ${name}'s card.` : `Add a voice note or a short video to ${name}'s surprise card.`} Only {name} sees it, when the surprise opens.</p>
       <Recorder slug={slug} name={name} initialMode={mode} me={firstName(me)} />
-      <p style={{ margin: '22px 20px 0', paddingTop: 14, borderTop: `2px solid ${RUST}`, fontFamily: "'EB Garamond', serif", fontSize: 19, lineHeight: 1.3, color: '#000' }}>{already}</p>
+      <p style={{ margin: '22px 20px 0', paddingTop: 14, borderTop: `2px solid ${RUST}`, fontFamily: "'EB Garamond', serif", fontSize: 19, lineHeight: 1.3, color: 'var(--ink, #000)' }}>{already}</p>
       <div style={{ height: 40 }} />
       <Nav me={me} active="home" addHref={`/l/${slug}/add`} />
     </main>

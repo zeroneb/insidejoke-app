@@ -16,11 +16,11 @@ function formatPhone(p) {
   return p;
 }
 const CAP = { fontSize: 11, letterSpacing: '0.18em' };
-const BTN = { height: 56, border: 0, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 700, fontSize: 17, borderRadius: 999, cursor: 'pointer', width: '100%' };
-const FIELD = { height: 54, border: '1.5px solid #000000', background: '#FFFFFF', fontFamily: 'inherit', fontSize: 17, padding: '0 14px', boxSizing: 'border-box', width: '100%', borderRadius: 0, color: '#000000', fontWeight: 400 };
+const BTN = { height: 56, border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 700, fontSize: 17, borderRadius: 999, cursor: 'pointer', width: '100%' };
+const FIELD = { height: 54, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontSize: 17, padding: '0 14px', boxSizing: 'border-box', width: '100%', borderRadius: 0, color: 'var(--ink, #000000)', fontWeight: 400 };
 
 function Back({ href, label = 'Back', onClick }) {
-  const inner = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>;
+  const inner = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>;
   const st = { width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer' };
   return onClick ? <button type="button" aria-label={label} onClick={onClick} style={st}>{inner}</button> : <Link href={href} aria-label={label} style={st}>{inner}</Link>;
 }
@@ -36,7 +36,7 @@ function Resend({ onCode }) {
     return () => clearTimeout(t);
   }, [left]);
   if (left > 0) return <span>Resend in <span className="dot" style={{ fontSize: 14 }}>0:{String(left).padStart(2, '0')}</span></span>;
-  return <button formAction={act} formNoValidate disabled={pending} style={{ border: 0, background: 'transparent', padding: 0, fontFamily: 'inherit', fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer', color: '#000000' }}>{pending ? 'Sending…' : 'Send it again'}</button>;
+  return <button formAction={act} formNoValidate disabled={pending} style={{ border: 0, background: 'transparent', padding: 0, fontFamily: 'inherit', fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, cursor: 'pointer', color: 'var(--ink, #000000)' }}>{pending ? 'Sending…' : 'Send it again'}</button>;
 }
 
 export default function SignupForm({ next = '/home', title = 'Sign up' }) {
@@ -53,7 +53,7 @@ export default function SignupForm({ next = '/home', title = 'Sign up' }) {
     const shown = formatPhone(s1.phone);
     const who = (s1.name || '').trim();
     return (
-      <form action={act2} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, background: '#A9CDF5', margin: '0 0 -104px', paddingBottom: 104, minHeight: '100vh', boxSizing: 'border-box' }}>
+      <form action={act2} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, background: 'var(--lt, #A9CDF5)', margin: '0 0 -104px', paddingBottom: 104, minHeight: '100vh', boxSizing: 'border-box' }}>
         <input type="hidden" name="phone" value={s1.phone} />
         <input type="hidden" name="name" value={s1.name || ''} />
         <input type="hidden" name="next" value={s1.next || next} />
@@ -84,17 +84,17 @@ export default function SignupForm({ next = '/home', title = 'Sign up' }) {
           <span style={{ fontSize: 15 }}>Enter the code we sent to {shown}</span>
           <CodeBoxes height={64} fontSize={30} activeBg="#D8F75A" />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13 }}>
-            <button type="button" onClick={() => setEditing(true)} style={{ border: 0, background: 'transparent', padding: 0, fontFamily: 'inherit', fontSize: 13, textDecoration: 'underline', cursor: 'pointer', color: '#000000' }}>Change number</button>
+            <button type="button" onClick={() => setEditing(true)} style={{ border: 0, background: 'transparent', padding: 0, fontFamily: 'inherit', fontSize: 13, textDecoration: 'underline', cursor: 'pointer', color: 'var(--ink, #000000)' }}>Change number</button>
             <Resend onCode={(c) => { setFresh(c); document.getElementById('code-input')?.focus(); }} />
           </div>
           {s2?.error ? <div className="err" role="alert">{s2.error}</div> : null}
-          {code ? <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}><span style={{ background: '#D4FA4F', padding: '3px 8px' }}><span className="wide" style={CAP}>Test mode:</span> your code is <span className="dot" style={{ fontSize: 17 }}>{code}</span></span></p> : null}
+          {code ? <p style={{ margin: 0, fontSize: 14, lineHeight: 1.5 }}><span style={{ background: 'var(--lt, #D4FA4F)', padding: '3px 8px' }}><span className="wide" style={CAP}>Test mode:</span> your code is <span className="dot" style={{ fontSize: 17 }}>{code}</span></span></p> : null}
         </section>
         <div style={{ padding: '26px 16px 0' }}>
           <button style={{ ...BTN, fontWeight: 400, height: 'auto', padding: '17px 0' }} disabled={p2}>{p2 ? 'Checking…' : 'Confirm'}</button>
         </div>
 
-        <p style={{ margin: '22px 20px 0', paddingTop: 14, borderTop: '1px solid #000000', fontFamily: "'EB Garamond', serif", fontSize: 18, lineHeight: 1.3 }}>{login ? 'Confirming logs you in on this phone. We only text about lists you’re part of.' : 'Confirming makes your insidejoke account, so friends know who’s celebrating. We only text about lists you’re part of.'}</p>
+        <p style={{ margin: '22px 20px 0', paddingTop: 14, borderTop: '1px solid var(--line, #000000)', fontFamily: "'EB Garamond', serif", fontSize: 18, lineHeight: 1.3 }}>{login ? 'Confirming logs you in on this phone. We only text about lists you’re part of.' : 'Confirming makes your insidejoke account, so friends know who’s celebrating. We only text about lists you’re part of.'}</p>
         <div style={{ height: 36 }} />
       </form>
     );
@@ -108,7 +108,7 @@ export default function SignupForm({ next = '/home', title = 'Sign up' }) {
         <span className="wide" style={CAP}>Step 1 of {steps}</span>
       </header>
       <div aria-hidden="true" style={{ display: 'flex', gap: 6, padding: '8px 20px 0' }}>
-        {Array.from({ length: steps }, (_, i) => <span key={i} style={{ flex: '1 1 0', height: 4, borderRadius: 999, background: i === 0 ? '#000000' : '#C9C9CF' }} />)}
+        {Array.from({ length: steps }, (_, i) => <span key={i} style={{ flex: '1 1 0', height: 4, borderRadius: 999, background: i === 0 ? 'var(--inv-bg, #000000)' : 'var(--lt, #C9C9CF)' }} />)}
       </div>
 
       <section style={{ position: 'relative', height: 230, marginTop: 10 }}>
@@ -127,10 +127,10 @@ export default function SignupForm({ next = '/home', title = 'Sign up' }) {
         <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 700, fontSize: 14 }}>Phone number
           <input name="phone" defaultValue={s1?.phone ? formatPhone(s1.phone) : ''} inputMode="tel" autoComplete="tel" placeholder="(917) 555-0123" required style={{ ...FIELD, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 20 }} />
         </label>
-        <span style={{ fontSize: 13, lineHeight: 1.4, color: '#3A3A3A' }}>Your number is your account. No passwords, ever. It’s also how thank-yous and invites reach you.</span>
+        <span style={{ fontSize: 13, lineHeight: 1.4, color: 'var(--sub, #3A3A3A)' }}>Your number is your account. No passwords, ever. It’s also how thank-yous and invites reach you.</span>
         {s1?.error ? <div className="err" role="alert">{s1.error}</div> : null}
         <button style={{ ...BTN, marginTop: 8 }} disabled={p1}>{p1 ? 'Sending…' : 'Text me a code'}</button>
-        <span style={{ fontSize: 13, color: '#3A3A3A', textAlign: 'center' }}>
+        <span style={{ fontSize: 13, color: 'var(--sub, #3A3A3A)', textAlign: 'center' }}>
           {login ? <>New here? <Link href={`/signup?next=${encodeURIComponent(next)}`} style={{ fontWeight: 700, textUnderlineOffset: 3 }}>Sign up</Link></> : <>Already on insidejoke? <Link href={`/login?next=${encodeURIComponent(next)}`} style={{ fontWeight: 700, textUnderlineOffset: 3 }}>Log in</Link></>}
         </span>
       </section>

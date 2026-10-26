@@ -30,8 +30,8 @@ const nice = (name = '', store = '') => {
   return /^[A-Z][a-z]/.test(h) ? h[0].toLowerCase() + h.slice(1) : h;
 };
 
-const Globe = () => <svg role="img" aria-label="Public" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3c3 3 3 15 0 18" /><path d="M12 3c-3 3-3 15 0 18" /></svg>;
-const Lock = () => <svg role="img" aria-label="Private" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
+const Globe = () => <svg role="img" aria-label="Public" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3c3 3 3 15 0 18" /><path d="M12 3c-3 3-3 15 0 18" /></svg>;
+const Lock = () => <svg role="img" aria-label="Private" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
 
 export default async function HistoryPage({ searchParams }) {
   const me = await currentUser();
@@ -68,51 +68,51 @@ export default async function HistoryPage({ searchParams }) {
   const sentTo = sent[0] ? (sent[0].method_label || 'your bank').replace(/\s+(checking|savings)\b/i, '') : '';
 
   return (
-    <main className="r3-full" style={{ background: '#ECECEF', color: '#000000', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+    <main className="r3-full" style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href="/wallet" aria-label="Back to your wallet" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href="/wallet" aria-label="Back to your wallet" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Only you see this</span>
         <span style={{ width: 44 }} />
       </header>
 
       <section style={{ position: 'relative', padding: '22px 20px 0' }}>
-        <R3Boil paths={tri(31)} color="#D8F75A" style={{ left: -10, top: 6 }} width={250} height={130} />
+        <R3Boil paths={tri(31)} color="#D8F75A" style={{ left: -10, top: 6 }} width={290} height={130} />
         <h1 style={{ position: 'relative', margin: '26px 0 0 8px', fontWeight: 400, fontSize: 46, letterSpacing: '-0.03em', lineHeight: 0.95 }}>Your <span className="serif" style={{ fontStyle: 'italic' }}>history</span></h1>
       </section>
 
       {sent.length ? (
-        <section role="status" style={{ margin: '30px 20px 0', padding: '14px 16px', background: '#13286B', color: '#D4FA4F', display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <section role="status" style={{ margin: '30px 20px 0', padding: '14px 16px', background: 'var(--dk, #13286B)', color: '#D4FA4F', display: 'flex', flexDirection: 'column', gap: 4 }}>
           <span style={{ fontWeight: 800, fontSize: 17 }}>Sent! {usd(sentNet)} is on its way to {sentTo}.</span>
-          <span style={{ fontSize: 13, color: '#FFFFFF' }}>Usually arrives in 1–2 business days.</span>
+          <span style={{ fontSize: 13, color: 'var(--inv-fg, #FFFFFF)' }}>Usually arrives in 1–2 business days.</span>
         </section>
       ) : null}
 
       <section aria-label="Transactions" style={{ padding: sent.length ? '22px 20px 0' : '44px 20px 0', display: 'flex', flexDirection: 'column' }}>
         {rows.map((r) => (
-          <div key={r.key} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '16px 0', borderTop: '1px solid #000000' }}>
+          <div key={r.key} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '16px 0', borderTop: '1px solid var(--line, #000000)' }}>
             {r.bank ? (
-              <span aria-hidden="true" style={{ width: 44, height: 44, flexShrink: 0, borderRadius: '50%', background: '#13286B', color: '#D4FA4F', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 17 }}>$</span>
+              <span aria-hidden="true" style={{ width: 44, height: 44, flexShrink: 0, borderRadius: '50%', background: 'var(--dk, #13286B)', color: '#D4FA4F', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 17 }}>$</span>
             ) : (
               <Link href={`/u/${r.person.id}`} aria-label={r.person.name || 'A friend'} style={{ flexShrink: 0, display: 'block', textDecoration: 'none' }}><Avatar user={r.person} size={44} /></Link>
             )}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}>
               <span style={{ fontSize: 15, lineHeight: 1.3 }}><span style={{ fontWeight: 800 }}>{r.from}</span><span style={{ padding: '0 6px' }}>→</span><span style={{ fontWeight: 800 }}>{r.to}</span></span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: '#4A4A4A' }}>{day(r.at)}<span aria-hidden="true">·</span>{r.priv ? <Lock /> : <Globe />}</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{day(r.at)}<span aria-hidden="true">·</span>{r.priv ? <Lock /> : <Globe />}</span>
               <span style={{ fontSize: 14, lineHeight: 1.35, marginTop: 3 }}>{r.what}</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
-              <span className="dot" style={{ fontSize: 18, color: r.plus ? '#2E7D3E' : '#000000' }}>{r.amt}</span>
-              <span style={{ width: 34, height: 34, background: r.iconBg || '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg role="img" aria-label={r.icon[0]} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#13286B" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={r.icon[1]} /></svg></span>
+              <span className="dot" style={{ fontSize: 18, color: r.plus ? '#2E7D3E' : 'var(--ink, #000000)' }}>{r.amt}</span>
+              <span style={{ width: 34, height: 34, background: r.iconBg || 'var(--surface, #FFFFFF)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg role="img" aria-label={r.icon[0]} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy-ink, #13286B)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={r.icon[1]} /></svg></span>
             </div>
           </div>
         ))}
         {rows.length === 0 ? (
-          <div style={{ padding: '18px 0', borderTop: '1px solid #000000', display: 'flex', flexDirection: 'column', gap: 8 }}>
+          <div style={{ padding: '18px 0', borderTop: '1px solid var(--line, #000000)', display: 'flex', flexDirection: 'column', gap: 8 }}>
             <span style={{ fontSize: 15, fontWeight: 800 }}>Nothing here yet</span>
-            <span style={{ fontSize: 14, lineHeight: 1.45, color: '#4A4A4A' }}>Gifts you give and get, and every cash-out, show up here the moment they happen.</span>
+            <span style={{ fontSize: 14, lineHeight: 1.45, color: 'var(--muted, #4A4A4A)' }}>Gifts you give and get, and every cash-out, show up here the moment they happen.</span>
           </div>
         ) : null}
-        <div style={{ borderTop: '1px solid #000000' }} />
+        <div style={{ borderTop: '1px solid var(--line, #000000)' }} />
       </section>
       <div style={{ height: 40 }} />
     </main>

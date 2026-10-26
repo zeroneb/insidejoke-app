@@ -9,7 +9,7 @@ import { savePayoutBank } from '@/lib/actions-r3';
 
 const V = '#3B12D9', Y = '#E6F98A';
 const BANKS = [['CH', 'Chase'], ['BA', 'Bank of America'], ['CI', 'Citi'], ['+', 'Another bank']];
-const field = { height: 52, border: `1.5px solid ${V}`, background: '#FFFFFF', color: '#000000', fontFamily: 'inherit', fontSize: 16, padding: '0 14px', boxSizing: 'border-box', width: '100%', borderRadius: 0 };
+const field = { height: 52, border: `1.5px solid ${V}`, background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', fontFamily: 'inherit', fontSize: 16, padding: '0 14px', boxSizing: 'border-box', width: '100%', borderRadius: 0 };
 const big = { height: 56, border: 0, background: V, color: Y, fontFamily: 'inherit', fontWeight: 800, fontSize: 17, borderRadius: 999, cursor: 'pointer', width: '100%', marginTop: 8 };
 const lbl = { display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 700, fontSize: 14 };
 
@@ -56,7 +56,7 @@ export default function PayoutForm({ next, current, legalName, acct }) {
             {BANKS.map(([i, name]) => {
               const on = bank === name;
               return (
-                <button key={name} type="button" role="radio" aria-checked={on} onClick={() => setBank(name)} style={{ display: 'flex', alignItems: 'center', gap: 12, border: `1.5px solid ${V}`, background: on ? '#FFFFFF' : 'transparent', color: V, fontFamily: 'inherit', padding: 12, cursor: 'pointer', textAlign: 'left' }}>
+                <button key={name} type="button" role="radio" aria-checked={on} onClick={() => setBank(name)} style={{ display: 'flex', alignItems: 'center', gap: 12, border: `1.5px solid ${V}`, background: on ? 'var(--surface, #FFFFFF)' : 'transparent', color: V, fontFamily: 'inherit', padding: 12, cursor: 'pointer', textAlign: 'left' }}>
                   <span className="wide" style={{ width: 40, height: 40, flexShrink: 0, background: V, color: Y, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14 }}>{i}</span>
                   <span style={{ flexGrow: 1, fontWeight: 700, fontSize: 16 }}>{name}</span>
                   <span className="dot" style={{ fontSize: 15 }}>{on ? masked : ''}</span>
@@ -87,8 +87,8 @@ export default function PayoutForm({ next, current, legalName, acct }) {
         <>
           <section className="pop" role="status" style={{ margin: '22px 16px 0', position: 'relative', background: V, color: Y, padding: '26px 18px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: 10, overflow: 'hidden' }}>
             <R3Boil paths={tri(17)} color="#FFFFFF" style={{ left: '50%', marginLeft: -95, top: 8, opacity: 0.14 }} width={190} height={130} />
-            <svg aria-hidden="true" style={{ position: 'relative' }} width="86" height="86" viewBox="0 0 100 100" fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path className="a3-draw" d="M50 9 C72 8 92 26 91 50 C90 74 72 92 49 91 C25 90 9 72 10 49 C11 27 30 10 53 9 M30 52 C36 57 41 62 44 67 C53 53 63 41 74 31 M76 33 L72 30" /></svg>
-            <span className="serif" style={{ position: 'relative', fontSize: 32, lineHeight: 1, color: '#FFFFFF' }}>You're <span style={{ fontWeight: 600 }}>all set</span></span>
+            <svg aria-hidden="true" style={{ position: 'relative' }} width="86" height="86" viewBox="0 0 100 100" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path className="a3-draw" d="M50 9 C72 8 92 26 91 50 C90 74 72 92 49 91 C25 90 9 72 10 49 C11 27 30 10 53 9 M30 52 C36 57 41 62 44 67 C53 53 63 41 74 31 M76 33 L72 30" /></svg>
+            <span className="serif" style={{ position: 'relative', fontSize: 32, lineHeight: 1, color: 'var(--inv-fg, #FFFFFF)' }}>You're <span style={{ fontWeight: 600 }}>all set</span></span>
             <span style={{ position: 'relative', fontSize: 15, lineHeight: 1.4 }}>{bank === 'Another bank' ? 'Your bank' : bank} {masked} is linked. You won't see this again.</span>
           </section>
           <p style={{ margin: '18px 20px 0', fontSize: 14, lineHeight: 1.45 }}>Fees come out only when you cash out: what the payments cost to process, our <span className="dot" style={{ fontSize: 16 }}>5%</span>, and a $2.50 cash-out fee. Your friends never pay a fee.</p>

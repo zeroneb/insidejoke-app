@@ -28,9 +28,9 @@ export default async function ThankGroupPage({ params }) {
   const suggestion = `Thank you for ${things}. This one felt good with you all.`;
   const token = list.reveal_token;
   return (
-    <main style={{ background: '#ECECEF', color: '#000', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <main style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000)', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <header className="a4-hdr">
-        <Link href={token ? `/reveal/${token}?open=1` : `/l/${slug}`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href={token ? `/reveal/${token}?open=1` : `/l/${slug}`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>{list.title}</span>
         <span style={{ width: 44 }} />
       </header>
@@ -41,14 +41,14 @@ export default async function ThankGroupPage({ params }) {
       <p style={{ margin: '2px 20px 0', fontSize: 15, lineHeight: 1.45 }}>One message reaches all {friends.length} {friends.length === 1 ? 'friend' : 'friends'} who chipped in. No group chat needed.</p>
       <section aria-label="Going to" style={{ padding: '18px 20px 0', display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         {friends.map((f) => (
-          <span key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid #000', borderRadius: 999, padding: '3px 10px 3px 3px', fontSize: 13, fontWeight: 700 }}><Avatar user={f} size={26} />{firstName(f)}</span>
+          <span key={f.id} style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid var(--edge, #000)', borderRadius: 999, padding: '3px 10px 3px 3px', fontSize: 13, fontWeight: 700 }}><Avatar user={f} size={26} />{firstName(f)}</span>
         ))}
       </section>
       <ThankGroupForm slug={slug} count={friends.length} suggestion={suggestion} name={firstName(me)} link={`${appUrl().replace(/^https?:\/\//, '')}/l/${slug}`} />
-      <section style={{ margin: '26px 20px 0', paddingTop: 18, borderTop: '1.5px solid #000', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <section style={{ margin: '26px 20px 0', paddingTop: 18, borderTop: '1.5px solid var(--line, #000)', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <p style={{ margin: 0, fontFamily: "'EB Garamond', serif", fontSize: 22, lineHeight: 1.25 }}>Your turn next time. What would <span style={{ fontStyle: 'italic' }}>you</span> love?</p>
-        <Link href="/lists/new" style={{ alignSelf: 'flex-start', textDecoration: 'none', border: '1.5px solid #000', background: '#D8F75A', fontWeight: 800, fontSize: 15, padding: '12px 18px', borderRadius: 999 }}>Start your own list</Link>
-        <span style={{ fontSize: 13, color: '#4A4A4A' }}>Maybe later. Your surprise stays in Archived as a keepsake.</span>
+        <Link href="/lists/new" style={{ alignSelf: 'flex-start', textDecoration: 'none', border: '1.5px solid var(--edge, #000)', background: 'var(--lt, #D8F75A)', fontWeight: 800, fontSize: 15, padding: '12px 18px', borderRadius: 999 }}>Start your own list</Link>
+        <span style={{ fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Maybe later. Your surprise stays in Archived as a keepsake.</span>
       </section>
       <div style={{ height: 40 }} />
     </main>

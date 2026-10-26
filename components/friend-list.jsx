@@ -60,14 +60,14 @@ export default function FriendList({ list, owner, items, me }) {
       {design ? (
         <>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
-            <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+            <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
             {me && list.visibility !== 'private' ? (
-              <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+              <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
             ) : <span style={{ width: 44 }} />}
           </header>
           <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: [name], photo: list.photo || null, handle: owner?.handle || null }} />
           <div style={{ padding: '10px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-            <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: '#000000', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
+            <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: 'var(--ink, #000000)', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
             <span className="dot" style={{ fontSize: 14, flexShrink: 0 }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
           </div>
         </>
@@ -125,30 +125,30 @@ export default function FriendList({ list, owner, items, me }) {
           <h2 className="wide" style={{ margin: 0, fontSize: 17, letterSpacing: '0.12em' }}>Wishes</h2>
           <span style={{ fontSize: 13, fontWeight: 700 }}>Get it or contribute</span>
         </div>
-        {wishes.length === 0 ? <p style={{ margin: 0, padding: '16px 0', borderTop: '1.5px solid #000000', fontSize: 14, color: '#4A4A4A' }}>Nothing here yet.</p> : null}
+        {wishes.length === 0 ? <p style={{ margin: 0, padding: '16px 0', borderTop: '1.5px solid var(--line, #000000)', fontSize: 14, color: 'var(--muted, #4A4A4A)' }}>Nothing here yet.</p> : null}
         <div className="dk-wishgrid">
         {wishes.map((it, i) => {
           const ink = tileInk(it.color);
           return (
-            <div key={it.id} className="dk-wish" style={{ borderTop: '1.5px solid #000000', padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <Link href={`/l/${slug}/i/${it.id}`} style={{ textDecoration: 'none', display: 'flex', gap: 14, color: '#000000' }}>
+            <div key={it.id} className="dk-wish" style={{ borderTop: '1.5px solid var(--line, #000000)', padding: '16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <Link href={`/l/${slug}/i/${it.id}`} style={{ textDecoration: 'none', display: 'flex', gap: 14, color: 'var(--ink, #000000)' }}>
                 <div style={{ position: 'relative', width: 92, height: 92, flexShrink: 0, background: it.color, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {it.photo ? <Halftone src={it.photo} ink={ink === '#FFFFFF' ? '#13286B' : ink} size={92} /> : <ItemSketch name={it.name} size={72} ink={ink} strokeWidth={2.6} />}
-                  {it.photo && !it.url ? <span style={{ position: 'absolute', left: 4, bottom: 4, background: '#000000', color: '#FFFFFF', fontSize: 10, fontWeight: 700, padding: '2px 5px' }}>{forName}'s photo</span> : null}
+                  {it.photo && !it.url ? <span style={{ position: 'absolute', left: 4, bottom: 4, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontSize: 10, fontWeight: 700, padding: '2px 5px' }}>{forName}'s photo</span> : null}
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 5, flexGrow: 1, minWidth: 0 }}>
                   <span style={{ fontSize: 17, lineHeight: 1.15, letterSpacing: '-0.015em' }}>{it.name}</span>
                   <span style={{ fontSize: 13 }}>{storeLine(it)}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 'auto' }}>
-                    <div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? '#2E9B47' : '#13286B', animationDelay: `${0.2 * (i + 1)}s` }} /></div>
+                    <div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'var(--surface2, #D7D7DC)', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? 'var(--lt, #2E9B47)' : 'var(--dk, #13286B)', animationDelay: `${0.2 * (i + 1)}s` }} /></div>
                     <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 500 }}>{wishLabel(it)}</span>
                   </div>
                 </div>
               </Link>
               {!it.covered ? (
                 <div style={{ display: 'flex', gap: 8, paddingLeft: 106 }}>
-                  <Link href={`/l/${slug}/i/${it.id}/give`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 44, borderRadius: 999, background: '#000000', color: '#FFFFFF', textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>Contribute</Link>
-                  <Link href={`/l/${slug}/i/${it.id}/give?mode=rest`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 44, borderRadius: 999, border: '1.5px solid #000000', boxSizing: 'border-box', color: '#000000', textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
+                  <Link href={`/l/${slug}/i/${it.id}/give`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 44, borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>Contribute</Link>
+                  <Link href={`/l/${slug}/i/${it.id}/give?mode=rest`} style={{ flex: '1 1 0', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 44, borderRadius: 999, border: '1.5px solid var(--edge, #000000)', boxSizing: 'border-box', color: 'var(--ink, #000000)', textDecoration: 'none', fontWeight: 700, fontSize: 14 }}>{it.pct === 0 ? 'Get it' : 'Cover the rest'}</Link>
                 </div>
               ) : null}
             </div>
@@ -157,12 +157,12 @@ export default function FriendList({ list, owner, items, me }) {
         </div>
       </section>
 
-      <div style={{ padding: '16px 20px 40px', borderTop: '1.5px solid #000000', margin: '0 20px' }}>
+      <div style={{ padding: '16px 20px 40px', borderTop: '1.5px solid var(--line, #000000)', margin: '0 20px' }}>
         <p className="serif" style={{ margin: 0, fontSize: 19, lineHeight: 1.3, paddingTop: 14 }}>Tap anything to get it for {forName} or chip in. 100% goes to {forName}, who sees your note, never the amount.</p>
       </div>
 
       {!me ? (
-        <div style={{ margin: '0 20px', padding: '18px 0 36px', borderTop: '1.5px solid #000000', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ margin: '0 20px', padding: '18px 0 36px', borderTop: '1.5px solid var(--line, #000000)', display: 'flex', flexDirection: 'column', gap: 10 }}>
           <span style={{ fontSize: 14, lineHeight: 1.4 }}>Takes a minute: your name and your number. No password.</span>
           <Link href={`/signup?next=/l/${slug}`} className="btn" style={{ height: 54, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Sign up to give</Link>
         </div>

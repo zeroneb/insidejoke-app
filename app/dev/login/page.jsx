@@ -24,7 +24,7 @@ export default async function DevLogin() {
         ) : null}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {users.map((u) => (
-            <form key={u.id} action={devLogin} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: '1px solid #000' }}>
+            <form key={u.id} action={devLogin} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderTop: '1px solid var(--line, #000)' }}>
               <input type="hidden" name="userId" value={u.id} />
               <Avatar user={u} size={36} />
               <span style={{ flexGrow: 1, fontSize: 15 }}>{u.name || '(no name)'} <span className="muted" style={{ fontSize: 12 }}>{u.phone}</span></span>

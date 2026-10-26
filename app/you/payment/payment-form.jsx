@@ -13,13 +13,13 @@ export default function PaymentForm({ next, current }) {
   const pay = usePayment(current?.kind || 'apple');
   const [brand, digits] = splitPayLabel(current?.label || '');
   return (
-    <form action={action} style={{ color: '#000000', display: 'flex', flexDirection: 'column' }}>
+    <form action={action} style={{ color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column' }}>
       <input type="hidden" name="payKind" value={pay.kind} />
       <input type="hidden" name="last4" value={pay.last4} />
       <input type="hidden" name="cardFirst" value={pay.first} />
       <input type="hidden" name="next" value={next} />
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href={next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href={next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>{current ? 'How you pay' : 'One-time setup'}</span>
         <div style={{ width: 44 }} />
       </header>
@@ -27,9 +27,9 @@ export default function PaymentForm({ next, current }) {
         <h1 style={{ margin: 0, fontWeight: 400, fontSize: 44, lineHeight: 0.98, letterSpacing: '-0.04em' }}>{current ? <>How you <span className="serif" style={{ fontStyle: 'italic' }}>pay</span></> : <>Set up paying <span className="serif" style={{ fontStyle: 'italic' }}>once</span></>}</h1>
         <p style={{ margin: '12px 0 0', fontSize: 16, lineHeight: 1.4 }}>After this, every gift is one tap.</p>
       </section>
-      <section style={{ position: 'relative', margin: '22px 16px 0', background: '#13286B', color: '#FFFFFF', height: 210, overflow: 'hidden' }}>
+      <section style={{ position: 'relative', margin: '22px 16px 0', background: 'var(--dk, #13286B)', color: 'var(--inv-fg, #FFFFFF)', height: 210, overflow: 'hidden' }}>
         <R3Boil paths={tri(22)} color="#D8F75A" style={{ left: '50%', marginLeft: -139, top: 18 }} width={280} height={175} />
-        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: '#000000', textAlign: 'center', padding: '0 70px' }}>
+        <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: 'var(--ink, #000000)', textAlign: 'center', padding: '0 70px' }}>
           <span style={{ fontSize: 13 }}>{current ? 'You give with' : 'Nothing saved yet'}</span>
           <span className={digits ? 'dot' : ''} style={{ fontSize: digits ? 44 : 30, lineHeight: 1, fontWeight: digits ? 900 : 400 }}>{current ? (digits || brand) : 'Pick one'}</span>
           <span style={{ fontSize: 13 }}>{current && digits ? brand : 'Saved for every gift'}</span>
@@ -41,11 +41,11 @@ export default function PaymentForm({ next, current }) {
       </div>
       {state?.error ? <p className="err" style={{ margin: '14px 20px 0' }}>{state.error}</p> : null}
       <div style={{ padding: '22px 16px 0' }}>
-        <button type="submit" disabled={pending || (pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 4)} style={{ width: '100%', border: 0, background: '#000000', color: '#FFFFFF', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || (pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 4) ? 0.5 : 1 }}>
+        <button type="submit" disabled={pending || (pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 4)} style={{ width: '100%', border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontSize: 17, padding: '17px 0', borderRadius: 999, cursor: 'pointer', opacity: pending || (pay.kind === 'card' && pay.card.replace(/\D/g, '').length < 4) ? 0.5 : 1 }}>
           {pending ? 'Saving…' : stripeClientOn() ? 'Save' : pay.kind === 'apple' ? 'Use Apple Pay' : pay.kind === 'card' ? 'Save this card' : 'Link this bank'}
         </button>
       </div>
-      <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: '#3A3A3A' }}>Saved for next time. Change it anytime in settings.</p>
+      <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 13, color: 'var(--sub, #3A3A3A)' }}>Saved for next time. Change it anytime in settings.</p>
       <div style={{ height: 36 }} />
     </form>
   );

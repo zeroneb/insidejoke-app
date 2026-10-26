@@ -26,7 +26,7 @@ function forWhat(list) {
 
 function Gift({ size = 210 }) {
   return (
-    <svg aria-hidden="true" style={{ position: 'relative' }} width={size} height={size} viewBox="0 0 200 200" fill="none" stroke="#000" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
+    <svg aria-hidden="true" style={{ position: 'relative' }} width={size} height={size} viewBox="0 0 200 200" fill="none" stroke="var(--ink, #000)" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M38 96 C37 120 38 150 40 180 C80 184 124 184 162 179 C164 150 164 122 162 96" /><path d="M36 98 C80 101 122 101 164 97" strokeWidth="2.4" />
       <path d="M92 99 C93 128 92 156 91 182 M108 99 C109 128 108 156 108 182" /><path d="M120 112 L150 110 M121 124 L151 122 M121 136 L151 134 M122 148 L151 147 M122 160 L151 159 M50 112 L80 111 M50 124 L80 123" strokeWidth="2" />
       <path d="M26 78 C70 70 130 66 176 70 L178 96 C130 92 72 96 28 102 Z" /><path d="M24 76 C60 69 110 64 150 66" strokeWidth="2" /><path d="M92 71 L94 99 M108 69 L110 97" />
@@ -41,11 +41,11 @@ function Gift({ size = 210 }) {
 function SignUpView({ list, people, organiser, me, token }) {
   const name = whoFor(list);
   return (
-    <main className="r4-sky" style={{ background: '#A9CDF5', color: '#000', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <main className="r4-sky" style={{ background: 'var(--lt, #A9CDF5)', color: 'var(--ink, #000)', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <section style={{ position: 'relative', background: RUST, padding: '22px 20px 26px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <span className="wide" style={{ fontSize: 11, letterSpacing: '0.22em', color: '#fff' }}>insidejoke</span>
+        <span className="wide" style={{ fontSize: 11, letterSpacing: '0.22em', color: 'var(--inv-fg, #fff)' }}>insidejoke</span>
         <div style={{ marginTop: 10, maxWidth: '100%' }}>
-          <svg role="img" aria-label="A hand-drawn gift box with its lid lifting" width="350" height="300" style={{ maxWidth: '100%', height: 'auto' }} viewBox="0 0 300 260" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+          <svg role="img" aria-label="A hand-drawn gift box with its lid lifting" width="350" height="300" style={{ maxWidth: '100%', height: 'auto' }} viewBox="0 0 300 260" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
             <path d="M74 132 C72 168 73 204 76 238 C124 243 178 243 226 236 C229 202 229 166 227 130" /><path d="M70 134 C120 138 182 137 231 131" />
             <path d="M141 136 C143 170 142 206 140 242 M159 136 C161 172 160 206 160 241" />
             <path d="M172 150 L218 147 M173 162 L219 159 M173 174 L219 172 M174 186 L220 184 M174 198 L220 196 M175 210 L220 209 M176 222 L220 221" strokeWidth="2" /><path d="M84 150 L104 149 M84 162 L101 161" strokeWidth="2" />
@@ -69,7 +69,7 @@ function SignUpView({ list, people, organiser, me, token }) {
       </div>
       <p style={{ margin: '10px 20px 0', textAlign: 'center', fontSize: 14 }}>From {firstName(organiser)}{people.length > 1 ? ` and ${people.length - 1} ${people.length - 1 === 1 ? 'friend' : 'friends'}` : ''}</p>
       {me && me.phone !== list.recipient_phone ? (
-        <p style={{ margin: '18px 16px 0', background: '#fff', padding: '14px 16px', fontSize: 14, lineHeight: 1.4 }}>You're signed in as {firstName(me)}. This surprise is for {name}, so only {name}'s number can open it.</p>
+        <p style={{ margin: '18px 16px 0', background: 'var(--surface, #fff)', padding: '14px 16px', fontSize: 14, lineHeight: 1.4 }}>You're signed in as {firstName(me)}. This surprise is for {name}, so only {name}'s number can open it.</p>
       ) : null}
       <RevealSignup phone={list.recipient_phone} name={name} next={`/reveal/${token}`} masked={maskPhone(list.recipient_phone)} auto={!me} />
       <p style={{ margin: '22px 20px 0', textAlign: 'center', fontFamily: "'EB Garamond', serif", fontSize: 18, lineHeight: 1.3 }}>Your number becomes your insidejoke account. No password, nothing else to fill in.</p>
@@ -105,7 +105,7 @@ export default async function RevealPage({ params, searchParams }) {
   const confetti = Array.from({ length: 22 }, (_, i) => { const k = i % 3; return { x: (i * 53 + 9) % 380, w: k === 0 ? 12 : 7, h: k === 0 ? 12 : 18, r: k === 0 ? '50%' : 2, c: ['#000', '#fff', '#FFE34D', '#13286B', '#96E084'][i % 5], d: `${(-(i * 0.45) % 6).toFixed(2)}s`, dur: `${(5 + (i % 4) * 0.7).toFixed(1)}s` }; });
 
   return (
-    <main className="a4-heat r4-heat" style={{ position: 'relative', minHeight: '100vh', color: '#000', overflow: 'hidden', backgroundImage: HEAT }}>
+    <main className="a4-heat r4-heat" style={{ position: 'relative', minHeight: '100vh', color: 'var(--ink, #000)', overflow: 'hidden', backgroundImage: HEAT }}>
       <svg aria-hidden="true" style={{ position: 'absolute', inset: 0, mixBlendMode: 'overlay', opacity: 0.45, pointerEvents: 'none' }} width="100%" height="100%"><filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="100%" height="100%" filter="url(#g)" /></svg>
       {opened ? confetti.map((c, i) => <div key={i} aria-hidden="true" className="a4-fall" style={{ position: 'absolute', left: c.x, top: 0, width: c.w, height: c.h, borderRadius: c.r, background: c.c, animationDelay: c.d, animationDuration: c.dur, pointerEvents: 'none' }} />) : null}
       <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
@@ -115,8 +115,8 @@ export default async function RevealPage({ params, searchParams }) {
         </header>
         <h1 className="serif" style={{ margin: '60px 0 0', padding: '0 22px', fontWeight: 400, fontSize: 64, lineHeight: 0.92, letterSpacing: '-0.02em' }}>Your friends have a <span style={{ fontStyle: 'italic' }}>surprise</span> for you</h1>
         <div style={{ margin: '26px 22px 0', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 4 }}>
-          <span style={{ background: '#000', color: '#fff', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line1}</span>
-          <span style={{ background: '#000', color: '#fff', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line2}</span>
+          <span style={{ background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line1}</span>
+          <span style={{ background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)', fontSize: 20, fontWeight: 600, padding: '4px 8px' }}>{line2}</span>
         </div>
 
         {!opened ? (
@@ -126,7 +126,7 @@ export default async function RevealPage({ params, searchParams }) {
               <Boil seed={5} fill="#D8F75A" left={-45} top={-35} width={300} height={280} />
               <Gift />
             </div>
-            <button style={{ border: 0, background: '#000', color: '#fff', fontFamily: 'inherit', fontWeight: 800, fontSize: 19, padding: '18px 42px', borderRadius: 999, cursor: 'pointer' }}>Open it</button>
+            <button style={{ border: 0, background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)', fontFamily: 'inherit', fontWeight: 800, fontSize: 19, padding: '18px 42px', borderRadius: 999, cursor: 'pointer' }}>Open it</button>
             {!list.sent_at ? <span style={{ fontSize: 13, fontWeight: 600 }}>It isn't quite ready yet, but you can peek.</span> : null}
           </form>
         ) : (
@@ -149,11 +149,11 @@ export default async function RevealPage({ params, searchParams }) {
               })}
             </section>
             {notes.length ? (
-              <section className="a4-pop" style={{ position: 'relative', margin: '24px 16px 0', background: '#fff', padding: '22px 18px', display: 'flex', flexDirection: 'column', gap: 14, animationDelay: '.2s' }}>
+              <section className="a4-pop" style={{ position: 'relative', margin: '24px 16px 0', background: 'var(--surface, #fff)', padding: '22px 18px', display: 'flex', flexDirection: 'column', gap: 14, animationDelay: '.2s' }}>
                 <svg aria-hidden="true" className="a4-spin" style={{ position: 'absolute', right: -40, top: -40 }} width="130" height="130" viewBox="0 0 130 130"><defs><path id="r" d="M65 65 m-50 0 a50 50 0 1 1 100 0 a50 50 0 1 1 -100 0" /></defs><text style={{ fontFamily: "'Archivo', sans-serif", fontWeight: 800, fontSize: 12, fill: '#B53CF0', letterSpacing: 1 }}><textPath href="#r">{`HAPPY ${forWhat(list).replace(/^your /, '').toUpperCase()} ${name.toUpperCase()} · HAPPY ${forWhat(list).replace(/^your /, '').toUpperCase()} ·`}</textPath></text></svg>
                 <h2 style={{ margin: 0, fontWeight: 400, fontSize: 28, letterSpacing: '-0.02em' }}>Happy {forWhat(list).replace(/^your /, '')}, {name}</h2>
                 {notes.map((n) => (
-                  <div key={n.id} style={{ borderTop: '1.5px solid #000', paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
+                  <div key={n.id} style={{ borderTop: '1.5px solid var(--line, #000)', paddingTop: 10, display: 'flex', flexDirection: 'column', gap: 4 }}>
                     {n.media ? <img src={n.media} alt={`Photo from ${firstName(n)}`} style={{ width: '100%', maxHeight: 260, objectFit: 'cover' }} /> : null}
                     {n.body ? <span style={{ fontSize: 16, lineHeight: 1.35 }}>{n.body}</span> : null}
                     <span style={{ fontSize: 13, fontWeight: 800 }}>{firstName(n)}</span>
@@ -165,9 +165,9 @@ export default async function RevealPage({ params, searchParams }) {
               <section className="a4-pop" style={{ margin: '12px 16px 0', display: 'flex', flexDirection: 'column', gap: 8, animationDelay: '.35s' }}>
                 {voices.map((v, i) => <VoicePlayer key={v.id} src={v.media} who={firstName(v)} dark seed={[37, 23, 29, 41][i % 4]} />)}
                 {videos.map((v) => (
-                  <div key={v.id} style={{ position: 'relative', background: '#13286B' }}>
+                  <div key={v.id} style={{ position: 'relative', background: 'var(--dk, #13286B)' }}>
                     <video src={v.media} controls playsInline preload="metadata" style={{ display: 'block', width: '100%', maxHeight: 360 }} />
-                    <span style={{ position: 'absolute', left: 12, top: 10, color: '#fff', fontSize: 13, fontWeight: 700, background: 'rgba(0,0,0,.5)', padding: '2px 6px' }}>Video from {firstName(v)}</span>
+                    <span style={{ position: 'absolute', left: 12, top: 10, color: 'var(--inv-fg, #fff)', fontSize: 13, fontWeight: 700, background: 'rgba(0,0,0,.5)', padding: '2px 6px' }}>Video from {firstName(v)}</span>
                   </div>
                 ))}
               </section>
@@ -175,13 +175,13 @@ export default async function RevealPage({ params, searchParams }) {
             <section className="a4-pop" style={{ padding: '26px 16px 40px', display: 'flex', flexDirection: 'column', gap: 10, animationDelay: '.5s' }}>
               {list.claimed_at ? (
                 <>
-                  <Link href="/wallet" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: '#000', color: '#fff', fontWeight: 800, fontSize: 18, padding: '18px 0', borderRadius: 999 }}>Go to your wallet</Link>
-                  <Link href={`/l/${list.slug}/thank-group`} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', border: '2px solid #000', fontWeight: 800, fontSize: 16, padding: '15px 0', borderRadius: 999 }}>Thank everyone</Link>
+                  <Link href="/wallet" style={{ display: 'block', textAlign: 'center', textDecoration: 'none', background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)', fontWeight: 800, fontSize: 18, padding: '18px 0', borderRadius: 999 }}>Go to your wallet</Link>
+                  <Link href={`/l/${list.slug}/thank-group`} style={{ display: 'block', textAlign: 'center', textDecoration: 'none', border: '2px solid var(--edge, #000)', fontWeight: 800, fontSize: 16, padding: '15px 0', borderRadius: 999 }}>Thank everyone</Link>
                 </>
               ) : (
                 <form action={claimReveal} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <input type="hidden" name="token" value={token} />
-                  <button style={{ border: 0, background: '#000', color: '#fff', fontFamily: 'inherit', fontWeight: 800, fontSize: 18, padding: '18px 0', borderRadius: 999, cursor: 'pointer' }}>Claim your gifts</button>
+                  <button style={{ border: 0, background: 'var(--inv-bg, #000)', color: 'var(--inv-fg, #fff)', fontFamily: 'inherit', fontWeight: 800, fontSize: 18, padding: '18px 0', borderRadius: 999, cursor: 'pointer' }}>Claim your gifts</button>
                   <span style={{ textAlign: 'center', fontSize: 13, fontWeight: 600 }}>What they gave moves to your wallet. Cash out or buy them yourself.</span>
                 </form>
               )}

@@ -25,7 +25,7 @@ export default async function EditItemPage({ params }) {
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px', gap: 8 }}>
-        <Link href={`/l/${slug}/i/${it.id}`} aria-label="Close without saving" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
+        <Link href={`/l/${slug}/i/${it.id}`} aria-label="Close without saving" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
         <span style={{ fontWeight: 800, fontSize: 15, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Edit in "{list.title}"</span>
         <div style={{ width: 44, flexShrink: 0 }} />
       </header>
@@ -34,11 +34,11 @@ export default async function EditItemPage({ params }) {
         <span style={{ fontWeight: 500, fontSize: 13 }}>{it.unlimited ? 'Unlimited treat' : it.quantity > 1 ? `A set of ${it.quantity}` : 'Just one'} · added {added}</span>
         <div style={{ marginTop: 10, display: 'flex', flexDirection: 'column', gap: 10 }}>
           {it.unlimited ? (
-            <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>Given ×{it.timesTreated}.</b> {it.givers ? `${fr(it.givers)} sent one.` : 'Nobody has sent one yet.'}</span>
+            <span style={{ fontSize: 14, color: 'var(--sub, #3A3A3A)' }}><b style={{ color: 'var(--ink, #000000)' }}>Given ×{it.timesTreated}.</b> {it.givers ? `${fr(it.givers)} sent one.` : 'Nobody has sent one yet.'}</span>
           ) : (
             <>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: '#D7D7DC', overflow: 'hidden' }}><div style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? '#2E9B47' : '#5546A0' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
-              <span style={{ fontSize: 14, color: '#3A3A3A' }}><b style={{ color: '#000000' }}>{lead}</b> {it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'is' : 'are'} in.` : 'Nobody has given yet.'}</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'var(--surface2, #D7D7DC)', overflow: 'hidden' }}><div style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? 'var(--lt, #2E9B47)' : 'var(--dk, #5546A0)' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
+              <span style={{ fontSize: 14, color: 'var(--sub, #3A3A3A)' }}><b style={{ color: 'var(--ink, #000000)' }}>{lead}</b> {it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'is' : 'are'} in.` : 'Nobody has given yet.'}</span>
             </>
           )}
         </div>

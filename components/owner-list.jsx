@@ -43,9 +43,9 @@ export function ItemRow({ it, sub, href, right, children, border = true }) {
       <span className="dot" style={{ fontSize: 16, flexShrink: 0 }}>{it.unlimited ? `×${it.timesTreated}` : it.covered ? 'DONE' : `${it.pct}%`}</span>
     </>
   );
-  const row = { display: 'flex', gap: 12, alignItems: 'center', padding: '12px 0', textDecoration: 'none', color: '#000000' };
+  const row = { display: 'flex', gap: 12, alignItems: 'center', padding: '12px 0', textDecoration: 'none', color: 'var(--ink, #000000)' };
   return (
-    <div style={{ position: 'relative', borderTop: border ? '1.5px solid #000000' : 0 }}>
+    <div style={{ position: 'relative', borderTop: border ? '1.5px solid var(--line, #000000)' : 0 }}>
       {href ? <Link href={href} style={row}>{inner}{right}</Link> : <div style={row}>{inner}{right}</div>}
       {children}
     </div>
@@ -77,14 +77,14 @@ export default function OwnerList({ list, items, me, blast = null }) {
       {design ? (
         <>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
-            <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
-            <Link href={`/l/${slug}/share`} style={{ border: '2px solid #000000', color: '#000000', textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
+            <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+            <Link href={`/l/${slug}/share`} style={{ border: '2px solid var(--edge, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
           </header>
           <div style={archived ? { filter: 'grayscale(1)', opacity: 0.7 } : undefined}>
             <ListCover slug={slug} design={design} title={list.title} treat={design.key === 'treat'} ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: ['You'], photo: list.photo || null, handle: me?.handle || null }} />
           </div>
           <p style={{ margin: '14px 0 0', padding: '0 20px', fontWeight: 800, fontSize: 14 }}>{status}</p>
-          {archived ? <form action={setListArchived} style={{ margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid #000000', borderRadius: 999, background: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: '#000' }}>Unarchive</button></form> : null}
+          {archived ? <form action={setListArchived} style={{ margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid var(--edge, #000000)', borderRadius: 999, background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: 'var(--ink, #000)' }}>Unarchive</button></form> : null}
         </>
       ) : (
         <section style={{ position: 'relative', background: bg, color: cv.chrome, height: 300, overflow: 'hidden', flexShrink: 0 }}>
@@ -102,19 +102,19 @@ export default function OwnerList({ list, items, me, blast = null }) {
           </svg>
           <Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} width={320} height={190} style={{ left: -24, top: 64 }} />
           <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={long ? 40 : 50} /></h1>
-          <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: archived ? '#FFFFFF' : cv.title, fontWeight: 800, fontSize: 14 }}>{status}</p>
-          {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid #000000', borderRadius: 999, background: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: '#000' }}>Unarchive</button></form> : null}
+          <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: archived ? 'var(--inv-fg, #FFFFFF)' : cv.title, fontWeight: 800, fontSize: 14 }}>{status}</p>
+          {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid var(--edge, #000000)', borderRadius: 999, background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: 'var(--ink, #000)' }}>Unarchive</button></form> : null}
         </section>
       )}
 
       {blast ? (
-        <section aria-label="Pinned text blast" style={{ margin: '16px 20px 0', background: '#13286B', color: '#FFFFFF', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+        <section aria-label="Pinned text blast" style={{ margin: '16px 20px 0', background: 'var(--dk, #13286B)', color: 'var(--inv-fg, #FFFFFF)', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>
           <Avatar user={blast} size={36} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 6, flexGrow: 1, minWidth: 0 }}>
             <span className="wide" style={{ fontSize: 10, letterSpacing: '0.18em', color: '#D8F75A' }}>Pinned · from {blast.name || 'the team'}</span>
             <span style={{ fontSize: 17, lineHeight: 1.3 }}>{blast.body}</span>
           </div>
-          <form action={unpinBlastAction}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="blastId" value={blast.id} /><button aria-label="Unpin" className="iconbtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></button></form>
+          <form action={unpinBlastAction}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="blastId" value={blast.id} /><button aria-label="Unpin" className="iconbtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></button></form>
         </section>
       ) : null}
 
@@ -122,18 +122,18 @@ export default function OwnerList({ list, items, me, blast = null }) {
       <section style={{ padding: '14px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 6 }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 16, letterSpacing: '0.12em' }}>On the list</h2>
-          <Link href={`/l/${slug}/add`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '10px 0', color: '#000000' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
+          <Link href={`/l/${slug}/add`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '10px 0', color: 'var(--ink, #000000)' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
         </div>
-        <div style={{ borderBottom: '1.5px solid #000000' }}>
+        <div style={{ borderBottom: '1.5px solid var(--line, #000000)' }}>
           {items.map((it) => <ItemRow key={it.id} it={it} sub={rowSub(it)} href={`/l/${slug}/i/${it.id}`} />)}
-          {!items.length ? <Link href={`/l/${slug}/add`} style={{ display: 'block', padding: '18px 0', borderTop: '1.5px solid #000000', fontSize: 14, color: '#000000' }}>Nothing on it yet. Add the first thing.</Link> : null}
+          {!items.length ? <Link href={`/l/${slug}/add`} style={{ display: 'block', padding: '18px 0', borderTop: '1.5px solid var(--line, #000000)', fontSize: 14, color: 'var(--ink, #000000)' }}>Nothing on it yet. Add the first thing.</Link> : null}
         </div>
       </section>
 
       {showNudge ? (
-        <section className="pop" style={{ margin: '26px 16px 0', background: '#96E084', display: 'flex', flexDirection: 'column' }}>
+        <section className="pop" style={{ margin: '26px 16px 0', background: 'var(--lt, #96E084)', display: 'flex', flexDirection: 'column' }}>
           <div style={{ height: 210, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg className="draw-g" role="img" aria-label="Hand-drawn bagel" width="220" height="190" viewBox="0 0 220 190" fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg className="draw-g" role="img" aria-label="Hand-drawn bagel" width="220" height="190" viewBox="0 0 220 190" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <defs><filter id="r2wob" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5" /><feDisplacementMap in="SourceGraphic" scale="4" /></filter></defs>
               <g filter="url(#r2wob)">
                 <path d="M30 112 C26 72 70 48 112 50 C158 52 196 78 190 114 C184 148 140 162 104 160 C62 158 34 144 30 112 Z" />
@@ -145,23 +145,23 @@ export default function OwnerList({ list, items, me, blast = null }) {
               </g>
             </svg>
           </div>
-          <div style={{ background: '#FFFFFF', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div style={{ background: 'var(--surface, #FFFFFF)', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             <span style={{ fontSize: 24, lineHeight: 1.05, letterSpacing: '-0.02em' }}>Some things you never get <span className="serif" style={{ fontStyle: 'italic' }}>tired of.</span></span>
             <span style={{ fontSize: 15, lineHeight: 1.4 }}>Make one unlimited and friends can give it again and again.</span>
             <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-              <Link href={`/l/${slug}/add?treat=1`} style={{ flex: '1 1 0', textAlign: 'center', textDecoration: 'none', background: '#000000', color: '#FFFFFF', fontWeight: 700, fontSize: 15, padding: '14px 0', borderRadius: 999 }}>Add an unlimited item</Link>
+              <Link href={`/l/${slug}/add?treat=1`} style={{ flex: '1 1 0', textAlign: 'center', textDecoration: 'none', background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontWeight: 700, fontSize: 15, padding: '14px 0', borderRadius: 999 }}>Add an unlimited item</Link>
               <form action={dismissNudge} style={{ display: 'flex' }}>
                 <input type="hidden" name="slug" value={slug} />
-                <button style={{ flexShrink: 0, border: '1.5px solid #000000', background: 'transparent', fontFamily: 'inherit', fontSize: 15, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: '#000000' }}>Not now</button>
+                <button style={{ flexShrink: 0, border: '1.5px solid var(--edge, #000000)', background: 'transparent', fontFamily: 'inherit', fontSize: 15, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: 'var(--ink, #000000)' }}>Not now</button>
               </form>
             </div>
           </div>
         </section>
       ) : !hasTreat && list.nudge_dismissed ? (
-        <p style={{ margin: '22px 20px 0', fontSize: 13, color: '#4A4A4A' }}>You can make any item unlimited from Add, anytime.</p>
+        <p style={{ margin: '22px 20px 0', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>You can make any item unlimited from Add, anytime.</p>
       ) : null}
 
-      <Link href={`/l/${slug}/manage`} style={{ alignSelf: 'flex-start', margin: '18px 20px 0', fontSize: 13, fontWeight: 700, color: '#000000', padding: '10px 0' }}>Manage this list</Link>
+      <Link href={`/l/${slug}/manage`} style={{ alignSelf: 'flex-start', margin: '18px 20px 0', fontSize: 13, fontWeight: 700, color: 'var(--ink, #000000)', padding: '10px 0' }}>Manage this list</Link>
       <div style={{ height: 40 }} />
     </main>
   );

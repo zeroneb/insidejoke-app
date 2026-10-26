@@ -18,13 +18,13 @@ export function Avatar({ user, size = 40, owner = false }) {
   return (
     <span className="avatar" style={{ width: size, height: size }}>
       <svg aria-hidden="true" width={size} height={size} viewBox="0 0 200 200"><path d={shape} fill={owner ? '#B36EE0' : user?.color || '#D8F75A'} /></svg>
-      <span className={owner ? 'serif' : ''} style={{ fontSize: size * (owner ? 0.5 : 0.4), color: owner ? '#D8F75A' : '#000', fontWeight: owner ? 400 : 800 }}>{initial}</span>
+      <span className={owner ? 'serif' : ''} style={{ fontSize: size * (owner ? 0.5 : 0.4), color: owner ? '#D8F75A' : 'var(--ink, #000)', fontWeight: owner ? 400 : 800 }}>{initial}</span>
     </span>
   );
 }
 
 export function Header({ back, title, right, light }) {
-  const ink = light ? '#FFFFFF' : '#000000';
+  const ink = light ? '#FFFFFF' : 'var(--ink, #000000)';
   return (
     <header className="hdr">
       {back ? (
@@ -40,7 +40,7 @@ export function Header({ back, title, right, light }) {
 
 export function Bar({ pct, color = '#13286B' }) {
   return (
-    <div className="bar"><div className="grow" style={{ width: `${pct}%`, background: pct >= 100 ? '#2E9B47' : color }} /></div>
+    <div className="bar"><div className="grow" style={{ width: `${pct}%`, background: pct >= 100 ? 'var(--lt, #2E9B47)' : color }} /></div>
   );
 }
 
@@ -71,7 +71,7 @@ export function ItemSketch({ name = '', size = 72, ink = '#FFFFFF', unlimited, s
 export function Strip({ text, delay, style }) {
   const run = Array.from({ length: 16 }, () => text).join(' · ') + ' · ';
   return (
-    <div aria-hidden="true" style={{ background: '#D4FA4F', color: '#13286B', height: 28, overflow: 'hidden', display: 'flex', alignItems: 'center', ...style }}>
+    <div aria-hidden="true" style={{ background: 'var(--lt, #D4FA4F)', color: 'var(--navy-ink, #13286B)', height: 28, overflow: 'hidden', display: 'flex', alignItems: 'center', ...style }}>
       <div className="marq wide" style={{ whiteSpace: 'nowrap', fontSize: 11, letterSpacing: '0.18em', animationDuration: '30s', animationDelay: delay }}>{run}{run}</div>
     </div>
   );
@@ -101,7 +101,7 @@ export function Dial({ pct = 0, size = 132, label, seed = 6 }) {
         <circle className="ip-dialarc" cx="66" cy="66" r={r} fill="none" stroke="#D8F75A" strokeWidth="12" strokeLinecap="round" strokeDasharray={`${dash} 1000`} />
       </svg>
       <Blob seed={seed} color="#D8F75A" style={{ left: size * 22 / 132, top: size * 22 / 132 }} width={size * 88 / 132} height={size * 88 / 132} />
-      <span className="dot" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: '#13286B' }}>{label ?? `${pct}%`}</span>
+      <span className="dot" style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, color: 'var(--navy-ink, #13286B)' }}>{label ?? `${pct}%`}</span>
     </div>
   );
 }
@@ -109,7 +109,7 @@ export function Dial({ pct = 0, size = 132, label, seed = 6 }) {
 // The item photo exactly as the store shows it: no filters, on white, whole product visible.
 export function Halftone({ src, fit = 'contain' }) {
   return (
-    <span aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'block', background: '#FFFFFF' }}>
+    <span aria-hidden="true" style={{ position: 'absolute', inset: 0, display: 'block', background: 'var(--surface, #FFFFFF)' }}>
       <img src={src} alt="" referrerPolicy="no-referrer" style={{ width: '100%', height: '100%', objectFit: fit, display: 'block' }} />
     </span>
   );
@@ -154,7 +154,7 @@ export function PosterSketch({ name = '', unlimited = false, seed = 7 }) {
   );
   if (p) {
     return (
-      <svg role="img" aria-label={`One-line sketch of ${name}`} style={{ position: 'absolute', right: p.right, top: p.top }} width={p.w} height={p.h} viewBox={p.vb} fill="none" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <svg role="img" aria-label={`One-line sketch of ${name}`} style={{ position: 'absolute', right: p.right, top: p.top }} width={p.w} height={p.h} viewBox={p.vb} fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
         {filter}
         <g filter={`url(#${fid})`}>{p.paths.map((d, i) => <path key={i} d={d} strokeWidth={i >= 7 ? 2.2 : 3} />)}</g>
       </svg>
@@ -163,7 +163,7 @@ export function PosterSketch({ name = '', unlimited = false, seed = 7 }) {
   // Other kinds: the small sketch, scaled up, with the same wobble.
   const d = DRAW[key] || DRAW.gift;
   return (
-    <svg role="img" aria-label={`One-line sketch of ${name}`} style={{ position: 'absolute', right: 10, top: 20 }} width="210" height="210" viewBox="0 0 100 100" fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <svg role="img" aria-label={`One-line sketch of ${name}`} style={{ position: 'absolute', right: 10, top: 20 }} width="210" height="210" viewBox="0 0 100 100" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       {filter}
       <g filter={`url(#${fid})`}><path d={d} /></g>
     </svg>
@@ -198,7 +198,7 @@ export function PhotoBlob({ user, size = 170, owner = false, boil = true, uid = 
         ) : null}
       </svg>
       {user?.photo ? null : (
-        <span className={owner ? 'serif' : 'serif'} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: fontSize || size * 0.5, lineHeight: 1, color: owner ? '#D8F75A' : '#000000' }}>{initial}</span>
+        <span className={owner ? 'serif' : 'serif'} style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: fontSize || size * 0.5, lineHeight: 1, color: owner ? '#D8F75A' : 'var(--ink, #000000)' }}>{initial}</span>
       )}
     </span>
   );

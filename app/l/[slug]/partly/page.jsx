@@ -45,11 +45,11 @@ export default async function PartlyPage({ params, searchParams }) {
       <section style={{ position: 'relative', padding: '14px 20px 0', height: 200 }}>
         <Boil seed={52} fill="#FFFFFF" left={-24} top={0} width={320} height={200} />
         <span className="wide" style={{ position: 'relative', display: 'block', margin: '40px 0 0 10px', fontSize: 12, letterSpacing: '0.2em', color: RUST }}>{when}</span>
-        <h1 style={{ position: 'relative', margin: '8px 0 0 10px', fontWeight: 400, fontSize: 40, lineHeight: 0.98, letterSpacing: '-0.03em', color: '#000' }}>Almost <span className="serif" style={{ fontStyle: 'italic' }}>there</span></h1>
+        <h1 style={{ position: 'relative', margin: '8px 0 0 10px', fontWeight: 400, fontSize: 40, lineHeight: 0.98, letterSpacing: '-0.03em', color: 'var(--ink, #000)' }}>Almost <span className="serif" style={{ fontStyle: 'italic' }}>there</span></h1>
       </section>
-      <p style={{ margin: '4px 20px 0', fontSize: 15, lineHeight: 1.45, color: '#000' }}>{shortN === 0 ? 'Everything is covered now. Send it whenever you like.' : `${shortN === 1 ? 'One gift isn’t' : `${['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'][shortN - 2] || shortN} gifts aren’t`} fully covered yet. ${name} will only ever see % covered, never amounts.`}</p>
+      <p style={{ margin: '4px 20px 0', fontSize: 15, lineHeight: 1.45, color: 'var(--ink, #000)' }}>{shortN === 0 ? 'Everything is covered now. Send it whenever you like.' : `${shortN === 1 ? 'One gift isn’t' : `${['Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine'][shortN - 2] || shortN} gifts aren’t`} fully covered yet. ${name} will only ever see % covered, never amounts.`}</p>
 
-      <section aria-label="Gifts" style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', color: '#000' }}>
+      <section aria-label="Gifts" style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column', color: 'var(--ink, #000)' }}>
         {p.items.map((it) => (
           <div key={it.id} style={{ display: 'flex', flexDirection: 'column', gap: 8, padding: '14px 0', borderTop: `2px solid ${RUST}` }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, alignItems: 'baseline' }}>
@@ -57,7 +57,7 @@ export default async function PartlyPage({ params, searchParams }) {
               <span className="dot" style={{ flexShrink: 0, fontSize: 16, color: it.covered ? '#2E9B47' : RUST }}>{it.covered ? 'DONE' : `${100 - it.pct}% TO GO`}</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'rgba(255,255,255,0.8)', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, background: it.covered ? '#2E9B47' : '#13286B' }} /></div>
+              <div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'rgba(255,255,255,0.8)', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, background: it.covered ? 'var(--lt, #2E9B47)' : 'var(--dk, #13286B)' }} /></div>
               <span style={{ flexShrink: 0, width: 84, textAlign: 'right', fontSize: 12, fontWeight: 500 }}>{it.covered ? 'Covered' : `${it.pct}% covered`}</span>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default async function PartlyPage({ params, searchParams }) {
           ))}
         </section>
         {canMove ? (
-          <section className="a4-up r4-if r4-if-move" style={{ margin: '12px 16px 0', background: '#FFFFFF', padding: 16, flexDirection: 'column', gap: 10 }}>
+          <section className="a4-up r4-if r4-if-move" style={{ margin: '12px 16px 0', background: 'var(--surface, #FFFFFF)', padding: 16, flexDirection: 'column', gap: 10 }}>
             <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em', color: RUST }}>Fully cover</span>
             {plan.targets.map((t) => (
               <label key={t.id} className={`r4-target${t.ok ? '' : ' r4-off'}`}>
@@ -92,7 +92,7 @@ export default async function PartlyPage({ params, searchParams }) {
         <div style={{ padding: '22px 16px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>
           {canMove ? <button className="a4-btn r4-if r4-if-move" formAction={moveMoneyAction} disabled={!plan.any} style={{ background: RUST, justifyContent: 'center' }}>{now ? `Move it and send to ${name}` : `Move it and keep the ${until} send`}</button> : null}
           <button className="a4-btn a4-if a4-if-asis" style={{ background: RUST }}>{now ? `Send it to ${name} as it is` : `${when.replace('Sends', 'Send')} as it is`}</button>
-          <button name="wait" value="1" style={{ border: 0, background: 'transparent', fontFamily: 'inherit', textAlign: 'center', fontSize: 13, color: '#13286B', padding: '4px 0', cursor: 'pointer' }}>{now ? 'Or wait: friends can still chip in.' : `Or wait: friends can still chip in until ${until}.`}</button>
+          <button name="wait" value="1" style={{ border: 0, background: 'transparent', fontFamily: 'inherit', textAlign: 'center', fontSize: 13, color: 'var(--navy-ink, #13286B)', padding: '4px 0', cursor: 'pointer' }}>{now ? 'Or wait: friends can still chip in.' : `Or wait: friends can still chip in until ${until}.`}</button>
         </div>
       </form>
       <div style={{ height: 40 }} />

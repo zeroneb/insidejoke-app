@@ -35,7 +35,7 @@ export default async function ProfileFriends({ params }) {
   return (
     <main className="withnav" style={{ display: 'flex', flexDirection: 'column' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href={`/u/${them.id}`} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href={`/u/${them.id}`} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Friends</span>
         <span style={{ width: 44 }} />
       </header>
@@ -44,17 +44,17 @@ export default async function ProfileFriends({ params }) {
       </section>
       <section aria-label={`${possessive(name)} friends`} style={{ padding: '18px 20px 0', display: 'flex', flexDirection: 'column' }}>
         {people.map((f) => (
-          <Link key={f.id} href={f.id === me.id ? '/home' : `/u/${f.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 0', borderTop: '1px solid #000000', textDecoration: 'none' }}>
+          <Link key={f.id} href={f.id === me.id ? '/home' : `/u/${f.id}`} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 0', borderTop: '1px solid var(--line, #000000)', textDecoration: 'none' }}>
             <FaceSm user={f} size={44} />
             <span style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}>
               <span style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.2 }}>{f.id === me.id ? 'You' : f.name || 'Someone'}</span>
-              {mine.has(f.id) ? <span style={{ fontSize: 13, lineHeight: 1.35, color: '#4A4A4A' }}>Your friend too</span> : null}
+              {mine.has(f.id) ? <span style={{ fontSize: 13, lineHeight: 1.35, color: 'var(--muted, #4A4A4A)' }}>Your friend too</span> : null}
             </span>
             <Chevron />
           </Link>
         ))}
-        {!people.length ? <p style={{ margin: 0, padding: '16px 0', borderTop: '1px solid #000000', fontSize: 15, lineHeight: 1.45 }}>{name} has no friends on insidejoke yet.</p> : null}
-        <div style={{ borderTop: '1.5px solid #000000' }} />
+        {!people.length ? <p style={{ margin: 0, padding: '16px 0', borderTop: '1px solid var(--line, #000000)', fontSize: 15, lineHeight: 1.45 }}>{name} has no friends on insidejoke yet.</p> : null}
+        <div style={{ borderTop: '1.5px solid var(--line, #000000)' }} />
       </section>
       <div style={{ height: 24 }} />
     </main>

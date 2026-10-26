@@ -50,12 +50,12 @@ export default async function SharedPage({ params, searchParams }) {
           <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>On the list</h2>
           <span className="dot" style={{ fontSize: 15 }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'}</span>
         </div>
-        {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: '#000', fontSize: 15 }}>Nothing on it yet. Check back soon.</p> : null}
+        {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: 'var(--ink, #000)', fontSize: 15 }}>Nothing on it yet. Check back soon.</p> : null}
         {items.map((it) => (
           <Link key={it.id} href={`/l/${slug}/i/${it.id}`} className="a4-row">
             <Who user={{ id: it.adder_id, name: it.adder_name, color: it.adder_color, seed: it.adder_seed }} me={me} size={40} />
             <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1, minWidth: 0 }}>
-              <span style={{ fontWeight: 800, fontSize: 15, color: '#000' }}>{it.name}{it.unlimited ? ' (treat)' : ''}</span>
+              <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ink, #000)' }}>{it.name}{it.unlimited ? ' (treat)' : ''}</span>
               <span style={{ fontSize: 12 }}>added by {by_(it.adder_id, it.adder_name)}{it.store ? ` · ${it.store}` : ''}</span>
             </span>
             <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
@@ -65,15 +65,15 @@ export default async function SharedPage({ params, searchParams }) {
       </section>
 
       {match ? (
-        <form action={matchAction} className="pop" role="alert" style={{ margin: '18px 16px 0', background: '#FFFFFF', padding: 16, display: 'flex', flexDirection: 'column', gap: 12, color: '#000' }}>
+        <form action={matchAction} className="pop" role="alert" style={{ margin: '18px 16px 0', background: 'var(--surface, #FFFFFF)', padding: 16, display: 'flex', flexDirection: 'column', gap: 12, color: 'var(--ink, #000)' }}>
           <input type="hidden" name="slug" value={slug} /><input type="hidden" name="keep" value={match.keep.id} /><input type="hidden" name="dupe" value={match.dupe.id} />
           <span className="wide" style={{ fontSize: 12, letterSpacing: '0.16em', color: RED }}>Looks like a match</span>
           <p style={{ margin: 0, fontSize: 16, lineHeight: 1.35 }}>{by_(match.dupe.adder_id, match.dupe.adder_name).replace(/^you$/, 'You').replace(/^./, (c) => c.toUpperCase())} added something similar: <span style={{ fontWeight: 800 }}>{match.dupe.name}</span>. You already have <span style={{ fontWeight: 800 }}>{match.keep.name}</span>.</p>
           <div style={{ display: 'flex', gap: 8 }}>
-            <button name="merge" value="1" style={{ flex: '1 1 0', border: 0, background: RED, color: '#FFFFFF', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '14px 0', borderRadius: 999, cursor: 'pointer' }}>Merge into one</button>
+            <button name="merge" value="1" style={{ flex: '1 1 0', border: 0, background: RED, color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '14px 0', borderRadius: 999, cursor: 'pointer' }}>Merge into one</button>
             <button name="keepboth" value="1" style={{ flex: '1 1 0', border: `2px solid ${RED}`, background: 'transparent', color: RED, fontFamily: 'inherit', fontWeight: 800, fontSize: 15, padding: '12px 0', borderRadius: 999, cursor: 'pointer' }}>Keep both</button>
           </div>
-          <span style={{ fontSize: 12, color: '#6A4A44' }}>Merging keeps the progress from both.</span>
+          <span style={{ fontSize: 12, color: 'var(--warm-ink, #6A4A44)' }}>Merging keeps the progress from both.</span>
         </form>
       ) : null}
       {editor ? (

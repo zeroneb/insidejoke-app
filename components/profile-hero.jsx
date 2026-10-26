@@ -14,7 +14,7 @@ export function ProfileHero({ user, owner = false, ring, uid = 'hero', children 
       <div style={{ position: 'relative', width: 250, height: 250, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <svg aria-hidden="true" style={{ position: 'absolute', inset: 0 }} width="250" height="250" viewBox="0 0 250 250">
           <defs><path id={`${uid}-ring`} d="M17 125 A108 108 0 0 1 233 125" /></defs>
-          <text className="serif" style={{ fontSize: 15, letterSpacing: '0.06em', fill: '#13286B' }}><textPath href={`#${uid}-ring`} startOffset="50%" textAnchor="middle">{ring}</textPath></text>
+          <text className="serif" style={{ fontSize: 15, letterSpacing: '0.06em', fill: 'var(--navy-ink, #13286B)' }}><textPath href={`#${uid}-ring`} startOffset="50%" textAnchor="middle">{ring}</textPath></text>
         </svg>
         <PhotoBlob user={user} owner={owner} size={170} pad={16} uid={uid} fontSize={84} />
       </div>
@@ -27,9 +27,9 @@ export function ProfileHero({ user, owner = false, ring, uid = 'hero', children 
 
 export function Stats({ cells, label }) {
   return (
-    <section aria-label={label} style={{ margin: '26px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderTop: '1.5px solid #000000', borderBottom: '1.5px solid #000000' }}>
+    <section aria-label={label} style={{ margin: '26px 20px 0', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderTop: '1.5px solid var(--line, #000000)', borderBottom: '1.5px solid var(--line, #000000)' }}>
       {cells.map(([n, l], k) => (
-        <div key={l} style={{ padding: k ? '14px 0 14px 14px' : '14px 0 14px 2px', /* r1: 2px so the first Doto digit never touches the edge */ display: 'flex', flexDirection: 'column', gap: 2, borderRight: k < cells.length - 1 ? '1px solid #000000' : 0, minWidth: 0 }}>
+        <div key={l} style={{ padding: k ? '14px 0 14px 14px' : '14px 0 14px 2px', /* r1: 2px so the first Doto digit never touches the edge */ display: 'flex', flexDirection: 'column', gap: 2, borderRight: k < cells.length - 1 ? '1px solid var(--line, #000000)' : 0, minWidth: 0 }}>
           <span className="dot" style={{ fontSize: 30, color: '#E8642C', lineHeight: 1.2 }}>{n}</span><span style={{ fontSize: 13 }}>{l}</span>
         </div>
       ))}
@@ -37,7 +37,7 @@ export function Stats({ cells, label }) {
   );
 }
 
-export const Chevron = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>;
+export const Chevron = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>;
 
 // +1 917 555 0142
 export function spacedPhone(p) {

@@ -17,15 +17,15 @@ export function splitPayLabel(label = '') {
   return m ? [m[1], m[2]] : [label, ''];
 }
 
-const inputStyle = { minWidth: 0, height: 52, border: '1.5px solid #000000', background: '#FFFFFF', fontFamily: 'inherit', fontSize: 15, padding: '0 12px', borderRadius: 0, color: '#000000', boxSizing: 'border-box', width: '100%' };
+const inputStyle = { minWidth: 0, height: 52, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontSize: 15, padding: '0 12px', borderRadius: 0, color: 'var(--ink, #000000)', boxSizing: 'border-box', width: '100%' };
 
 export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', card, onCard }) {
   if (stripeClientOn()) {
     return (
       <>
         <StripePay />
-        <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: '#D8F75A', padding: '14px 16px' }}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
+        <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: 'var(--lt, #D8F75A)', padding: '14px 16px' }}>
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
           <span style={{ fontSize: 16, lineHeight: 1.3 }}>No fee added. All of it goes to {forName}.</span>
         </section>
       </>
@@ -38,13 +38,13 @@ export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', car
         {PAY_METHODS.map(([k, label, sub]) => {
           const on = kind === k;
           return (
-            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => onKind(k)} style={{ display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left', border: 0, borderTop: '1px solid #000000', background: on ? '#FFFFFF' : 'transparent', color: '#000000', fontFamily: 'inherit', padding: `14px ${on ? '12px' : '0'}`, cursor: 'pointer' }}>
-              <span style={{ width: 22, height: 22, flexShrink: 0, borderRadius: '50%', border: '1.5px solid #000000', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 12, height: 12, borderRadius: '50%', background: on ? '#000000' : 'transparent' }} /></span>
-              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}><span style={{ fontSize: 18 }}>{label}</span><span style={{ fontSize: 13, color: '#3A3A3A' }}>{sub}</span></span>
+            <button key={k} type="button" role="radio" aria-checked={on} onClick={() => onKind(k)} style={{ display: 'flex', alignItems: 'center', gap: 14, textAlign: 'left', border: 0, borderTop: '1px solid var(--line, #000000)', background: on ? 'var(--surface, #FFFFFF)' : 'transparent', color: 'var(--ink, #000000)', fontFamily: 'inherit', padding: `14px ${on ? '12px' : '0'}`, cursor: 'pointer' }}>
+              <span style={{ width: 22, height: 22, flexShrink: 0, borderRadius: '50%', border: '1.5px solid var(--edge, #000000)', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><span style={{ width: 12, height: 12, borderRadius: '50%', background: on ? 'var(--inv-bg, #000000)' : 'transparent' }} /></span>
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}><span style={{ fontSize: 18 }}>{label}</span><span style={{ fontSize: 13, color: 'var(--sub, #3A3A3A)' }}>{sub}</span></span>
             </button>
           );
         })}
-        <div style={{ borderTop: '1px solid #000000' }} />
+        <div style={{ borderTop: '1px solid var(--line, #000000)' }} />
       </div>
       {kind === 'card' ? (
         <section className="pop" style={{ paddingTop: 16, display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -57,8 +57,8 @@ export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', car
           </div>
         </section>
       ) : null}
-      <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: '#D8F75A', padding: '14px 16px' }}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
+      <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: 'var(--lt, #D8F75A)', padding: '14px 16px' }}>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
         <span style={{ fontSize: 16, lineHeight: 1.3 }}>No fee added. All of it goes to {forName}.</span>
       </section>
     </>

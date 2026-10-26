@@ -14,7 +14,7 @@ export default function SocialIcons({ size = 24, gap = 18 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap }}>
       {LINKS.map((l) => (
-        <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" aria-label={l.name} style={{ color: '#FFFFFF', display: 'flex' }}>
+        <a key={l.href} href={l.href} target="_blank" rel="noopener noreferrer" aria-label={l.name} style={{ color: 'var(--inv-fg, #FFFFFF)', display: 'flex' }}>
           <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24">{l.icon}</svg>
         </a>
       ))}

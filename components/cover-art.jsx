@@ -2,7 +2,7 @@
 
 export function Cake({ style = { right: 8, bottom: 44 }, w = 96, h = 104, sparkle = false }) {
   return (
-    <svg aria-hidden="true" style={{ position: 'absolute', ...style }} width={w} height={h} viewBox="0 0 120 140" fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
+    <svg aria-hidden="true" style={{ position: 'absolute', ...style }} width={w} height={h} viewBox="0 0 120 140" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
       <path d="M18 128 C40 132 82 132 104 127" />
       <path d="M24 126 C23 112 24 100 26 88 C48 84 76 84 98 87 C100 100 100 113 99 126" />
       <path d="M30 86 C30 77 31 70 33 64 C50 60 72 60 90 63 C92 71 92 79 92 86" />

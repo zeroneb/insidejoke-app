@@ -44,7 +44,7 @@ export function CoverPhotoField({ shape = 'circle' }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
       <input ref={input} id="coverphoto" name="coverPhoto" type="file" accept="image/*" onChange={pick} className="sr" />
-      <span aria-hidden="true" style={{ ...frame, flexShrink: 0, overflow: 'hidden', border: '1.5px solid #000000', background: '#FFFFFF', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span aria-hidden="true" style={{ ...frame, flexShrink: 0, overflow: 'hidden', border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {preview
           ? <img src={preview} alt="" style={shape === 'diamond' ? { position: 'absolute', left: '-21%', top: '-21%', width: '142%', height: '142%', objectFit: 'cover', transform: 'rotate(-45deg)' } : { width: '100%', height: '100%', objectFit: 'cover' }} />
           : <span style={shape === 'diamond' ? { transform: 'rotate(-45deg)', display: 'flex' } : { display: 'flex' }}><Camera /></span>}
@@ -52,8 +52,8 @@ export function CoverPhotoField({ shape = 'circle' }) {
       <span style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
         <label htmlFor="coverphoto" style={{ fontWeight: 700, fontSize: 15, cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3 }}>{preview ? 'Change photo' : 'Add a cover photo'}</label>
         {preview
-          ? <button type="button" onClick={clear} style={{ border: 0, background: 'transparent', padding: 0, fontFamily: 'inherit', fontSize: 13, textAlign: 'left', cursor: 'pointer', color: '#4A4A4A' }}>Back to art</button>
-          : <span style={{ fontSize: 13, color: '#4A4A4A' }}>It sits inside the {shape === 'diamond' ? 'diamond' : 'circle'} on your cover.</span>}
+          ? <button type="button" onClick={clear} style={{ border: 0, background: 'transparent', padding: 0, fontFamily: 'inherit', fontSize: 13, textAlign: 'left', cursor: 'pointer', color: 'var(--muted, #4A4A4A)' }}>Back to art</button>
+          : <span style={{ fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>It sits inside the {shape === 'diamond' ? 'diamond' : 'circle'} on your cover.</span>}
       </span>
     </div>
   );
@@ -84,12 +84,12 @@ export function ChangeCover({ slug, hasPhoto, color = '#000000' }) {
         <Camera color={color} size={21} />
       </button>
       {open ? (
-        <div className="pop" role="menu" style={{ position: 'absolute', right: 0, top: 46, zIndex: 5, background: '#FFFFFF', border: '1.5px solid #000000', display: 'flex', flexDirection: 'column', minWidth: 170 }}>
-          <button type="button" role="menuitem" onClick={choose} style={{ border: 0, borderBottom: '1.5px solid #000000', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '12px 14px', textAlign: 'left', cursor: 'pointer', color: '#000000' }}>Change photo</button>
+        <div className="pop" role="menu" style={{ position: 'absolute', right: 0, top: 46, zIndex: 5, background: 'var(--surface, #FFFFFF)', border: '1.5px solid var(--line, #000000)', display: 'flex', flexDirection: 'column', minWidth: 170 }}>
+          <button type="button" role="menuitem" onClick={choose} style={{ border: 0, borderBottom: '1.5px solid var(--line, #000000)', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '12px 14px', textAlign: 'left', cursor: 'pointer', color: 'var(--ink, #000000)' }}>Change photo</button>
           <form action={action}>
             <input type="hidden" name="slug" value={slug} />
             <input type="hidden" name="remove" value="1" />
-            <button role="menuitem" style={{ width: '100%', border: 0, background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '12px 14px', textAlign: 'left', cursor: 'pointer', color: '#000000' }}>Back to art</button>
+            <button role="menuitem" style={{ width: '100%', border: 0, background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, padding: '12px 14px', textAlign: 'left', cursor: 'pointer', color: 'var(--ink, #000000)' }}>Back to art</button>
           </form>
         </div>
       ) : null}

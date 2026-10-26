@@ -29,7 +29,7 @@ export default async function HandoffPage({ params }) {
       <Hdr back={`/l/${slug}/collab`}>{list.title} · {p.pct}% covered</Hdr>
       <section style={{ position: 'relative', padding: '10px 20px 0', height: 160 }}>
         <Boil seed={23} left={20} top={0} width={300} height={160} />
-        <h1 style={{ position: 'relative', margin: '34px 0 0', textAlign: 'center', fontWeight: 400, fontSize: 40, lineHeight: 0.98, letterSpacing: '-0.03em', color: '#000' }}>How does it <span className="serif" style={{ fontStyle: 'italic' }}>reach {name}?</span></h1>
+        <h1 style={{ position: 'relative', margin: '34px 0 0', textAlign: 'center', fontWeight: 400, fontSize: 40, lineHeight: 0.98, letterSpacing: '-0.03em', color: 'var(--ink, #000)' }}>How does it <span className="serif" style={{ fontStyle: 'italic' }}>reach {name}?</span></h1>
       </section>
       <p style={{ margin: '12px 24px 0', textAlign: 'center', fontSize: 14, lineHeight: 1.4, color: DEEP }}>{together}</p>
       <HandoffForm slug={slug} team={members} meId={me.id} name={name} list={{ handoff: list.handoff, cashout_user_id: list.cashout_user_id, recipient_phone: list.recipient_phone, send_at: list.send_at }} />

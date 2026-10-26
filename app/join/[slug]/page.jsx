@@ -52,16 +52,16 @@ export default async function JoinPage({ params, searchParams }) {
         </div>
         <section style={{ padding: '14px 20px 0', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', rowGap: 6 }}>
           {team.filter((m) => m.id !== me.id).map((m, i) => <span key={m.id} className="a4-chip" style={{ marginLeft: i ? -2 : 0 }}>{firstName(m)}</span>)}
-          <span className="a4-chip" style={{ marginLeft: -2, background: member ? RED : 'transparent', color: member ? '#fff' : RED, borderStyle: member ? 'solid' : 'dashed' }}>{firstName(me)} · you</span>
+          <span className="a4-chip" style={{ marginLeft: -2, background: member ? RED : 'transparent', color: member ? 'var(--inv-fg, #fff)' : RED, borderStyle: member ? 'solid' : 'dashed' }}>{firstName(me)} · you</span>
         </section>
         <p style={{ margin: '14px 20px 0', textAlign: 'center', fontSize: 14, color: DEEP }}>{firstName(organiser)} started this. {member ? 'You can add, edit and fund.' : 'Join to add, edit and fund.'}</p>
         <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <h2 className="wide" style={{ margin: '0 0 8px', fontSize: 14, letterSpacing: '0.14em' }}>On the list</h2>
-          {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: '#000', fontSize: 15 }}>Nothing yet. Be the first to add something.</p> : null}
+          {items.length === 0 ? <p className="a4-row" style={{ margin: 0, color: 'var(--ink, #000)', fontSize: 15 }}>Nothing yet. Be the first to add something.</p> : null}
           {items.map((it) => (
             <div key={it.id} className="a4-row">
               <Who user={{ id: it.adder_id, name: it.adder_name, color: it.adder_color, seed: it.adder_seed }} me={me} size={40} />
-              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1, minWidth: 0 }}><span style={{ fontWeight: 800, fontSize: 15, color: '#000' }}>{it.name}{it.unlimited ? ' (treat)' : ''}</span><span style={{ fontSize: 12 }}>added by {it.adder_id === me.id ? 'you' : firstName({ name: it.adder_name })}</span></span>
+              <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1, minWidth: 0 }}><span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ink, #000)' }}>{it.name}{it.unlimited ? ' (treat)' : ''}</span><span style={{ fontSize: 12 }}>added by {it.adder_id === me.id ? 'you' : firstName({ name: it.adder_name })}</span></span>
               <span className="dot" style={{ fontSize: 16 }}>{stat(it)}</span>
             </div>
           ))}

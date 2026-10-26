@@ -14,14 +14,14 @@ const TICKER2 = TICKER.concat(TICKER);
 const BARS = [
   { name: 'Leather boots', label: '82% covered', pct: 82, color: '#D8F75A', d: '0.3s' },
   { name: 'Santal 33', label: '45% covered', pct: 45, color: '#D8F75A', d: '0.5s' },
-  { name: 'Beeswax candles', label: 'All covered', pct: 100, color: '#13286B', d: '0.7s' }
+  { name: 'Beeswax candles', label: 'All covered', pct: 100, color: 'var(--navy-ink, #13286B)', d: '0.7s' }
 ];
 const BOOT = 'M34 14 L52 14 L52 56 Q72 60 80 70 L80 84 L26 84 L26 74 Q34 70 34 56 Z M26 76 L80 76 M40 30 L48 30 M40 40 L48 40';
 
 function MenuIcon() {
   return (
     <Link href="/menu" aria-label="Menu: log in, company, contact" className="iconbtn">
-      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#13286B" strokeWidth="2.2" strokeLinecap="round"><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
+      <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy-ink, #13286B)" strokeWidth="2.2" strokeLinecap="round"><path d="M4 7h16" /><path d="M4 12h16" /><path d="M4 17h16" /></svg>
     </Link>
   );
 }
@@ -62,12 +62,12 @@ export default function Landing() {
         <div className="marq lp-tickerin">{TICKER2.map((t, i) => <span key={i}>{t.word} <span style={{ color: t.color }}>✺</span></span>)}</div>
       </section>
 
-      <section className="lp-step" style={{ background: '#E3C552' }}>
+      <section className="lp-step" style={{ background: 'var(--lt, #E3C552)' }}>
         <p className="lp-lead">Your taste, down to the detail.</p>
         <h2 className="lp-h2">Name what you'd love, down to the <span className="it lp-h2i">shade.</span></h2>
         <div className="lp-card" style={{ alignItems: 'center' }}>
-          <div className="lp-tile" style={{ background: '#F0895A' }}>
-            <svg aria-hidden="true" width="58" height="58" viewBox="0 0 100 100" fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d={BOOT} /></svg>
+          <div className="lp-tile" style={{ background: 'var(--lt, #F0895A)' }}>
+            <svg aria-hidden="true" width="58" height="58" viewBox="0 0 100 100" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d={BOOT} /></svg>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 3, minWidth: 0 }}>
             <span style={{ fontSize: 17, letterSpacing: '-0.01em' }}>Ganni Western leather boots</span>
@@ -78,26 +78,26 @@ export default function Landing() {
         <p className="lp-p">Paste a link or snap a photo. Friends see exactly what you mean and tap straight through to it.</p>
       </section>
 
-      <section className="lp-step" style={{ background: '#ECECEF' }}>
+      <section className="lp-step" style={{ background: 'var(--ground, #ECECEF)' }}>
         <p className="lp-lead">One link, anywhere.</p>
         <h2 className="lp-h2">Share it in a text, an invite, or your <span className="it lp-h2i">bio.</span></h2>
         <div className="lp-preview">
           <div className="lp-preview-top">
             <Blob seed={8} color="#D8F75A" width={220} height={106} style={{ left: 30, top: 12 }} />
-            <span className="serif" style={{ position: 'relative', fontSize: 26, color: '#000' }}>For my <span style={{ fontWeight: 600 }}>birthday</span></span>
+            <span className="serif" style={{ position: 'relative', fontSize: 26, color: 'var(--ink, #000)' }}>For my <span style={{ fontWeight: 600 }}>birthday</span></span>
           </div>
           <div style={{ padding: '10px 12px', display: 'flex', flexDirection: 'column', gap: 2 }}>
             <span style={{ fontWeight: 700, fontSize: 14 }}>Maya shared a birthday list with you</span>
-            <span style={{ fontSize: 12, color: '#4A4A4A' }}>insidejoke.app</span>
+            <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>insidejoke.app</span>
           </div>
         </div>
         <p className="lp-p">Nobody has to guess, and nobody doubles up.</p>
       </section>
 
-      <section className="lp-step" style={{ background: '#13286B', color: '#fff' }}>
+      <section className="lp-step" style={{ background: 'var(--dk, #13286B)', color: 'var(--inv-fg, #fff)' }}>
         <p className="lp-lead">Friends and family give.</p>
         <h2 className="lp-h2">Get it, chip in, or <span className="it lp-h2i">treat.</span></h2>
-        <div className="lp-card" style={{ color: '#000' }}>
+        <div className="lp-card" style={{ color: 'var(--ink, #000)' }}>
           <span className="avatar" style={{ width: 44, height: 44 }}>
             <svg aria-hidden="true" width="44" height="44" viewBox="0 0 200 200"><path d={priya} fill="#B36EE0" /></svg>
             <span style={{ fontWeight: 800, fontSize: 17 }}>P</span>
@@ -110,7 +110,7 @@ export default function Landing() {
         <p className="lp-p" style={{ color: '#DCE3FF' }}>Every gift comes with a note, public or private. All of it goes to the person celebrated.</p>
       </section>
 
-      <section className="lp-step" style={{ background: '#ECECEF' }}>
+      <section className="lp-step" style={{ background: 'var(--ground, #ECECEF)' }}>
         <p className="lp-lead">Watch it fill.</p>
         <h2 className="lp-h2">See who's celebrating <span className="it lp-h2i">you.</span></h2>
         <div className="lp-bars">
@@ -128,11 +128,11 @@ export default function Landing() {
 
       <section className="lp-thanks">
         <h2 className="lp-thanks-h">All covered?<br />Say thank uuuuuuuuuuuuuuuuuuuuuuuuuuu</h2>
-        <svg aria-hidden="true" style={{ display: 'block', margin: '8px 0 0 auto' }} width="170" height="150" viewBox="0 0 100 90" fill="none" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d="M14 16 L86 16 L86 62 L44 62 L26 80 L28 62 L14 62 Z M28 32 L72 32 M28 44 L60 44" /></svg>
-        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.4, color: '#5A1A08' }}>One text to everyone who chipped in, with a photo if you want.</p>
+        <svg aria-hidden="true" style={{ display: 'block', margin: '8px 0 0 auto' }} width="170" height="150" viewBox="0 0 100 90" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path className="draw" d="M14 16 L86 16 L86 62 L44 62 L26 80 L28 62 L14 62 Z M28 32 L72 32 M28 44 L60 44" /></svg>
+        <p style={{ margin: 0, fontSize: 16, lineHeight: 1.4, color: 'var(--warm-ink, #5A1A08)' }}>One text to everyone who chipped in, with a photo if you want.</p>
       </section>
 
-      <section aria-label="More ways to celebrate" style={{ background: '#000', padding: '26px 22px 24px' }}>
+      <section aria-label="More ways to celebrate" style={{ background: 'var(--inv-bg, #000)', padding: '26px 22px 24px' }}>
         <p className="serif" style={{ margin: 0, fontSize: 32, lineHeight: 1, color: '#D8F75A' }}>And there's <span style={{ fontStyle: 'italic' }}>more.</span></p>
       </section>
 
@@ -146,7 +146,7 @@ export default function Landing() {
           <p className="dot" style={{ position: 'absolute', left: 0, right: 0, top: 70, margin: 0, textAlign: 'center', fontSize: 46, lineHeight: 1 }}>LOX<br />BAGEL</p>
           <p className="dot tick" style={{ position: 'absolute', right: 6, top: 190, margin: 0, fontSize: 58 }}>×23</p>
           <div aria-hidden="true" style={{ position: 'absolute', left: 0, bottom: 6, display: 'flex', gap: 2 }}>
-            {['a1', 'a2', 'a3'].map((c) => <svg key={c} className={c} width="30" height="34" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="#000" /></svg>)}
+            {['a1', 'a2', 'a3'].map((c) => <svg key={c} className={c} width="30" height="34" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="var(--ink, #000)" /></svg>)}
           </div>
           <span className="wide" style={{ position: 'absolute', right: 0, bottom: 8, fontSize: 26, letterSpacing: '0.02em' }}>$17</span>
         </div>
@@ -164,7 +164,7 @@ export default function Landing() {
           <span className="lp-chip" style={{ marginLeft: -2 }}>Sara</span>
         </div>
         <div className="bob lp-bubble">
-          <span style={{ display: 'block', fontSize: 12, color: '#6A6A6A', marginBottom: 4 }}>Text message · Sara</span>
+          <span style={{ display: 'block', fontSize: 12, color: 'var(--mute2, #6A6A6A)', marginBottom: 4 }}>Text message · Sara</span>
           Sara invited you to make a list for Mom for Mother's Day 💐 Add what Mom would love: insidejoke.app/j/mom
         </div>
         <p style={{ margin: '22px 20px 0', fontWeight: 700, fontSize: 18, lineHeight: 1.3 }}>Build a list with your sister for Mom, or with the group chat for a bridal shower.</p>
@@ -173,7 +173,7 @@ export default function Landing() {
       <section className="lp-surprise">
         <div aria-hidden="true" className="lp-dotc" style={{ right: 22, top: 22 }} />
         <div aria-hidden="true" className="lp-dotc" style={{ left: 22, bottom: 22 }} />
-        <h2 className="wide" style={{ margin: 0, color: '#fff', fontSize: 42, letterSpacing: '0.08em', lineHeight: 1 }}>Sur<br />prise!</h2>
+        <h2 className="wide" style={{ margin: 0, color: 'var(--inv-fg, #fff)', fontSize: 42, letterSpacing: '0.08em', lineHeight: 1 }}>Sur<br />prise!</h2>
         <div style={{ position: 'relative', height: 290, marginTop: 14 }}>
           <svg aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -60, top: 0 }} width="270" height="270" viewBox="0 0 270 270">
             <defs>
@@ -184,7 +184,7 @@ export default function Landing() {
             <circle cx="135" cy="135" r="135" fill="#E7B48A" />
             <circle cx="135" cy="135" r="135" fill="url(#ht2)" mask="url(#m2)" />
           </svg>
-          <svg aria-hidden="true" style={{ position: 'absolute', left: 168, top: 40 }} width="176" height="206" viewBox="0 0 120 140" fill="none" stroke="#FFFFFF" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+          <svg aria-hidden="true" style={{ position: 'absolute', left: 168, top: 40 }} width="176" height="206" viewBox="0 0 120 140" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 128 C40 132 82 132 104 127" />
             <path d="M24 126 C23 112 24 100 26 88 C48 84 76 84 98 87 C100 100 100 113 99 126" />
             <path d="M30 86 C30 77 31 70 33 64 C50 60 72 60 90 63 C92 71 92 79 92 86" />
