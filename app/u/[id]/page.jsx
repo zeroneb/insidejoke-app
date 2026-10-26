@@ -45,7 +45,7 @@ export default async function FriendProfile({ params }) {
   const admin = !self && isAdmin(me);
   if (admin) {
     const shown = new Set(lists.map((l) => l.id));
-    const extra = await all("SELECT * FROM lists WHERE owner_id = ? AND status = 'open' AND surprise = 0 AND for_who = 'me' AND visibility = 'private' ORDER BY created_at DESC", them.id);
+    const extra = await all("SELECT * FROM lists WHERE owner_id = ? AND status = 'open' AND visibility = 'private' ORDER BY created_at DESC", them.id);
     lists.push(...extra.filter((l) => !shown.has(l.id)));
   }
   const tiles = await Promise.all(lists.map((l) => tileData(l, me?.id)));
