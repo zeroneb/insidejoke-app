@@ -61,7 +61,7 @@ export default async function HomePage() {
           <h1 style={{ margin: 0, fontWeight: 400, fontSize: 28, letterSpacing: '-0.02em', lineHeight: 1 }}>{me.name || 'Hi there'}</h1>
           {me.bio ? <span style={{ fontSize: 15 }}>{me.bio}</span> : <Link href="/you/settings" style={{ fontSize: 15, color: 'var(--muted, #4A4A4A)' }}>Add a line about you</Link>}
           <span style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 2 }}>
-            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink, #000000)' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+            <Link href="/friends?view=list" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink, #000000)' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
           </span>
         </div>
       </section>
@@ -88,7 +88,7 @@ export default async function HomePage() {
       <section className="home-side" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, margin: '0 0 4px' }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
-          <Link href="/friends" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
+          <Link href="/friends?view=list" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends} {friends === 1 ? 'friend' : 'friends'}</Link>
         </div>
         <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Gifts on your lists, replies to you, and what you’ve been up to. Friends’ news is in <Link href="/friends" style={{ color: 'var(--ink, #000)' }}>Friends</Link>.</p>
         <LatelyRows rows={feed} meId={me.id} />

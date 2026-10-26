@@ -83,7 +83,7 @@ export default async function FriendProfile({ params }) {
           <h1 style={{ margin: '6px 0 0', fontWeight: 400, fontSize: 34, letterSpacing: '-0.02em', lineHeight: 1 }}>{(them.name || 'Someone').trim().split(/\s+/)[0]}{(them.name || '').trim().split(/\s+/).length > 1 ? <> <span className="serif" style={{ fontStyle: 'italic' }}>{them.name.trim().split(/\s+/).slice(1).join(' ')}</span></> : null}</h1>
           {them.bio ? <span style={{ fontSize: 15 }}>{them.bio}</span> : null}
           {self ? (
-            <Link href="/friends" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink, #000000)' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
+            <Link href="/friends?view=list" style={{ fontSize: 14, fontWeight: 700, color: 'var(--ink, #000000)' }}>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</Link>
           ) : (
             me && fc.n && (!locked || isAdmin(me)) ? (
               <Link href={`/u/${them.id}/friends`} style={{ fontSize: 14, color: 'var(--ink, #000000)' }}><b>{fc.n} {fc.n === 1 ? 'friend' : 'friends'}</b>{fc.mutual ? ` · ${fc.mutual} in common` : ''}</Link>

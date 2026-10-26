@@ -19,6 +19,8 @@ export default async function FriendsPage({ searchParams }) {
   if (!me) redirect('/signup?next=/friends');
   const sp = await searchParams;
   const q = typeof sp?.q === 'string' ? sp.q.trim().slice(0, 40) : '';
+  // Bottom bar → friends' Lately. Your profile's "N friends" → the list of friends (?view=list), as before.
+  const listView = !!q || sp?.view === 'list';
   const friends = await friendsOf(me.id);
   const counts = Object.fromEntries((await all("SELECT owner_id, COUNT(*) AS n FROM lists WHERE status = 'open' AND surprise = 0 AND for_who = 'me' AND visibility = 'public' GROUP BY owner_id")).map((r) => [r.owner_id, r.n]));
 
@@ -27,7 +29,7 @@ export default async function FriendsPage({ searchParams }) {
   const ql = q.toLowerCase();
   const shown = q ? friends.filter((f) => (f.name || '').toLowerCase().includes(ql) || (digits.length >= 3 && f.phone.replace(/\D/g, '').includes(digits))) : friends;
   const phone = digits.length >= 10 ? normalizePhone(q) : null;
-  const feed = q ? [] : await friendsFeed(me.id);
+  const feed = listView ? [] : await friendsFeed(me.id);
   let found = null;
   if (phone && phone !== me.phone && !friends.find((f) => f.phone === phone)) found = (await get('SELECT * FROM users WHERE phone = ?', phone)) || { none: true };
 
@@ -37,27 +39,28 @@ export default async function FriendsPage({ searchParams }) {
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 12px' }}>
           <span style={{ width: 44 }} />
           <h1 className="wide" style={{ margin: 0, fontSize: 11, letterSpacing: '0.18em' }}>Friends</h1>
-          <a href="#add" aria-label="Add a friend" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.91" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg></a>
+          <a href="/friends?view=list#add" aria-label="Add a friend" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.91" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg></a>
         </header>
 
-        {q ? null : (
+        {listView ? null : (
           <section aria-label="Lately" style={{ padding: '22px 20px 0', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, margin: '0 0 4px' }}>
               <h2 className="wide" style={{ margin: 0, fontSize: 18, letterSpacing: '0.1em' }}>Lately</h2>
-              <a href="#people" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends.length} {friends.length === 1 ? 'friend' : 'friends'}</a>
+              <a href="/friends?view=list" className="dot" style={{ fontSize: 15, color: '#E8642C', textDecoration: 'none' }}>{friends.length} {friends.length === 1 ? 'friend' : 'friends'}</a>
             </div>
             <p style={{ margin: '0 0 12px', fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>New lists, new wishes and wishes all covered, from your friends.</p>
             <LatelyRows rows={feed} meId={me.id} limit={20} />
             {feed.length === 0 ? (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'flex-start', padding: '14px 0', borderTop: '1px solid var(--line, #000000)' }}>
                 <span style={{ fontSize: 15, lineHeight: 1.45 }}>{friends.length ? 'Quiet so far. When your friends start lists or add wishes, it shows up here.' : 'Nothing here yet. Add a few friends and their new lists and wishes show up here.'}</span>
-                <a href="#add" style={{ display: 'flex', alignItems: 'center', height: 40, padding: '0 16px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 13 }}>Add a friend</a>
+                <a href="/friends?view=list#add" style={{ display: 'flex', alignItems: 'center', height: 40, padding: '0 16px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 13 }}>Add a friend</a>
               </div>
             ) : null}
             <p style={{ margin: 0, padding: '14px 0 0', borderTop: '1px solid var(--line, #000000)', fontSize: 13, color: 'var(--muted, #4A4A4A)', display: 'flex', gap: 8, alignItems: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="1.55" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="9" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>Private lists and surprises stay out of here.</p>
           </section>
         )}
 
+        {listView ? (<>
         <section id="people" style={{ position: 'relative', padding: q ? '22px 20px 0' : '40px 20px 0', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12 }}>
           <h2 style={{ margin: 0, fontWeight: 400, fontSize: 44, letterSpacing: '-0.03em', lineHeight: 0.95 }}>Your <span className="it">friends</span></h2>
           <span style={{ position: 'relative', width: 72, height: 56, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -109,6 +112,7 @@ export default async function FriendsPage({ searchParams }) {
           <ContactsPicker />
           <AddFriendForm defaultPhone={found?.none ? q : ''} />
         </section>
+        </>) : null}
         <div style={{ height: 24 }} />
       </main>
     </>
