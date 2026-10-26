@@ -10,8 +10,8 @@ import { replyToGiver } from '@/lib/actions-a1';
 // same emoji again takes the reaction back.
 const QUICK = ['❤️', '😋', '🎉', '🙌', '🥹', '👀'];
 const MORE = ['😍', '🔥', '✨', '🥂', '😂', '🤌', '💐', '🎂', '🍰', '☕️', '🥯', '🍕', '🛍️', '👢', '🕯️', '📚', '🌸', '🫶', '💃', '🤍', '😭', '🙏', '💯', '🍾']
-const PILL = { border: '1.5px solid var(--edge, #000000)', background: 'transparent', height: 34, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontFamily: 'inherit', color: 'var(--ink, #000000)' };
-const Smile = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2" /><path d="M9 9.5h.01" /><path d="M15 9.5h.01" /></svg>;
+const PILL = { border: '1.5px solid var(--edge, #000000)', background: 'transparent', height: 40, borderRadius: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontFamily: 'inherit', color: 'var(--ink, #000000)' };
+const Smile = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.64" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M8.5 14.5c1 1.4 2.2 2 3.5 2s2.5-.6 3.5-2" /><path d="M9 9.5h.01" /><path d="M15 9.5h.01" /></svg>;
 
 export default function LatelyActions({ cid, chips = [], mine = [], href, see = 'See item', toName = 'them', delay = 0 }) {
   const [pick, setPick] = useState(false);
@@ -34,12 +34,12 @@ export default function LatelyActions({ cid, chips = [], mine = [], href, see = 
         ) : null}
         <button type="button" onClick={() => { setPick(!pick); setMore(false); }} aria-expanded={pick ? 'true' : 'false'} aria-label={count ? 'Add an emoji' : 'React with an emoji'} style={{ ...PILL, padding: '0 10px', gap: 4, fontSize: 14, background: pick ? 'var(--lt, #D4FA4F)' : 'transparent' }}>
           {count ? null : <Smile />}
-          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.13" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
         </button>
-        <button type="button" aria-label={`Reply to ${toName} by text`} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)} style={{ ...PILL, width: 40, padding: 0, background: open ? 'var(--inv-bg, #000000)' : 'transparent' }}>
-          <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={open ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)'} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
+        <button type="button" aria-label={`Reply to ${toName} by text`} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)} style={{ ...PILL, width: 48, padding: 0, background: open ? 'var(--inv-bg, #000000)' : 'transparent' }}>
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={open ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)'} strokeWidth="1.64" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
         </button>
-        <Link href={href} style={{ marginLeft: 2, display: 'flex', alignItems: 'center', gap: 4, height: 34, padding: '0 12px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap' }}>{see}<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></Link>
+        <Link href={href} style={{ marginLeft: 2, display: 'flex', alignItems: 'center', gap: 4, height: 40, padding: '0 14px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap' }}>{see}<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.96" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></Link>
       </div>
       {pick ? (
         <form action={react} onSubmit={() => { setPick(false); setMore(false); }} className="a1up" role="group" aria-label="Pick a reaction" style={{ display: 'flex', gap: 4, marginTop: 4, flexWrap: 'wrap' }}>

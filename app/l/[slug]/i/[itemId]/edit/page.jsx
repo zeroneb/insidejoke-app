@@ -25,7 +25,7 @@ export default async function EditItemPage({ params }) {
   return (
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px', gap: 8 }}>
-        <Link href={`/l/${slug}/i/${it.id}`} aria-label="Close without saving" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
+        <Link href={`/l/${slug}/i/${it.id}`} aria-label="Close without saving" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
         <span style={{ fontWeight: 800, fontSize: 15, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>Edit in "{list.title}"</span>
         <div style={{ width: 44, flexShrink: 0 }} />
       </header>

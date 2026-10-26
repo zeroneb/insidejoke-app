@@ -34,7 +34,7 @@ export default async function ManagePage({ params, searchParams }) {
       <section style={{ position: 'relative', background: archived ? 'var(--lt, #8C8A86)' : 'var(--lt, #E8642C)', color: 'var(--inv-fg, #FFFFFF)', height: 300, overflow: 'hidden', flexShrink: 0 }}>
         <div aria-hidden="true" className="breathe" style={{ position: 'absolute', right: -70, bottom: -80, width: 260, height: 260, borderRadius: '50%', background: 'var(--dk, #13286B)' }} />
         <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={`/l/${slug}`} aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={`/l/${slug}`} aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <form action={setListArchived}>
             <input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value={archived ? '0' : '1'} />
             <button style={{ border: '2px solid #FFFFFF', background: 'transparent', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999, cursor: 'pointer' }}>{archived ? 'Unarchive list' : 'Archive list'}</button>
@@ -55,7 +55,7 @@ export default async function ManagePage({ params, searchParams }) {
       <section aria-labelledby="h-people" style={{ padding: '30px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 8 }}>
           <h2 id="h-people" className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.16em' }}>Collaborators</h2>
-          <Link href={`/l/${slug}/invite`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', color: 'var(--ink, #000000)', padding: '10px 0' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
+          <Link href={`/l/${slug}/invite`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', color: 'var(--ink, #000000)', padding: '10px 0' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.07" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
         </div>
         <p style={{ margin: '0 0 6px', fontSize: 13, lineHeight: 1.45, color: 'var(--muted, #4A4A4A)' }}>Collaborators can add, edit and share things on this list with you.</p>
         {people.length === 0 ? <p style={{ margin: 0, padding: '14px 0', borderTop: '1.5px solid var(--line, #000000)', fontSize: 15 }}>Just you for now.</p> : null}

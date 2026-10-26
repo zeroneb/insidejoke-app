@@ -60,9 +60,9 @@ export default function FriendList({ list, owner, items, me }) {
       {design ? (
         <>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
-            <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+            <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
             {me && list.visibility !== 'private' ? (
-              <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+              <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
             ) : <span style={{ width: 44 }} />}
           </header>
           <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: [name], photo: list.photo || null, handle: owner?.handle || null }} />
@@ -75,9 +75,9 @@ export default function FriendList({ list, owner, items, me }) {
       <section style={{ position: 'relative', background: cv.bg, color: cv.chrome, height: 420, overflow: 'hidden', flexShrink: 0 }}>
         <CoverArt cv={cv} />
         <header style={{ position: 'relative', zIndex: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={me ? profile : '/'} aria-label={`Back to ${name}'s profile`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           {me && list.visibility !== 'private' ? (
-            <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+            <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
         <span className="dk-center370"><Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} style={{ left: 10, top: 56 }} width={370} height={290} /></span>

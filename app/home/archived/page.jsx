@@ -17,7 +17,7 @@ export default async function Archived() {
     <>
       <main className="withnav">
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Archived</span>
           <span style={{ width: 44 }} />
         </header>
@@ -30,7 +30,7 @@ export default async function Archived() {
             <div key={l.id} style={{ borderTop: '1px solid var(--line, #000000)' }}>
             <Link href={`/l/${l.slug}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', textDecoration: 'none', minHeight: 56, fontWeight: 700, fontSize: 15 }}>
               <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}><span>{l.title}</span><span style={{ fontWeight: 400, fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>Archived {ago(l.archived_at || l.created_at)}</span></span>
-              <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
+              <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
             </Link>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14, paddingBottom: 10, flexWrap: 'wrap' }}>
             <form action={setListArchived}><input type="hidden" name="slug" value={l.slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 36, padding: '0 14px', border: '1.5px solid var(--edge, #000000)', borderRadius: 999, background: 'transparent', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer', color: 'var(--ink, #000)' }}>Unarchive</button></form>

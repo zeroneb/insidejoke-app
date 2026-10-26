@@ -51,28 +51,28 @@ function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
       <Link href="/" className="navlogo" aria-label="insidejoke landing page"><span className="wide" style={{ fontSize: 11, color: W, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 21, color: LIME }}>joke</span></Link>
       <span className="ph-only">
       <Tab href="/you" label="Profile and settings" short="Settings" active={active === 'home'}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('home')} strokeWidth="2" strokeLinecap="round"><path d="M5 7h14" /><path d="M5 12h14" /><path d="M5 17h9" /></svg>
+        <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink('home')} strokeWidth="1.73" strokeLinecap="round"><path d="M5 7h14" /><path d="M5 12h14" /><path d="M5 17h9" /></svg>
       </Tab>
       </span>
       <span className="dk-only">
       <Tab href="/you/settings" label="Settings" short="Settings" active={active === 'home'}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('home')} strokeWidth="2" strokeLinecap="round"><path d="M5 7h14" /><path d="M5 12h14" /><path d="M5 17h9" /></svg>
+        <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink('home')} strokeWidth="1.73" strokeLinecap="round"><path d="M5 7h14" /><path d="M5 12h14" /><path d="M5 17h9" /></svg>
       </Tab>
       </span>
       <Tab href="/friends" label="Friends" short="Friends" active={active === 'friends'}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('friends')} strokeWidth="1.9" strokeLinecap="round"><circle cx="9" cy="9" r="3" /><circle cx="17" cy="10" r="2.4" /><path d="M3 19c1-3 3.4-4.5 6-4.5s5 1.5 6 4.5" /><path d="M15 15c2.6 0 4.6 1.4 5.4 4" /></svg>
+        <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink('friends')} strokeWidth="1.65" strokeLinecap="round"><circle cx="9" cy="9" r="3" /><circle cx="17" cy="10" r="2.4" /><path d="M3 19c1-3 3.4-4.5 6-4.5s5 1.5 6 4.5" /><path d="M15 15c2.6 0 4.6 1.4 5.4 4" /></svg>
       </Tab>
       <Tab href={addHref} label="Add an item" short="Add" active={active === 'add'}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('add')} strokeWidth="2" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
+        <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink('add')} strokeWidth="1.73" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
       </Tab>
       <Tab href="/wallet" label="Wallet" short="Wallet" active={active === 'wallet'}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink('wallet')} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3z" /><path d="M3 7l12-4v4" /><circle cx="16" cy="13.5" r="1.4" /></svg>
+        <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink('wallet')} strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3z" /><path d="M3 7l12-4v4" /><circle cx="16" cy="13.5" r="1.4" /></svg>
       </Tab>
       <Link href={me ? '/home' : `/login?next=${encodeURIComponent(path)}`} aria-label={me ? 'You' : 'Log in'} aria-current={active === 'you' ? 'page' : undefined} className="navtab navme">
-        <span style={{ width: 42, height: 42, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ width: 50, height: 50, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {!me ? (
-            <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.9" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
-          ) : me.photo ? <img src={me.photo} alt="" style={{ width: 30, height: 30, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={30} owner />}
+            <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.66" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
+          ) : me.photo ? <img src={me.photo} alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={38} owner />}
         </span>
         <span className="navlabel" aria-hidden="true" style={{ color: W }}>{me ? 'You' : 'Log in'}</span>
       </Link>

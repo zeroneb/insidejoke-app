@@ -15,7 +15,7 @@ export default function Menu() {
       <header className="hdr" style={{ padding: '14px 12px 14px 20px' }}>
         <Link href="/" style={{ textDecoration: 'none', color: 'var(--inv-fg, #fff)', fontSize: 22 }}><span className="wide" style={{ fontSize: 20, textTransform: 'none' }}>inside</span><span className="dot" style={{ fontSize: 24, color: '#D4FA4F' }}>joke</span></Link>
         <Link href="/" aria-label="Close menu" className="iconbtn">
-          <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
+          <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="1.92" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
         </Link>
       </header>
 

@@ -12,7 +12,7 @@ const VIS = [['public', 'Public', 'On your profile. Anyone you share it with, or
 
 // r2: Option 10 NewList board headings (no numbers).
 const H2 = ({ children }) => <h2 className="wide" style={{ margin: 0, fontSize: 14, letterSpacing: '0.14em' }}>{children}</h2>;
-const Plus = () => <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
+const Plus = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.13" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
 const pillStyle = (on) => ({ border: '1.5px solid var(--edge, #000000)', background: on ? 'var(--lt, #D8F75A)' : 'transparent', color: 'var(--ink, #000000)', fontFamily: 'inherit', fontSize: 14, minHeight: 40, padding: '0 14px', borderRadius: 999, cursor: 'pointer' });
 const Section = ({ children }) => (
   <section style={{ padding: '26px 20px 0', display: 'flex', flexDirection: 'column', gap: 10 }}>{children}</section>
@@ -45,7 +45,7 @@ function Chip({ user, onRemove }) {
     <span style={{ display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid var(--edge, #000000)', borderRadius: 999, padding: '4px 6px 4px 4px', fontSize: 14, height: 40, boxSizing: 'border-box' }}>
       <Avatar user={user} size={30} />{user.name}
       <button type="button" onClick={onRemove} aria-label={`Remove ${user.name}`} style={{ width: 28, height: 28, border: 0, background: 'transparent', padding: 0, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: -2 }}>
-        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
+        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
       </button>
     </span>
   );

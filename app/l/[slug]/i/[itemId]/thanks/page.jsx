@@ -51,7 +51,7 @@ export default async function ThanksPage({ params }) {
           <div key={i} aria-hidden="true" className="r3-fall" style={{ position: 'absolute', left: c.x, top: 0, width: c.w, height: c.h, borderRadius: c.r, background: c.color, animationDelay: c.d, animationDuration: c.dur }} />
         ))}
         <Link href={`/l/${slug}/i/${it.id}`} aria-label="Close" style={{ position: 'relative', zIndex: 2, width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
+          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.56" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
         </Link>
         <h1 style={{ position: 'relative', zIndex: 1, margin: 0, padding: '0 10px', fontWeight: 700, fontSize: 60, lineHeight: 0.88, letterSpacing: '-0.055em', color: '#EE6A2F' }}>All<br />covered!</h1>
         {it.photo ? <img src={`/api/photo/${it.id}`} alt={it.name} style={{ position: 'absolute', right: 14, top: 140, width: 180, height: 180, objectFit: 'contain', background: 'var(--surface, #FFFFFF)', padding: 10, boxSizing: 'border-box' }} /> : <span style={{ position: 'absolute', right: 6, top: 140, display: 'block' }}><ItemSketch name={it.name} size={200} strokeWidth={1.6} /></span>}
@@ -65,7 +65,7 @@ export default async function ThanksPage({ params }) {
             <Link key={p.id} href={`/u/${p.id}`} aria-label={`${p.name || 'A friend'}${p.priv ? ', gave privately' : ''}`} style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1px solid var(--edge, #000000)', padding: '4px 10px 4px 4px', borderRadius: 999, fontSize: 14, color: 'var(--ink, #000000)', textDecoration: 'none' }}>
               <Avatar user={p} size={24} />
               {(p.name || 'A friend').split(/\s+/)[0]}
-              {p.priv ? <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M5 11h14v9H5z" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg> : null}
+              {p.priv ? <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M5 11h14v9H5z" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg> : null}
             </Link>
           ))}
         </div>

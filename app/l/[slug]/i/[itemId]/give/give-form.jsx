@@ -38,7 +38,7 @@ function Boil({ paths, color, style, width, height }) {
   );
 }
 
-const X = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
+const X = <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.56" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
 const Arrows = () => (
   <span aria-hidden="true" style={{ display: 'flex', gap: 1 }}>
     {['a1', 'a2', 'a3'].map((c) => <svg key={c} className={c} width="10" height="12" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="#96E084" /></svg>)}
@@ -103,7 +103,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
         {hidden}
         <StripeAuth need={state?.needAuth} />
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <button type="button" onClick={() => setStep('form')} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+          <button type="button" onClick={() => setStep('form')} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.56" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>One-time setup</span>
           <div style={{ width: 44 }} />
         </header>
@@ -148,7 +148,7 @@ export default function GiveForm({ slug, item, forName, signedIn, payLabel, init
         {hidden}
         <StripeAuth need={state?.needAuth} />
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={`/l/${slug}`} aria-label="Close" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
+          <Link href={`/l/${slug}`} aria-label="Close" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></Link>
           <span className="wide" style={{ fontSize: 12, letterSpacing: '0.18em', borderTop: '2px solid var(--line, #000000)', borderBottom: '2px solid var(--line, #000000)', padding: '5px 10px' }}>Treat · unlimited</span>
           <div style={{ width: 44 }} />
         </header>

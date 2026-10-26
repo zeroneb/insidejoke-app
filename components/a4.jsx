@@ -18,7 +18,7 @@ export function Hdr({ back, children, ink = RED, right, wide }) {
   return (
     <header className="a4-hdr">
       {back ? (
-        <Link href={back} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink} strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href={back} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink} strokeWidth="1.91" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
       ) : <span style={{ width: 44 }} />}
       {wide ? <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em', color: ink }}>{children}</span> : <span style={{ fontWeight: 800, fontSize: 14, color: ink, textAlign: 'center' }}>{children}</span>}
       {right || <span style={{ width: 44 }} />}

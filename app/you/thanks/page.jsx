@@ -19,7 +19,7 @@ export default async function WeeklyThanksPage() {
   return (
     <main className="r3-full" style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', flexGrow: 1, overflow: 'hidden' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>This week's treats</span>
         <span style={{ width: 44 }} />
       </header>

@@ -25,7 +25,7 @@ export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', car
       <>
         <StripePay />
         <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: 'var(--lt, #D8F75A)', padding: '14px 16px' }}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
+          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.08" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
           <span style={{ fontSize: 16, lineHeight: 1.3 }}>No fee added. All of it goes to {forName}.</span>
         </section>
       </>
@@ -58,7 +58,7 @@ export function PaymentPicker({ forName, kind, onKind, onBg = 'transparent', car
         </section>
       ) : null}
       <section style={{ marginTop: 22, display: 'flex', alignItems: 'center', gap: 12, background: 'var(--lt, #D8F75A)', padding: '14px 16px' }}>
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
+        <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.08" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><path d="M4 12l5 5L20 6" /></svg>
         <span style={{ fontSize: 16, lineHeight: 1.3 }}>No fee added. All of it goes to {forName}.</span>
       </section>
     </>

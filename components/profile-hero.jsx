@@ -37,7 +37,7 @@ export function Stats({ cells, label }) {
   );
 }
 
-export const Chevron = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>;
+export const Chevron = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>;
 
 // +1 917 555 0142
 export function spacedPhone(p) {

@@ -55,13 +55,13 @@ export default function ManageRows({ slug, active, archived }) {
       <section style={{ padding: '14px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 6 }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 16, letterSpacing: '0.12em' }}>On the list</h2>
-          <Link href={`/l/${slug}/add`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '10px 0', color: 'var(--ink, #000000)' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
+          <Link href={`/l/${slug}/add`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '10px 0', color: 'var(--ink, #000000)' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.07" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
         </div>
         {active.map((it) => {
           const isOpen = open === it.id;
           return (
             <ItemRow key={it.id} it={it} sub={sub(it)} right={
-              <button type="button" onClick={() => setOpen(isOpen ? null : it.id)} aria-label={`More options for ${it.name}`} aria-expanded={isOpen} style={{ width: 40, height: 40, flexShrink: 0, border: 0, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="var(--ink, #000000)"><circle cx="5" cy="12" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="19" cy="12" r="2" /></svg></button>
+              <button type="button" onClick={() => setOpen(isOpen ? null : it.id)} aria-label={`More options for ${it.name}`} aria-expanded={isOpen} style={{ width: 40, height: 40, flexShrink: 0, border: 0, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="var(--ink, #000000)"><circle cx="5" cy="12" r="2" /><circle cx="12" cy="12" r="2" /><circle cx="19" cy="12" r="2" /></svg></button>
             }>
               {isOpen ? (
                 <div className="pop" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 6, padding: '0 0 12px' }}>

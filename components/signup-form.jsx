@@ -20,7 +20,7 @@ const BTN = { height: 56, border: 0, background: 'var(--inv-bg, #000000)', color
 const FIELD = { height: 54, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontSize: 17, padding: '0 14px', boxSizing: 'border-box', width: '100%', borderRadius: 0, color: 'var(--ink, #000000)', fontWeight: 400 };
 
 function Back({ href, label = 'Back', onClick }) {
-  const inner = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>;
+  const inner = <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>;
   const st = { width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center', border: 0, background: 'transparent', padding: 0, cursor: 'pointer' };
   return onClick ? <button type="button" aria-label={label} onClick={onClick} style={st}>{inner}</button> : <Link href={href} aria-label={label} style={st}>{inner}</Link>;
 }

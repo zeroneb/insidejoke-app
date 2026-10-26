@@ -8,9 +8,9 @@ import { saveListDesign } from '@/lib/actions';
 
 // NAVY: text, icons, rings (flips light in dark mode). NAVY_BG: a navy fill, stays navy with white text.
 const NAVY = 'var(--navy-ink, #13286B)', NAVY_BG = '#13286B', MUTE = 'var(--muted, #4A4A4A)';
-const Pencil = () => <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z" /><path d="M14 6l3 3" /></svg>;
-const Cam = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>;
-const X = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
+const Pencil = () => <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={NAVY} strokeWidth="1.83" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z" /><path d="M14 6l3 3" /></svg>;
+const Cam = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.82" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>;
+const X = () => <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>;
 const label = { fontFamily: "'Archivo', sans-serif", fontStretch: '125%', fontWeight: 800, fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase' };
 const pencilBtn = { position: 'absolute', right: 14, top: 14, width: 44, height: 44, borderRadius: '50%', background: 'var(--surface, #FFFFFF)', border: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 14px rgba(0,0,0,.15)', cursor: 'pointer', zIndex: 2 };
 const changeBtn = { position: 'absolute', right: 14, bottom: 14, display: 'flex', alignItems: 'center', gap: 8, background: 'var(--surface, #FFFFFF)', color: NAVY, fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '10px 14px', borderRadius: 999, border: 0, cursor: 'pointer', zIndex: 2 };
@@ -130,7 +130,7 @@ export function CoverEditor({ design, title, ctx, onTitle, onDone, onClose, done
   return (
     <Sheet title="Edit cover" onClose={onClose}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 20px 0 8px' }}>
-        <button type="button" onClick={onClose} aria-label="Back" className="iconbtn" style={{ border: 0, background: 'transparent' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+        <button type="button" onClick={onClose} aria-label="Back" className="iconbtn" style={{ border: 0, background: 'transparent' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.91" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
         <span style={{ fontWeight: 800, fontSize: 16 }}>Edit cover</span>
         <span style={{ width: 44 }} />
       </div>

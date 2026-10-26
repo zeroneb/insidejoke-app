@@ -24,8 +24,8 @@ const first = (n) => (n || '').trim().split(/\s+/)[0] || 'them';
 const possessive = (n) => (n.endsWith('s') ? `${n}’` : `${n}’s`);
 const shortDate = (ts) => new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
-const Check = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg>;
-const Plus = () => <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
+const Check = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg>;
+const Plus = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.07" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>;
 const PILL = { marginTop: 6, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid var(--edge, #000000)', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', borderRadius: 999, cursor: 'pointer', color: 'var(--ink, #000)', textDecoration: 'none', boxSizing: 'border-box' };
 
 // a1/r1: a friend's profile, Option 10 FriendProfile.
@@ -71,10 +71,10 @@ export default async function FriendProfile({ params }) {
     <>
       <main className={me ? 'withnav' : ''} style={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={me ? '/friends' : '/'} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={me ? '/friends' : '/'} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Profile</span>
           {friend ? (
-            <a href="#text" aria-label={`Text ${name}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></a>
+            <a href="#text" aria-label={`Text ${name}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></a>
           ) : <span style={{ width: 44 }} />}
         </header>
 
@@ -99,7 +99,7 @@ export default async function FriendProfile({ params }) {
             </>
           ) : friend ? (
             <>
-              <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: 'var(--lt, #D4FA4F)' }}><Check />Friends<svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
+              <a href="#friend-options" aria-haspopup="dialog" style={{ ...PILL, background: 'var(--lt, #D4FA4F)' }}><Check />Friends<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.96" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></a>
               <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>On insidejoke together</span>
             </>
           ) : me ? (

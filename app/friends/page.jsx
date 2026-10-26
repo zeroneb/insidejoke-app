@@ -34,7 +34,7 @@ export default async function FriendsPage({ searchParams }) {
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 12px' }}>
           <span style={{ width: 44 }} />
           <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Friends</span>
-          <a href="#add" aria-label="Add a friend" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg></a>
+          <a href="#add" aria-label="Add a friend" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.91" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg></a>
         </header>
 
         <section style={{ position: 'relative', padding: '22px 20px 0', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 12 }}>
@@ -48,7 +48,7 @@ export default async function FriendsPage({ searchParams }) {
 
         <form role="search" action="/friends" style={{ margin: '22px 20px 0', display: 'flex', height: 52, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)' }}>
           <label htmlFor="q" className="sr">Search friends by name or number</label>
-          <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center', padding: '0 4px 0 14px' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg></span>
+          <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center', padding: '0 4px 0 14px' }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.82" strokeLinecap="round"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4 4" /></svg></span>
           <input id="q" name="q" type="search" defaultValue={q} placeholder="Name or number" autoComplete="off" style={{ flexGrow: 1, minWidth: 0, border: 0, background: 'transparent', fontFamily: 'inherit', fontSize: 17, padding: '0 10px', color: 'var(--ink, #000)', outline: 'none' }} />
           {q ? <Link href="/friends" aria-label="Clear search" style={{ display: 'flex', alignItems: 'center', padding: '0 14px', fontSize: 13, fontWeight: 700 }}>Clear</Link> : null}
         </form>

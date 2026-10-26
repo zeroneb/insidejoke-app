@@ -110,7 +110,7 @@ export default function Recorder({ slug, name, initialMode = 'card', me }) {
 
       {mode !== 'card' && step === 'ask' ? (
         <section className="a4-up" style={{ margin: '18px 16px 0', background: 'var(--surface, #fff)', padding: '22px 18px', display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <span style={{ width: 56, height: 56, borderRadius: '50%', background: RUST, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={video ? 'M3 7h12v10H3Z M15 11l6-4v10l-6-4' : 'M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Z M5 11a7 7 0 0 0 14 0 M12 18v3'} /></svg></span>
+          <span style={{ width: 56, height: 56, borderRadius: '50%', background: RUST, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="1.72" strokeLinecap="round" strokeLinejoin="round"><path d={video ? 'M3 7h12v10H3Z M15 11l6-4v10l-6-4' : 'M12 3a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0V6a3 3 0 0 1 3-3Z M5 11a7 7 0 0 0 14 0 M12 18v3'} /></svg></span>
           <p style={{ margin: 0, fontSize: 21, lineHeight: 1.2, letterSpacing: '-0.01em' }}>{video ? 'To record a video, insidejoke needs your camera and mic.' : 'To record a voice note, insidejoke needs your mic.'}</p>
           <p style={{ margin: 0, fontSize: 14, lineHeight: 1.45, color: 'var(--sub, #2A2A2A)' }}>Your browser will ask next. We only use it while you record, and you can redo it as many times as you like.</p>
           {err ? <div className="err">{err}</div> : null}

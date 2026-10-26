@@ -72,11 +72,11 @@ export default async function ItemView({ slug, itemId }) {
     <main style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <section style={{ position: 'relative', background: it.color, height: 380, overflow: 'hidden', flexShrink: 0 }}>
         <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-          <Link href={back} aria-label={isOwner ? 'Back to my list' : `Back to ${forName}'s list`} className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={back} aria-label={isOwner ? 'Back to my list' : `Back to ${forName}'s list`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.56" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           {isOwner ? (
-            <Link href={`/l/${slug}/i/${it.id}/edit`} aria-label={`Edit ${it.name}`} className="iconbtn"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z" /><path d="M13 8l3 3" /></svg></Link>
+            <Link href={`/l/${slug}/i/${it.id}/edit`} aria-label={`Edit ${it.name}`} className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20l4-1 11-11-3-3L5 16z" /><path d="M13 8l3 3" /></svg></Link>
           ) : me && list.visibility !== 'private' ? (
-            <Link href={`/l/${slug}/share`} aria-label="Share item" className="iconbtn"><svg aria-hidden="true" width="21" height="21" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
+            <Link href={`/l/${slug}/share`} aria-label="Share item" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={hdrInk} strokeWidth="1.53" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
           ) : <span style={{ width: 44 }} />}
         </header>
         <span style={{ position: 'absolute', left: 14, top: 64, fontWeight: 500, fontSize: 12, color: dark ? 'var(--inv-fg, #FFFFFF)' : EYEBROW[it.color] || 'var(--ink, #000000)', zIndex: 1 }}>{eyebrow}</span>
@@ -122,7 +122,7 @@ export default async function ItemView({ slug, itemId }) {
           )}
         </div>
         {it.url ? (
-          <a href={`/go/${it.id}`} target="_blank" rel="noopener sponsored" style={{ alignSelf: 'flex-start', marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'underline', textUnderlineOffset: 3, fontSize: 15, fontWeight: 700, padding: '10px 0', color: 'var(--ink, #000000)' }}>See it on {store} <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
+          <a href={`/go/${it.id}`} target="_blank" rel="noopener sponsored" style={{ alignSelf: 'flex-start', marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'underline', textUnderlineOffset: 3, fontSize: 15, fontWeight: 700, padding: '10px 0', color: 'var(--ink, #000000)' }}>See it on {store} <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.78" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
         ) : null}
       </section>
 
@@ -168,7 +168,7 @@ export default async function ItemView({ slug, itemId }) {
         })}
         {privateCount ? (
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '14px 0', borderTop: '1px solid var(--line, #000000)' }}>
-            <div style={{ width: 40, height: 40, flexShrink: 0, borderRadius: '50%', border: '1.5px dashed var(--edge, #000000)', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M5 11h14v9H5z" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg></div>
+            <div style={{ width: 40, height: 40, flexShrink: 0, borderRadius: '50%', border: '1.5px dashed var(--edge, #000000)', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M5 11h14v9H5z" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg></div>
             <span style={{ fontSize: 14 }}>{privateCount} private {privateCount === 1 ? 'contribution' : 'contributions'}</span>
           </div>
         ) : null}

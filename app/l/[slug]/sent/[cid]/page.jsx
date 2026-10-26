@@ -60,7 +60,7 @@ export default async function SentPage({ params }) {
 
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
         <Link href={`/l/${slug}`} aria-label={`Close, back to ${listName}`} style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.8" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
+          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.56" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
         </Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em', color: 'var(--ink, #000000)' }}>Sent</span>
         <div style={{ width: 44 }} />

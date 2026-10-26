@@ -77,7 +77,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
       {design ? (
         <>
           <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 8px 8px' }}>
-            <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+            <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
             <Link href={`/l/${slug}/share`} style={{ border: '2px solid var(--edge, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
           </header>
           <div style={archived ? { filter: 'grayscale(1)', opacity: 0.7 } : undefined}>
@@ -90,7 +90,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
         <section style={{ position: 'relative', background: bg, color: cv.chrome, height: 300, overflow: 'hidden', flexShrink: 0 }}>
           <CoverArt cv={cv} />
           <header style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-            <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+            <Link href="/home" aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={cv.icon || cv.chrome} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
             <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <ChangeCover slug={slug} hasPhoto={!!list.photo} color={cv.icon || cv.chrome} />
               <Link href={`/l/${slug}/share`} style={{ border: `2px solid ${cv.chrome}`, color: cv.chrome, textDecoration: 'none', fontWeight: 800, fontSize: 13, padding: '9px 14px', borderRadius: 999 }}>Share</Link>
@@ -114,7 +114,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
             <span className="wide" style={{ fontSize: 10, letterSpacing: '0.18em', color: '#D8F75A' }}>Pinned · from {blast.name || 'the team'}</span>
             <span style={{ fontSize: 17, lineHeight: 1.3 }}>{blast.body}</span>
           </div>
-          <form action={unpinBlastAction}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="blastId" value={blast.id} /><button aria-label="Unpin" className="iconbtn"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></button></form>
+          <form action={unpinBlastAction}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="blastId" value={blast.id} /><button aria-label="Unpin" className="iconbtn"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.82" strokeLinecap="round"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg></button></form>
         </section>
       ) : null}
 
@@ -122,7 +122,7 @@ export default function OwnerList({ list, items, me, blast = null }) {
       <section style={{ padding: '14px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 6 }}>
           <h2 className="wide" style={{ margin: 0, fontSize: 16, letterSpacing: '0.12em' }}>On the list</h2>
-          <Link href={`/l/${slug}/add`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '10px 0', color: 'var(--ink, #000000)' }}><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
+          <Link href={`/l/${slug}/add`} style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, fontSize: 14, textDecoration: 'none', padding: '10px 0', color: 'var(--ink, #000000)' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.07" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>Add</Link>
         </div>
         <div style={{ borderBottom: '1.5px solid var(--line, #000000)' }}>
           {items.map((it) => <ItemRow key={it.id} it={it} sub={rowSub(it)} href={`/l/${slug}/i/${it.id}`} />)}

@@ -7,7 +7,7 @@ import { Blob, Halftone, ItemSketch } from '@/components/ui';
 
 // Shared by Add item and Edit item (Option 13 boards). `item` present = edit mode.
 const LBL = { fontWeight: 800, fontSize: 14 };
-const camera = <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3" /></svg>;
+const camera = <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3" /></svg>;
 const hostOf = (u) => { try { return new URL(/^https?:/i.test(u) ? u : 'https://' + u).hostname.replace(/^www\./, ''); } catch { return ''; } };
 
 export function Fields({ v, set, treat, n }) {
@@ -180,7 +180,7 @@ export default function AddItemForm({ slug, initialTreat = false }) {
         <section className="pop" style={{ display: 'flex', gap: 12, alignItems: 'stretch', padding: '18px 20px 0' }}>
           <PhotoTile src={own.url || pulledPhoto} tag={own.file ? own.file.name : host} name={v.name} />
           <div style={{ flexGrow: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', gap: 8 }}>
-            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, display: 'flex', gap: 8, alignItems: 'flex-start' }}><svg aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2E9B47" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L19 7" /></svg><span>{pulledPhoto || own.file ? <>Pulled from {host}. Check it and fix anything.</> : <>Got the name from {host}. They don’t share photos, so add one: a screenshot works.</>}</span></p>
+            <p style={{ margin: 0, fontSize: 14, lineHeight: 1.4, display: 'flex', gap: 8, alignItems: 'flex-start' }}><svg aria-hidden="true" style={{ flexShrink: 0, marginTop: 2 }} width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E9B47" strokeWidth="2.07" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5L19 7" /></svg><span>{pulledPhoto || own.file ? <>Pulled from {host}. Check it and fix anything.</> : <>Got the name from {host}. They don’t share photos, so add one: a screenshot works.</>}</span></p>
             <label style={{ height: 44, border: '1.5px dashed var(--line, #000000)', background: !pulledPhoto && !own.file ? 'var(--lt, #D8F75A)' : 'transparent', fontWeight: 800, fontSize: 13, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
               {camera}{own.file ? 'Change my photo' : pulledPhoto ? 'Use my own photo' : 'Add a photo'}
               <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
@@ -195,7 +195,7 @@ export default function AddItemForm({ slug, initialTreat = false }) {
           {own.url ? <PhotoTile src={own.url} tag={own.file.name} bg="#A9CDF5" /> : null}
           <label style={{ flexGrow: 1, cursor: 'pointer', minHeight: 150, display: 'block' }}>
             <span style={{ display: 'flex', height: '100%', boxSizing: 'border-box', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, border: '2px dashed var(--line, #000000)', padding: 10, fontWeight: 800, fontSize: 14, textAlign: 'center' }}>
-              <svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4" /><path d="M7 9l5-5 5 5" /><path d="M4 20h16" /></svg>
+              <svg aria-hidden="true" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.72" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4" /><path d="M7 9l5-5 5 5" /><path d="M4 20h16" /></svg>
               {own.file ? 'Add another photo' : 'Add a photo'}
             </span>
             <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
@@ -256,7 +256,7 @@ export function EditItemForm({ slug, item, listTitle, contributed }) {
               <input type="file" name="photo" accept="image/*" className="sr" onChange={(e) => own.setFile(e.target.files?.[0] || null)} />
             </label>
             {item.url ? (
-              <a href={/^https?:/i.test(item.url) ? item.url : 'https://' + item.url} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 6, height: 36, fontWeight: 700, fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, color: 'var(--ink, #000)' }}>Open the link <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
+              <a href={/^https?:/i.test(item.url) ? item.url : 'https://' + item.url} target="_blank" rel="noopener" style={{ display: 'flex', alignItems: 'center', gap: 6, height: 36, fontWeight: 700, fontSize: 13, textDecoration: 'underline', textUnderlineOffset: 3, color: 'var(--ink, #000)' }}>Open the link <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.83" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7" /><path d="M8 7h9v9" /></svg></a>
             ) : <span style={{ height: 36 }} />}
           </div>
         </section>
@@ -283,7 +283,7 @@ function RemoveBlock({ slug, item, contributed, removing, setRemoving }) {
     <div style={{ padding: '12px 20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
       {!removing ? (
         <button type="button" onClick={() => setRemoving(true)} style={{ height: 52, border: '1.5px solid var(--edge, #000000)', background: 'transparent', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, borderRadius: 999, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, color: 'var(--ink, #000)' }}>
-          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M9 7V4h6v3" /><path d="M6 7l1 13h10l1-13" /></svg>Remove from list
+          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round" strokeLinejoin="round"><path d="M4 7h16" /><path d="M9 7V4h6v3" /><path d="M6 7l1 13h10l1-13" /></svg>Remove from list
         </button>
       ) : (
         <div className="pop" role="alertdialog" aria-labelledby="rmtitle" style={{ border: '1.5px solid #E2452B', padding: '18px 16px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>

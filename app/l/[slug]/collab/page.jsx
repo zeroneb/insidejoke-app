@@ -11,7 +11,7 @@ import { InviteBox, SurpriseSwitch } from '@/components/a4-forms';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Collab · insidejoke' };
 
-const Arrow = () => <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
+const Arrow = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
 
 export default async function CollabPage({ params }) {
   const { slug } = await params;

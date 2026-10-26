@@ -29,7 +29,7 @@ export default async function WalletPage({ searchParams }) {
   const header = (
     <>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10, padding: '12px 20px 0 8px', fontSize: 13, fontWeight: 600 }}>
-        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="1.91" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span style={{ minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{!cur ? 'Your wallet' : cur.shared ? `${cur.list.title} · collab list` : `Your wallet · ${cur.list.title}`}</span>
       </header>
       {lists.length > 1 ? (

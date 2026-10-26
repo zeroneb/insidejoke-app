@@ -36,7 +36,7 @@ export default function ThanksForm({ slug, itemId, word, count, already, listHre
       <textarea id="msg" name="message" rows={4} required maxLength={600} placeholder={`You all got me the ${word}!! Thank you for celebrating me, I love you guys.`} style={{ width: '100%', boxSizing: 'border-box', border: 0, background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', resize: 'none', fontFamily: "'EB Garamond', serif", fontSize: 19, lineHeight: 1.3, padding: '12px 14px', borderRadius: 0 }} />
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
         <label className="r3-file" style={{ width: 84, height: 84, flexShrink: 0, boxSizing: 'border-box', border: `1.5px dashed ${photo ? '#F0895A' : '#FFFFFF'}`, background: photo ? 'var(--lt, #F0895A)' : 'transparent', color: photo ? 'var(--ink, #000000)' : 'var(--inv-fg, #FFFFFF)', fontSize: 12, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, cursor: 'pointer' }}>
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
+          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.56" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg>
           {photo ? 'Photo added' : 'Add photo'}
           <input type="file" name="photo" accept="image/*" aria-label="Add a photo" onChange={(e) => setPhoto(e.target.files?.[0]?.name || '')} />
         </label>

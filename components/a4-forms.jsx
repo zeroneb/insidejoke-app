@@ -63,14 +63,14 @@ export function ContactPicker({ slug, friends, link, name, surprise }) {
       <input type="checkbox" name="userId" value={f.id} disabled={f.member} checked={!!sel[f.id] || f.member} onChange={(e) => setSel({ ...sel, [f.id]: e.target.checked })} />
       {f.avatar}
       <span style={{ display: 'flex', flexDirection: 'column', gap: 2, flexGrow: 1 }}><span style={{ fontWeight: 800, fontSize: 16 }}>{f.name}</span><span style={{ fontSize: 12, color: 'var(--warm-ink, #8A2414)' }}>{f.member ? 'Already on this list' : f.sub}</span></span>
-      <span className="a4-tick"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
+      <span className="a4-tick"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" strokeWidth="2.84" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
     </label>
   );
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <input type="hidden" name="slug" value={slug} />
       <div style={{ margin: '18px 20px 0', display: 'flex', alignItems: 'center', gap: 10, height: 46, border: `2px solid ${RED}`, borderRadius: 999, padding: '0 16px', background: 'var(--surface, #fff)' }}>
-        <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
+        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={RED} strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" /></svg>
         <label htmlFor="q" className="sr">Search friends</label>
         <input id="q" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search friends" style={{ flexGrow: 1, minWidth: 0, border: 0, outline: 'none', fontFamily: 'inherit', fontSize: 15, background: 'transparent', color: 'var(--ink, #000)' }} />
       </div>
@@ -268,7 +268,7 @@ export function VoicePlayer({ src, who, dark = false, seed = 37 }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: dark ? 'var(--inv-bg, #000)' : 'var(--ground, #ECECEF)', color: dark ? 'var(--inv-fg, #fff)' : 'var(--ink, #000)', padding: dark ? 12 : '10px 12px' }}>
       <button type="button" aria-label={`${playing ? 'Pause' : 'Play'} ${who}'s voice note`} onClick={() => { const a = ref.current; if (!a) return; if (a.paused) a.play(); else a.pause(); }} style={{ width: dark ? 40 : 32, height: dark ? 40 : 32, flexShrink: 0, borderRadius: '50%', border: 0, background: dark ? 'var(--lt, #FFE34D)' : 'var(--inv-bg, #000)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-        {playing ? <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill={dark ? '#000' : 'var(--inv-fg, #fff)'}><path d="M6 4h4v16H6zM14 4h4v16h-4z" /></svg> : <svg aria-hidden="true" width="12" height="12" viewBox="0 0 24 24" fill={dark ? '#000' : 'var(--inv-fg, #fff)'}><path d="M6 4l14 8-14 8z" /></svg>}
+        {playing ? <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill={dark ? '#000' : 'var(--inv-fg, #fff)'}><path d="M6 4h4v16H6zM14 4h4v16h-4z" /></svg> : <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill={dark ? '#000' : 'var(--inv-fg, #fff)'}><path d="M6 4l14 8-14 8z" /></svg>}
       </button>
       <span aria-hidden="true" style={{ display: 'flex', alignItems: 'center', gap: 3, flexGrow: 1, height: 28, overflow: 'hidden' }}>
         {bars.map((b, i) => <span key={i} className={playing || dark ? 'a4-w' : ''} style={{ width: 3, flexShrink: 0, height: b.h, background: ink, animationDelay: b.d }} />)}
@@ -340,7 +340,7 @@ export function ThankGroupForm({ slug, count, suggestion, name, link }) {
         {photo ? (
           <div style={{ position: 'relative', height: 190, background: 'var(--lt, #F4D3EE)', overflow: 'hidden' }}>
             <img src={photo} alt="Your photo" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <button type="button" onClick={() => { if (fileRef.current) fileRef.current.value = ''; setPhoto(''); }} aria-label="Remove photo" style={{ position: 'absolute', right: 8, top: 8, width: 32, height: 32, border: 0, borderRadius: '50%', background: 'var(--surface, #fff)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000)" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+            <button type="button" onClick={() => { if (fileRef.current) fileRef.current.value = ''; setPhoto(''); }} aria-label="Remove photo" style={{ position: 'absolute', right: 8, top: 8, width: 40, height: 40, border: 0, borderRadius: '50%', background: 'var(--surface, #fff)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000)" strokeWidth="2.13" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
           </div>
         ) : (
           <label htmlFor="tphoto" style={{ border: '2px dashed var(--line, #000)', fontWeight: 800, fontSize: 14, padding: 18, textAlign: 'center', cursor: 'pointer' }}>Add a photo (optional)</label>

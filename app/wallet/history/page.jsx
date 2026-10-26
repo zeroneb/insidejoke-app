@@ -30,8 +30,8 @@ const nice = (name = '', store = '') => {
   return /^[A-Z][a-z]/.test(h) ? h[0].toLowerCase() + h.slice(1) : h;
 };
 
-const Globe = () => <svg role="img" aria-label="Public" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3c3 3 3 15 0 18" /><path d="M12 3c-3 3-3 15 0 18" /></svg>;
-const Lock = () => <svg role="img" aria-label="Private" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
+const Globe = () => <svg role="img" aria-label="Public" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="1.72" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M3 12h18" /><path d="M12 3c3 3 3 15 0 18" /><path d="M12 3c-3 3-3 15 0 18" /></svg>;
+const Lock = () => <svg role="img" aria-label="Private" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--muted, #4A4A4A)" strokeWidth="1.72" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="11" width="14" height="10" rx="1" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>;
 
 export default async function HistoryPage({ searchParams }) {
   const me = await currentUser();
@@ -70,7 +70,7 @@ export default async function HistoryPage({ searchParams }) {
   return (
     <main className="r3-full" style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000000)', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href="/wallet" aria-label="Back to your wallet" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href="/wallet" aria-label="Back to your wallet" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Only you see this</span>
         <span style={{ width: 44 }} />
       </header>

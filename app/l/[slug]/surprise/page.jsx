@@ -13,7 +13,7 @@ import { VoicePlayer } from '@/components/a4-forms';
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'The surprise · insidejoke' };
 
-const Check = () => <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={RUST} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12l5 5L20 6" /></svg>;
+const Check = () => <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={RUST} strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M4 12l5 5L20 6" /></svg>;
 
 export default async function SurpriseSendPage({ params, searchParams }) {
   const { slug } = await params;
@@ -41,7 +41,7 @@ export default async function SurpriseSendPage({ params, searchParams }) {
     <main className="a4 a4-blue r4-sky withnav">
       <section style={{ position: 'relative', height: 430, background: 'var(--lt, #A9CDF5)' }}>
         <header className="a4-hdr" style={{ position: 'relative', zIndex: 2 }}>
-          <Link href={`/l/${slug}/collab`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={`/l/${slug}/collab`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #fff)" strokeWidth="1.91" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
           <span aria-hidden="true" style={{ width: 18, height: 18, marginRight: 14, borderRadius: '50%', background: RUST }} />
         </header>
         <svg aria-hidden="true" className="a4-breathe" style={{ position: 'absolute', right: -100, top: 150 }} width="320" height="320" viewBox="0 0 270 270"><defs><pattern id="ht" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="2.7" fill={RUST} /></pattern><radialGradient id="f" cx="40%" cy="40%" r="65%"><stop offset="0" stopColor="#000" /><stop offset="1" stopColor="#fff" /></radialGradient><mask id="m"><rect width="270" height="270" fill="url(#f)" /></mask></defs><circle cx="135" cy="135" r="135" fill="#E7B48A" /><circle cx="135" cy="135" r="135" fill="url(#ht)" mask="url(#m)" /></svg>

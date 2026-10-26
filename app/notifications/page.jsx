@@ -27,7 +27,7 @@ export default async function Notifications() {
   return (
     <main className="withnav" style={{ display: 'flex', flexDirection: 'column' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 12px 0 8px' }}>
-        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href="/home" aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>Notifications</span>
         <span style={{ width: 44 }} />
       </header>
@@ -40,7 +40,7 @@ export default async function Notifications() {
         ) : items.map((n) => (
           <Link key={n.key} href={n.href} style={{ display: 'flex', gap: 12, alignItems: 'flex-start', padding: '14px 0', borderTop: '1px solid var(--line, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none' }}>
             {n.who ? <FaceSm user={{ id: n.who.uid, name: n.who.name, color: n.who.color, seed: n.who.seed, photo: n.who.photo }} size={40} uid={`n${n.key.replace(/[^a-z0-9]/gi, '')}`} /> : (
-              <span aria-hidden="true" style={{ width: 40, height: 40, flexShrink: 0, borderRadius: '50%', background: 'var(--lt, #D8F75A)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
+              <span aria-hidden="true" style={{ width: 40, height: 40, flexShrink: 0, borderRadius: '50%', background: 'var(--lt, #D8F75A)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.18" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12l5 5 9-10" /></svg></span>
             )}
             <span style={{ display: 'flex', flexDirection: 'column', gap: 4, flexGrow: 1, minWidth: 0 }}>
               <span style={{ fontSize: 15, lineHeight: 1.35 }}>{n.who ? <b>{first(n.who.name)} </b> : null}{n.big ? <b>{n.text}</b> : n.text}</span>

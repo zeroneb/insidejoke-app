@@ -28,9 +28,9 @@ export default function PayoutForm({ next, current, legalName, acct }) {
       <input type="hidden" name="next" value={next} />
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 20px 0 8px', fontSize: 13, fontWeight: 600 }}>
         {s === 1 ? (
-          <button type="button" onClick={() => setStep(0)} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
+          <button type="button" onClick={() => setStep(0)} aria-label="Back" style={{ width: 44, height: 44, border: 0, background: 'transparent', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></button>
         ) : (
-          <Link href={state?.next || next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+          <Link href={state?.next || next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         )}
         <span>{current && s < 2 ? 'Change where it lands' : 'One-time setup'}</span>
       </header>
@@ -107,7 +107,7 @@ export function StripePayoutStart({ next, current, started = false, status = '' 
     <form action={action} className="r3-full" style={{ background: Y, color: V, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
       <input type="hidden" name="next" value={next} />
       <header style={{ display: 'flex', alignItems: 'center', padding: '12px 20px 0 8px', fontSize: 13, fontWeight: 600, gap: 6 }}>
-        <Link href={next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="2.2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href={next} aria-label="Back" style={{ width: 44, height: 44, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={V} strokeWidth="1.91" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span>{current ? 'Change where it lands' : 'One-time setup'}</span>
       </header>
       <section style={{ padding: '10px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>

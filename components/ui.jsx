@@ -29,7 +29,7 @@ export function Header({ back, title, right, light }) {
     <header className="hdr">
       {back ? (
         <Link href={back} aria-label="Back" className="iconbtn">
-          <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={ink} strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>
+          <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg>
         </Link>
       ) : <span style={{ width: 44 }} />}
       {title ? <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em', color: ink }}>{title}</span> : null}

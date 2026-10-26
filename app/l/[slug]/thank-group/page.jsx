@@ -30,7 +30,7 @@ export default async function ThankGroupPage({ params }) {
   return (
     <main style={{ background: 'var(--ground, #ECECEF)', color: 'var(--ink, #000)', display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <header className="a4-hdr">
-        <Link href={token ? `/reveal/${token}?open=1` : `/l/${slug}`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000)" strokeWidth="2" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
+        <Link href={token ? `/reveal/${token}?open=1` : `/l/${slug}`} aria-label="Back" className="a4-back"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000)" strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>
         <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em' }}>{list.title}</span>
         <span style={{ width: 44 }} />
       </header>
