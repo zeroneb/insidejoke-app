@@ -13,14 +13,21 @@ function Who({ g, meId }) {
   return <Link href={`/u/${g.id}`} style={{ fontWeight: 700, textDecoration: 'none' }}>{first(g.name)}</Link>;
 }
 
+const Line = ({ m, meId }) => <span style={{ fontSize: 14, lineHeight: 1.35 }}><b>{m.uid === meId ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>;
+
 function Comments({ list, meId }) {
   if (!list.length) return null;
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4, paddingLeft: 10, borderLeft: '2px solid #D4FA4F' }}>
-      {list.slice(-3).map((m, i) => (
-        <span key={i} style={{ fontSize: 14, lineHeight: 1.35 }}><b>{m.uid === meId ? 'You' : (m.name || 'Someone').split(' ')[0]}</b> {m.body}</span>
-      ))}
-      {list.length > 3 ? <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{list.length - 3} earlier</span> : null}
+      {list.length > 3 ? (
+        <details>
+          <summary style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)', cursor: 'pointer' }}>{list.length - 3} earlier</summary>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
+            {list.slice(0, -3).map((m, i) => <Line key={i} m={m} meId={meId} />)}
+          </div>
+        </details>
+      ) : null}
+      {list.slice(-3).map((m, i) => <Line key={i} m={m} meId={meId} />)}
     </div>
   );
 }

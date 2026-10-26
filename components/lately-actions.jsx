@@ -6,7 +6,7 @@ import { react } from '@/lib/actions';
 import { replyToGiver } from '@/lib/actions-a1';
 
 // r1: the Lately row's buttons (Option 10 Home): emoji reaction (smiley + top emoji + count),
-// reply by text, See item / See list. Tapping the smiley opens a small emoji row; picking the
+// comment (adds to the row's thread), See item / See list. Tapping the smiley opens a small emoji row; picking the
 // same emoji again takes the reaction back.
 const QUICK = ['❤️', '😋', '🎉', '🙌', '🥹', '👀'];
 const MORE = ['😍', '🔥', '✨', '🥂', '😂', '🤌', '💐', '🎂', '🍰', '☕️', '🥯', '🍕', '🛍️', '👢', '🕯️', '📚', '🌸', '🫶', '💃', '🤍', '😭', '🙏', '💯', '🍾']
@@ -36,7 +36,7 @@ export default function LatelyActions({ cid, chips = [], mine = [], href, see = 
           {count ? null : <Smile />}
           <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.13" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>
         </button>
-        <button type="button" aria-label={toName ? `Reply to ${toName} by text` : 'Comment'} aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)} style={{ ...PILL, width: 48, padding: 0, background: open ? 'var(--inv-bg, #000000)' : 'transparent' }}>
+        <button type="button" aria-label="Comment" aria-expanded={open ? 'true' : 'false'} onClick={() => setOpen(!open)} style={{ ...PILL, width: 48, padding: 0, background: open ? 'var(--inv-bg, #000000)' : 'transparent' }}>
           <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={open ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)'} strokeWidth="1.64" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>
         </button>
         <Link href={href} style={{ marginLeft: 2, display: 'flex', alignItems: 'center', gap: 4, height: 40, padding: '0 14px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', textDecoration: 'none', fontWeight: 700, fontSize: 13, whiteSpace: 'nowrap' }}>{see}<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="1.96" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14" /><path d="M13 6l6 6-6 6" /></svg></Link>
@@ -51,13 +51,11 @@ export default function LatelyActions({ cid, chips = [], mine = [], href, see = 
         </form>
       ) : null}
       {open ? (
-        sent ? (
-          <p className="a1up" role="status" style={{ margin: '4px 0 0', fontSize: 13 }}><span style={{ background: 'var(--lt, #D4FA4F)', padding: '3px 8px', color: '#000' }}>{state.to ? `Sent. ${state.to} sees it here and gets it by text.` : 'Posted. Anyone who sees this sees it too.'}</span></p>
-        ) : (
-          <form action={act} className="a1up" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
+        (
+          <form key={state?.at || 0} action={act} className="a1up" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
             <input type="hidden" name="contributionId" value={cid} />
-            <label htmlFor={`r-${cid}`} className="sr">{toName ? `Reply to ${toName}` : 'Comment'}</label>
-            <input id={`r-${cid}`} name="body" autoFocus maxLength={280} placeholder={toName ? `Text ${toName} back` : 'Add a comment'} required
+            <label htmlFor={`r-${cid}`} className="sr">Comment</label>
+            <input id={`r-${cid}`} name="body" autoFocus maxLength={280} placeholder="Add a comment" required
               style={{ flexGrow: 1, minWidth: 0, height: 40, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontSize: 15, padding: '0 12px', borderRadius: 0, color: 'var(--ink, #000)' }} />
             <button disabled={pending} style={{ height: 40, padding: '0 14px', borderRadius: 999, border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 13, cursor: 'pointer' }}>{pending ? 'Sending…' : 'Send'}</button>
           </form>
