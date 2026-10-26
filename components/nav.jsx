@@ -69,7 +69,7 @@ function NavBar({ me, path = '/home', active = '', addHref = '/lists/new' }) {
         <svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={ink('wallet')} strokeWidth="1.65" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3z" /><path d="M3 7l12-4v4" /><circle cx="16" cy="13.5" r="1.4" /></svg>
       </Tab>
       <Link href={me ? '/home' : `/login?next=${encodeURIComponent(path)}`} aria-label={me ? 'You' : 'Log in'} aria-current={active === 'you' ? 'page' : undefined} className="navtab navme">
-        <span style={{ width: 50, height: 50, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ width: 46, height: 46, borderRadius: '50%', border: active === 'you' ? '2px solid #D4FA4F' : '2px solid transparent', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {!me ? (
             <svg aria-hidden="true" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" strokeWidth="1.66" strokeLinecap="round"><circle cx="12" cy="8.5" r="3.6" /><path d="M4.5 20c1.3-3.6 4.2-5.4 7.5-5.4s6.2 1.8 7.5 5.4" /></svg>
           ) : me.photo ? <img src={me.photo} alt="" style={{ width: 38, height: 38, borderRadius: '50%', objectFit: 'cover' }} /> : <Avatar user={me} size={38} owner />}
