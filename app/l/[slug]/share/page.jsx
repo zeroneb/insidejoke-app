@@ -6,6 +6,8 @@ import { listBySlug, owner as ownerOf } from '@/lib/lists';
 import { appUrl } from '@/lib/texts';
 import { firstName } from '@/components/friend-list';
 import ShareSheet from '@/components/share-sheet';
+import { parse as parseDesign } from '@/lib/cover-designs';
+import { teamOf } from '@/lib/collab';
 
 export const dynamic = 'force-dynamic';
 
@@ -55,6 +57,8 @@ export default async function SharePage({ params }) {
         invite={{ headline, when: fmtDate(list.date), isPrivate: list.visibility === 'private' }}
         profile={{ handle, bio: isOwner ? owner?.bio || '' : '' }}
         canProfile={isOwner && list.for_who === 'me' && !list.surprise && list.visibility !== 'private'}
+        design={parseDesign(list.design)}
+        coverCtx={{ visibility: list.visibility, recipient: list.recipient_name || null, photo: list.photo || null, handle: owner?.handle || null, people: (await teamOf(list)).filter((u) => u.role !== 'viewer').map((u) => String(u.name || '').trim().split(/\s+/)[0] || 'A friend') }}
       />
     </main>
   );
