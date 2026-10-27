@@ -35,7 +35,10 @@ export default function EdgeColors() {
   useEffect(() => {
     const html = document.documentElement;
     const sync = () => {
-      if (window.innerWidth >= 700) { html.style.removeProperty('--page'); return; }
+      // Measure with our own pin removed. In dark mode the app column's ground IS --page, so measuring with an
+      // old pin in place reads that pin back, and a light ground from one page stayed stuck on every page after.
+      html.style.removeProperty('--page');
+      if (window.innerWidth >= 700) return;
       const top = colorAt(1);
       const bottom = ground();
       if (bottom) html.style.setProperty('--page', bottom); else html.style.removeProperty('--page');
@@ -43,7 +46,12 @@ export default function EdgeColors() {
     };
     const t = setTimeout(sync, 60);
     window.addEventListener('resize', sync);
-    return () => { clearTimeout(t); window.removeEventListener('resize', sync); };
+    // Switching Light / Dark / Match phone (no page change) or the phone's own setting: measure again.
+    const mo = new MutationObserver(() => setTimeout(sync, 30));
+    mo.observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener?.('change', sync);
+    return () => { clearTimeout(t); window.removeEventListener('resize', sync); mo.disconnect(); mq.removeEventListener?.('change', sync); };
   }, [path]);
   return null;
 }
