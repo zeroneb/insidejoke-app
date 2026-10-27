@@ -43,11 +43,9 @@ export function TeamRow({ t, viewerId }) {
   if (!t.team?.length) return null;
   return (
     <div aria-label="Made together by" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', paddingTop: 6 }}>
-      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--muted, #4A4A4A)' }}>WITH</span>
       {t.team.map((u) => (
-        <Link key={u.id} href={`/u/${u.id}`} title={u.name} aria-label={u.id === viewerId ? 'You' : u.name} style={{ display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', color: 'var(--ink, #000000)', minHeight: 32 }}>
-          <FaceSm user={u} size={28} uid={`tm${t.id.replace(/[^a-z0-9]/gi, '')}${u.id.replace(/[^a-z0-9]/gi, '')}`} />
-          <span style={{ fontSize: 12, fontWeight: 700 }}>{u.id === viewerId ? 'You' : firstName(u.name)}</span>
+        <Link key={u.id} href={`/u/${u.id}`} title={u.id === viewerId ? 'You' : u.name} aria-label={u.id === viewerId ? 'Your profile' : `${u.name}’s profile`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 44, minHeight: 44, textDecoration: 'none' }}>
+          <FaceSm user={u} size={32} uid={`tm${t.id.replace(/[^a-z0-9]/gi, '')}${u.id.replace(/[^a-z0-9]/gi, '')}`} />
         </Link>
       ))}
     </div>
