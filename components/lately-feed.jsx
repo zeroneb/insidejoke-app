@@ -36,7 +36,7 @@ function Comments({ list, meId }) {
 
 // The picture for a row: a new list shows its cover; an added or covered item shows its photo.
 function Visual({ f, href }) {
-  if (f.kind === 'list') {
+  if (f.kind === 'list' || f.kind === 'joined') {
     const design = parseDesign(f.design);
     if (!design) return null;
     return (
@@ -45,7 +45,7 @@ function Visual({ f, href }) {
       </Link>
     );
   }
-  if (f.kind !== 'list' && f.item_photo) {
+  if (f.kind !== 'list' && f.kind !== 'joined' && f.item_photo) {
     return (
       <Link href={href} aria-label={`See ${f.item_name}`} style={{ display: 'block', marginTop: 6, width: 140, height: 140, borderRadius: 12, overflow: 'hidden', background: 'var(--surface, #FFFFFF)' }}>
         <img src={f.item_photo} alt="" loading="lazy" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -92,6 +92,11 @@ function FeedRow({ f, r, c = [], meId, n }) {
   } else if (f.kind === 'fcovered') {
     lead = <span style={{ fontSize: 15, lineHeight: 1.35 }}><Link href={`/u/${one.id}`} style={{ textDecoration: 'none' }}>{possessive(first(one.name))}</Link> {f.item_name} is all covered</span>;
     badge = '100%';
+  } else if (f.kind === 'joined') {
+    text = <>joined the collab list {f.title}</>;
+    badge = 'Joined';
+    see = 'See list';
+    href = `/l/${f.slug}`;
   } else if (f.kind === 'list') {
     text = f.for_name ? <>started {f.title} for {first(f.for_name)}</> : <>started a new list, {f.title}</>;
     badge = 'New';
@@ -118,7 +123,7 @@ function FeedRow({ f, r, c = [], meId, n }) {
         <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{when}</span>
         <Visual f={f} href={href} />
         <Comments list={c} meId={meId} />
-        <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} give={own ? null : f.kind === 'added' ? `/l/${f.slug}/i/${f.item_id}/give` : f.kind === 'list' ? `/l/${f.slug}` : null} toName={own && !f.noteBy ? '' : first(f.noteBy || one.name)} delay={n} />
+        <LatelyActions cid={f.key} chips={r?.list || []} mine={r?.mine || []} href={href} see={see} give={own ? null : f.kind === 'added' ? `/l/${f.slug}/i/${f.item_id}/give` : f.kind === 'list' || f.kind === 'joined' ? `/l/${f.slug}` : null} toName={own && !f.noteBy ? '' : first(f.noteBy || one.name)} delay={n} />
       </div>
       <span className="dot" style={{ fontSize: 18, color: '#E8642C', flexShrink: 0 }}>{badge}</span>
     </div>

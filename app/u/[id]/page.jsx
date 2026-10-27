@@ -52,7 +52,7 @@ export default async function FriendProfile({ params }) {
   const seen = {};
   const idx = (k) => (seen[k] = (seen[k] ?? -1) + 1);
   const fc = await friendCounts(them.id, me?.id);
-  const recent = friend ? await profileLately(lists) : [];
+  const recent = friend ? await profileLately(lists, them.id) : [];
   const gifts = me && !self ? await between(me.id, them.id) : [];
   const fromThem = gifts.filter((g) => g.giver_id === them.id).length;
   const toThem = gifts.length - fromThem;
@@ -147,7 +147,7 @@ export default async function FriendProfile({ params }) {
             {recent.map((e) => (
               <Link key={e.key} href={e.href} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 12, padding: '12px 0', borderTop: '1px solid var(--line, #000000)', color: 'var(--ink, #000000)', textDecoration: 'none' }}>
                 <span style={{ fontSize: 14, lineHeight: 1.35 }}>
-                  {e.kind === 'list' ? <>Started a new list, <b>{e.title}</b></> : e.kind === 'added' ? <>Added <b>{e.item}</b> to {e.title}</> : <><b>{e.item}</b> is covered</>}
+                  {e.kind === 'list' ? <>Started a new list, <b>{e.title}</b></> : e.kind === 'joined' ? <>Joined the collab list <b>{e.title}</b></> : e.kind === 'added' ? <>Added <b>{e.item}</b> to {e.title}</> : <><b>{e.item}</b> is covered</>}
                 </span>
                 <span style={{ flexShrink: 0, fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>{shortDate(e.at)}</span>
               </Link>
