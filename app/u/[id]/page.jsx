@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { publicListsOf, between, profileLately, friendCounts } from '@/lib/lists';
-import { ListTile, tileData } from '@/components/list-tile';
+import { ListTile, TeamTile, tileData } from '@/components/list-tile';
 import { PhotoBlob } from '@/components/ui';
 import { addFriend, unfriend } from '@/lib/actions-a1';
 import ShareProfile from '@/components/share-profile';
@@ -133,7 +133,7 @@ export default async function FriendProfile({ params }) {
                   <ListTile t={t} i={idx(t.kind) + 1} variant="friend" />
                   <span style={{ position: 'absolute', right: 8, top: 8, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontSize: 11, fontWeight: 800, letterSpacing: '0.04em', padding: '4px 9px', borderRadius: 999, pointerEvents: 'none' }}>Private · admin view</span>
                 </div>
-              ) : <ListTile key={t.id} t={t} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
+              ) : <TeamTile key={t.id} t={t} viewerId={me?.id} i={idx(t.kind) + (self ? 0 : 1)} variant="friend" />)}
             </div>
           ) : (
             <p style={{ margin: 0, fontSize: 15, lineHeight: 1.45 }}>{locked ? `${name} shares their profile with friends only.` : `${name} has no public lists right now.`}</p>

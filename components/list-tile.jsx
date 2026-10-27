@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { all, get } from '@/lib/db';
 import { itemsFor } from '@/lib/lists';
-import { Blob } from '@/components/ui';
+import { Blob, FaceSm } from '@/components/ui';
 import CoverDesign from '@/components/cover-design';
 import { parse as parseDesign } from '@/lib/cover-designs';
 
@@ -24,13 +24,44 @@ export async function tileData(list, viewerId) {
   const raised = wishes.reduce((n, i) => n + Math.min(i.raised, i.target), 0);
   const pct = target ? Math.min(100, Math.floor((raised / target) * 100)) : 0;
   const givers = (await get('SELECT COUNT(DISTINCT giver_id) AS n FROM contributions WHERE list_id = ?', list.id)).n;
-  const team = list.for_who === 'other'
-    ? await all("SELECT u.id, u.name FROM list_members m JOIN users u ON u.id = m.user_id WHERE m.list_id = ? AND m.role <> 'viewer' UNION SELECT u.id, u.name FROM users u WHERE u.id = ?", list.id, list.owner_id)
-    : [];
+  // Organiser first, then collaborators in the order they joined (viewers aren't part of the team).
+  const owner = await get('SELECT id, name, color, seed, photo FROM users WHERE id = ?', list.owner_id);
+  const members = await all("SELECT u.id, u.name, u.color, u.seed, u.photo FROM list_members m JOIN users u ON u.id = m.user_id WHERE m.list_id = ? AND m.role <> 'viewer' AND u.id <> ? AND u.phone NOT LIKE 'deleted:%' ORDER BY m.created_at ASC", list.id, list.owner_id);
+  const team = members.length ? [owner, ...members].filter(Boolean) : [];
   const others = team.filter((u) => u.id !== viewerId);
-  const kind = list.surprise ? 'surprise' : list.for_who === 'other' ? 'collab' : treatsOnly ? 'treat' : 'own';
+  // Names on the cover, from where the viewer stands: "You, Sam" for the team, "Maya, Sam" for anyone else.
+  const crew = team.length ? team : [owner].filter(Boolean);
+  const people = crew.some((u) => u.id === viewerId) ? ['You', ...crew.filter((u) => u.id !== viewerId).map((o) => firstName(o.name))] : crew.map((o) => firstName(o.name));
+  const kind = list.surprise ? 'surprise' : list.for_who === 'other' || (team.length && !treatsOnly) ? 'collab' : treatsOnly ? 'treat' : 'own';
   const fresh = items.filter((i) => i.created_at > Date.now() - 7 * 24 * 3600 * 1000).length;
-  return { ...list, kind, count: items.length, covered, wishCount: wishes.length, sent, pct, givers, others, fresh };
+  return { ...list, kind, count: items.length, covered, wishCount: wishes.length, sent, pct, givers, team, others, people, fresh };
+}
+
+// Under a tile on profiles: the collaborators' faces, each one a link to that person's profile.
+// Lives outside the tile's own link (a link can't sit inside another link).
+export function TeamRow({ t, viewerId }) {
+  if (!t.team?.length) return null;
+  return (
+    <div aria-label="Made together by" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', paddingTop: 6 }}>
+      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.04em', color: 'var(--muted, #4A4A4A)' }}>WITH</span>
+      {t.team.map((u) => (
+        <Link key={u.id} href={`/u/${u.id}`} title={u.name} aria-label={u.id === viewerId ? 'You' : u.name} style={{ display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', color: 'var(--ink, #000000)', minHeight: 32 }}>
+          <FaceSm user={u} size={28} uid={`tm${t.id.replace(/[^a-z0-9]/gi, '')}${u.id.replace(/[^a-z0-9]/gi, '')}`} />
+          <span style={{ fontSize: 12, fontWeight: 700 }}>{u.id === viewerId ? 'You' : firstName(u.name)}</span>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+// A tile plus its team row, for profile grids.
+export function TeamTile({ t, viewerId, ...rest }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+      <ListTile t={t} {...rest} />
+      <TeamRow t={t} viewerId={viewerId} />
+    </div>
+  );
 }
 
 const firstName = (n) => (n || '').trim().split(/\s+/)[0] || 'a friend';
@@ -68,7 +99,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
   if (design) {
     return (
       <Link href={href} aria-label={`${t.title}, ${things}`} style={{ ...base, padding: 0 }}>
-        <CoverDesign design={design} title={t.title} fluid height={h} label={t.title} ctx={{ visibility: t.visibility, recipient: t.recipient_name || null, people: ['You', ...t.others.slice(0, 2).map((o) => firstName(o.name))], photo: t.photo || null }} />
+        <CoverDesign design={design} title={t.title} fluid height={h} label={t.title} ctx={{ visibility: t.visibility, recipient: t.recipient_name || null, people: (t.people || []).slice(0, 3), photo: t.photo || null }} />
         {foot ? <span style={{ position: 'absolute', left: 8, bottom: 8, background: 'var(--surface, #FFFFFF)', color: 'var(--ink, #000000)', fontSize: 11, fontWeight: 700, padding: '4px 8px', borderRadius: 999 }}>{foot[0]}</span> : null}
       </Link>
     );
@@ -76,7 +107,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
 
   if (t.kind === 'collab') {
     const w = t.others[0] ? firstName(t.others[0].name) : null;
-    const names = ['You', ...t.others.slice(0, 2).map((o) => firstName(o.name))];
+    const names = (t.people?.length ? t.people : ['You']).slice(0, 3);
     return (
       <Link href={href} aria-label={`${t.title}, collab${w ? ' with ' + w : ''}`} style={{ ...base, justifyContent: 'space-between', background: 'var(--lt, #F4D3EE)', color: '#E2452B', borderTop: '1.5px solid #E2452B', borderBottom: '1.5px solid #E2452B' }}>
         {t.photo ? <PhotoShape src={t.photo} size={150} color="#FFFFFF" style={{ right: -36, top: 40 }} /> : null}

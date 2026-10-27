@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { logOut, switchAccount } from '@/lib/actions';
 import { profileStats, publicListsOf } from '@/lib/lists';
-import { ListTile, tileData } from '@/components/list-tile';
+import { TeamTile, tileData } from '@/components/list-tile';
 import { ProfileHero, Stats, Chevron, monthYear, spacedPhone } from '@/components/profile-hero';
 
 export const dynamic = 'force-dynamic';
@@ -55,9 +55,9 @@ export default async function YouPage() {
           {tiles.length ? (
             <>
               <div className="tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-                {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind)} big={false} />)}
+                {tiles.map((t) => <TeamTile key={t.id} t={t} viewerId={me.id} i={idx(t.kind)} big={false} />)}
               </div>
-              <p style={{ margin: 0, fontSize: 13, color: 'var(--muted, #4A4A4A)', lineHeight: 1.4 }}>Surprise lists and collabs never show here. Change who sees a list from its page.</p>
+              <p style={{ margin: 0, fontSize: 13, color: 'var(--muted, #4A4A4A)', lineHeight: 1.4 }}>Surprise lists never show here. Collabs show on everyone who builds them. Change who sees a list from its page.</p>
             </>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
