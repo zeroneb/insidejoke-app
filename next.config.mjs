@@ -4,6 +4,18 @@ const nextConfig = {
   env: { NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || process.env.NEXT_STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLISHABLE_KEY || process.env.STRIPE_PUBLIC_KEY || '' },
   distDir: process.env.NEXT_DIST_DIR || '.next',
   serverExternalPackages: ['@electric-sql/pglite', 'postgres'],
+  // Keep server functions small on Vercel (each deployment's functions count toward
+  // the plan's Function Storage). PGlite is only the local, no-database fallback and is
+  // never used when deployed; the musl (Alpine) image binaries don't run on Vercel.
+  ...(process.env.VERCEL ? {
+    outputFileTracingExcludes: {
+      '*': [
+        'node_modules/@electric-sql/pglite/**',
+        'node_modules/@img/sharp-libvips-linuxmusl-x64/**',
+        'node_modules/@img/sharp-linuxmusl-x64/**'
+      ]
+    }
+  } : {}),
   experimental: { serverActions: { bodySizeLimit: '6mb' } },
   poweredByHeader: false,
   // Security headers on every page: HTTPS only, no framing (clickjacking), no type sniffing,
