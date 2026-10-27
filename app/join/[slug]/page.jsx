@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { listBySlug } from '@/lib/lists';
-import { isMember, isInvited, teamOf, itemsWithAdder, firstName, whoFor } from '@/lib/collab';
+import { isMember, isInvited, addMember, teamOf, itemsWithAdder, firstName, whoFor } from '@/lib/collab';
 import { appUrl } from '@/lib/texts';
 import { joinList } from '@/lib/actions-a4';
 import Nav from '@/components/nav';
@@ -37,8 +37,10 @@ export default async function JoinPage({ params, searchParams }) {
   }
   if (list.recipient_phone && me.phone === list.recipient_phone) redirect('/home');
   if (me.id === list.owner_id) redirect(`/l/${slug}/collab`);
-  const member = await isMember(list.id, me.id);
-  const invited = member || (await isInvited(list, me));
+  let member = await isMember(list.id, me.id);
+  // Invited by the organiser or a member: opening the link is joining.
+  if (!member && (await isInvited(list, me))) { await addMember(list.id, me.id); member = true; }
+  const invited = member;
   const items = await itemsWithAdder(list);
   return (
     <main className="a4 r4-pink withnav">

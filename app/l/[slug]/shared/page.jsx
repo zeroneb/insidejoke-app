@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
 import { listBySlug } from '@/lib/lists';
-import { canEdit, isInvited, teamOf, itemsWithAdder, firstName, whoFor, findMatch } from '@/lib/collab';
+import { canEdit, isInvited, addMember, teamOf, itemsWithAdder, firstName, whoFor, findMatch } from '@/lib/collab';
 import { matchAction } from '@/lib/actions-r4';
 import Nav from '@/components/nav';
 import { Boil, Hdr, Who, TallTitle, stat, fmtDate, RED, DEEP } from '@/components/a4';
@@ -20,8 +20,10 @@ export default async function SharedPage({ params, searchParams }) {
   if (!(await (await import('@/lib/access')).canSeeList(list, me))) redirect(me ? '/home' : `/signup?next=${encodeURIComponent('/l/' + slug)}`);
   if (me && list.recipient_phone && me.phone === list.recipient_phone && !list.sent_at) redirect('/home'); // no peeking at your own surprise
   // r4: collaborators see the SharedList board (who added what, matches, add a wish or treat); others see give / help build.
-  const editor = !!me && (await canEdit(list, me));
-  const invited = !editor && !!me && (await isInvited(list, me));
+  let editor = !!me && (await canEdit(list, me));
+  // Invited to build it: opening the list is joining.
+  if (!editor && me && (await isInvited(list, me)) && !(list.recipient_phone && me.phone === list.recipient_phone)) { await addMember(list.id, me.id); editor = true; }
+  const invited = false;
   const team = await teamOf(list);
   const all = await itemsWithAdder(list);
   const match = editor ? findMatch(all) : null;
