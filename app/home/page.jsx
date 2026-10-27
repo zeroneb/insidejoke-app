@@ -10,7 +10,7 @@ import { myFeed } from '@/lib/feed';
 import { unreadCount } from '@/lib/notifications';
 import { unreadDmCount } from '@/lib/dm';
 import { PhotoBlob } from '@/components/ui';
-import { ListTile, tileData } from '@/components/list-tile';
+import { TeamTile, tileData } from '@/components/list-tile';
 import LatelyRows from '@/components/lately-feed';
 
 export const dynamic = 'force-dynamic';
@@ -78,7 +78,7 @@ export default async function HomePage() {
           <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, fontSize: 17, textDecoration: 'none', minHeight: 48, padding: '0 4px' }}><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.1" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
         </div>
         <div className="home-grid tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
-          {tiles.map((t) => <ListTile key={t.id} t={t} i={idx(t.kind)} variant="home" />)}
+          {tiles.map((t) => <TeamTile key={t.id} t={t} viewerId={me.id} i={idx(t.kind)} variant="home" />)}
           {tiles.length === 0 ? (
             <Link href="/lists/new" style={{ height: 230, textDecoration: 'none', border: '1.5px dashed var(--line, #000000)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 8, fontWeight: 800, fontSize: 15, textAlign: 'center', padding: 12 }}>
               <svg aria-hidden="true" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.08" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>

@@ -86,7 +86,11 @@ export default async function AdminPage({ searchParams }) {
   const wk = since(7);
   const parse = (d) => { try { return JSON.parse(d || '{}'); } catch { return {}; } };
   const linkRows = (await ev("SELECT ref, detail, at FROM app_events WHERE kind = 'link' AND at > ? ORDER BY at DESC LIMIT 400", wk)).map((r) => ({ ...r, d: parse(r.detail) }));
-  const linkFails = linkRows.filter((r) => !r.d.price || !r.d.photo || !r.d.name);
+  const linkFails = linkRows.filter((r) => !r.d.price || !r.d.name || (!r.d.photo && !r.d.candidates));
+  // Items saved with a link but no photo at all (after the phone tried too): the stores worth a dedicated reader.
+  const noPhoto = (await ev("SELECT detail, ref, at FROM app_events WHERE kind = 'nophoto' AND at > ? ORDER BY at DESC LIMIT 400", since(30))).map((r) => ({ ...r, d: parse(r.detail) }));
+  const noPhotoBy = Object.values(noPhoto.reduce((m, r) => { const h = r.d.host || '?'; (m[h] ||= { host: h, n: 0, ref: r.ref }).n++; return m; }, {})).sort((a, b) => b.n - a.n).slice(0, 15);
+  const fromMemory = linkRows.filter((r) => r.d.cached).length;
   const texts = await ev('SELECT status, COUNT(*) AS n FROM texts WHERE created_at > ? GROUP BY status', wk);
   const textFails = await ev("SELECT to_phone, kind, created_at FROM texts WHERE status = 'failed' ORDER BY created_at DESC LIMIT 10");
   const payFails = await ev("SELECT e.at, e.detail, e.user_id, u.name FROM app_events e LEFT JOIN users u ON u.id = e.user_id WHERE e.kind = 'pay_fail' ORDER BY e.at DESC LIMIT 10");
@@ -313,7 +317,15 @@ export default async function AdminPage({ searchParams }) {
 
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h2 style={{ margin: 0, fontSize: 18 }}>Store links, last 7 days</h2>
-        <span style={{ fontSize: 14 }}>{linkRows.length} read · <b>{linkFails.length}</b> missing something {linkRows.length ? `(${Math.round(((linkRows.length - linkFails.length) / linkRows.length) * 100)}% complete)` : ''}</span>
+        <span style={{ fontSize: 14 }}>{linkRows.length} read · <b>{linkFails.length}</b> missing something {linkRows.length ? `(${Math.round(((linkRows.length - linkFails.length) / linkRows.length) * 100)}% complete)` : ''} · {fromMemory} answered from memory (no outside calls)</span>
+        <span style={{ fontSize: 14, fontWeight: 800, marginTop: 6 }}>Saved without a photo, last 30 days · {noPhoto.length}</span>
+        {noPhotoBy.length ? noPhotoBy.map((r) => (
+          <div key={r.host} style={{ fontSize: 13, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            <b>{r.host}</b><span>{r.n} {r.n === 1 ? 'item' : 'items'}</span>
+            <a href={r.ref} target="_blank" rel="noreferrer" style={{ color: 'var(--ink, #000)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 360 }}>{r.ref}</a>
+          </div>
+        )) : <span style={{ fontSize: 13, color: 'var(--muted, #4A4A4A)' }}>None. Every linked item got a photo.</span>}
+        <span style={{ fontSize: 14, fontWeight: 800, marginTop: 6 }}>Missing something when read</span>
         {linkFails.slice(0, 25).map((r, i) => (
           <div key={i} style={{ fontSize: 13, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <span style={{ color: 'var(--muted, #4A4A4A)' }}>{when(r.at)}</span>
