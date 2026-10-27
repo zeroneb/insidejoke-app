@@ -331,6 +331,7 @@ export default async function AdminPage({ searchParams }) {
             <span style={{ color: 'var(--muted, #4A4A4A)' }}>{when(r.at)}</span>
             <b>{r.d.host || ''}</b>
             <span style={{ color: 'var(--warm-ink, #B3261E)' }}>missing {[!r.d.name && 'name', !r.d.price && 'price', !r.d.photo && 'photo'].filter(Boolean).join(', ')}</span>
+            {r.d.steps?.length ? <span style={{ width: '100%', color: 'var(--muted, #4A4A4A)', fontSize: 12 }}>{r.d.steps.join(' · ')}</span> : null}
             <a href={r.ref} target="_blank" rel="noreferrer" style={{ color: 'var(--ink, #000)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 360 }}>{r.ref}</a>
           </div>
         ))}
