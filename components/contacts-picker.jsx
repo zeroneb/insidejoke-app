@@ -1,22 +1,51 @@
 'use client';
 // "Choose from contacts" — only on phones whose browser lets a site ask for contacts (Android Chrome today).
+// Used for adding friends, and (PickContactsButton) for adding collaborators.
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { addFriendsFromContacts, addFriendByPhone } from '@/lib/actions-a1';
 
-export default function ContactsPicker() {
+// Shared helper: can this browser open the phone's contact list (Contact Picker API)? iPhone Safari and laptops
+// can't, and every caller keeps its type-a-number field for them.
+export function useCanPickContacts() {
   const [can, setCan] = useState(false);
+  useEffect(() => { try { setCan(!!(navigator.contacts && navigator.contacts.select && window.ContactsManager)); } catch {} }, []);
+  return can;
+}
+
+// Opens the contact list; resolves to [{ name, tel: [...] }] (empty if cancelled or not allowed).
+export async function pickContacts({ multiple = true } = {}) {
+  try {
+    const picked = await navigator.contacts.select(['name', 'tel'], { multiple });
+    return (picked || []).map((c) => ({ name: (c.name || [])[0] || '', tel: (c.tel || []).filter(Boolean) })).filter((c) => c.tel.length);
+  } catch { return []; }
+}
+
+// "Choose from contacts" button, shown only where the browser supports it. onPick gets [{ name, phone }] (first number of each).
+export function PickContactsButton({ onPick, multiple = true, label = 'Choose from contacts', style }) {
+  const can = useCanPickContacts();
+  if (!can) return null;
+  return (
+    <button type="button" onClick={async () => { const got = await pickContacts({ multiple }); if (got.length) onPick(got.map((c) => ({ name: c.name, phone: c.tel[0] }))); }}
+      style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, height: 48, border: '1.5px solid var(--edge, #000)', background: 'var(--lt, #D4FA4F)', fontFamily: 'inherit', fontWeight: 800, fontSize: 15, borderRadius: 999, cursor: 'pointer', color: '#000000', padding: '0 18px', ...style }}>
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5" /><path d="M5 20c1-3.6 3.8-5.5 7-5.5s6 1.9 7 5.5" /></svg>
+      {label}
+    </button>
+  );
+}
+
+export default function ContactsPicker() {
+  const can = useCanPickContacts();
   const [busy, setBusy] = useState(false);
   const [res, setRes] = useState(null);
   const [invited, setInvited] = useState({});
-  useEffect(() => { try { setCan(!!(navigator.contacts && window.ContactsManager)); } catch {} }, []);
   if (!can) return null;
   const pick = async () => {
     try {
-      const picked = await navigator.contacts.select(['name', 'tel'], { multiple: true });
+      const picked = await pickContacts({ multiple: true });
       if (!picked?.length) return;
       setBusy(true);
-      setRes(await addFriendsFromContacts(picked.map((c) => ({ name: c.name || [], tel: c.tel || [] }))));
+      setRes(await addFriendsFromContacts(picked.map((c) => ({ name: [c.name], tel: c.tel }))));
     } catch {} finally { setBusy(false); }
   };
   const invite = async (p) => {

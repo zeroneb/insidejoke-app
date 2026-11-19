@@ -6,6 +6,7 @@ import { requestCode } from '@/lib/actions';
 import { confirmCodeR1 } from '@/lib/actions-r1';
 import { Blob, Avatar } from '@/components/ui';
 import CodeBoxes from '@/components/code-boxes';
+import PhoneInput from '@/components/phone-input';
 
 // r1: Option 10 SignUp (step 1: name + number, gray, lime blob) and PhoneConfirm (code step, sky blue).
 // /login uses the same form with title "Log in": no name field, two steps.
@@ -125,7 +126,7 @@ export default function SignupForm({ next = '/home', title = 'Sign up' }) {
           </label>
         )}
         <label style={{ display: 'flex', flexDirection: 'column', gap: 6, fontWeight: 700, fontSize: 14 }}>Phone number
-          <input name="phone" defaultValue={s1?.phone ? formatPhone(s1.phone) : ''} inputMode="tel" autoComplete="tel" placeholder="(917) 555-0123" required style={{ ...FIELD, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 20 }} />
+          <PhoneInput name="phone" defaultValue={s1?.phone || ''} placeholder="(917) 555-0123" required style={{ ...FIELD, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 20 }} />
         </label>
         <span style={{ fontSize: 13, lineHeight: 1.4, color: 'var(--sub, #3A3A3A)' }}>Your number is your account. No passwords, ever. It’s also how thank-yous and invites reach you.</span>
         {s1?.error ? <div className="err" role="alert">{s1.error}</div> : null}

@@ -2,6 +2,7 @@
 // A list cover (Option 20 template) drawn at any width. The art is 390 × 480 and scales to fit.
 import { useId, useLayoutEffect, useRef, useState } from 'react';
 import { coverHTML, FONT_URL, KEYFRAMES } from '@/lib/cover-designs';
+import { fitCover } from '@/components/fit';
 
 export function CoverStyles() {
   return (
@@ -17,6 +18,7 @@ export function CoverStyles() {
 export default function CoverDesign({ design, title, ctx, width = 390, height, fluid = false, radius = 0, style, label }) {
   const id = useId();
   const box = useRef(null);
+  const art = useRef(null);
   const [w, setW] = useState(fluid ? 0 : width);
   useLayoutEffect(() => {
     if (!fluid || !box.current) return;
@@ -25,6 +27,22 @@ export default function CoverDesign({ design, title, ctx, width = 390, height, f
     ro.observe(box.current);
     return () => ro.disconnect();
   }, [fluid]);
+  const html = coverHTML(design, title, 'c' + id, ctx);
+  // Words always fit inside the cover (and inside its ring, blob or frame): measured once laid out, again once fonts load.
+  useLayoutEffect(() => {
+    // Tiles crop the cover to their box: the words must fit the part that shows.
+    const kk = w ? (height ? Math.max(w / 390, height / 480) : w / 390) : 1;
+    const ox = height && w ? (390 * kk - w) / 2 / kk : 0;
+    const view = height && w ? [ox, 0, 390 - ox, Math.min(480, height / kk)] : null;
+    const run = () => fitCover(art.current, design?.key, view);
+    run();
+    let alive = true;
+    const again = () => { if (alive) run(); };
+    document.fonts?.ready.then(again);
+    document.fonts?.addEventListener?.('loadingdone', again);
+    const t = setTimeout(again, 1200);
+    return () => { alive = false; clearTimeout(t); document.fonts?.removeEventListener?.('loadingdone', again); };
+  }, [html, w, height, design?.key]);
   // With a fixed height (tiles), the cover fills the box and is centered.
   const k = w ? (height ? Math.max(w / 390, height / 480) : w / 390) : 1;
   const dx = height && w ? Math.round((w - 390 * k) / 2) : 0;
@@ -32,7 +50,7 @@ export default function CoverDesign({ design, title, ctx, width = 390, height, f
   return (
     <div ref={box} role="img" aria-label={label || `Cover: ${title}`} style={{ position: 'relative', ...size, overflow: 'hidden', borderRadius: radius, flexShrink: 0, ...style }}>
       <CoverStyles />
-      <div className="cvx" aria-hidden="true" style={{ position: 'absolute', left: dx, top: 0, transform: `scale(${k})`, visibility: w ? 'visible' : 'hidden' }} dangerouslySetInnerHTML={{ __html: coverHTML(design, title, 'c' + id, ctx) }} />
+      <div ref={art} className="cvx" aria-hidden="true" style={{ position: 'absolute', left: dx, top: 0, transform: `scale(${k})`, visibility: w ? 'visible' : 'hidden' }} dangerouslySetInnerHTML={{ __html: html }} />
     </div>
   );
 }

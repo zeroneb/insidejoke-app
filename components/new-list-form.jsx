@@ -6,6 +6,8 @@ import { createList } from '@/lib/actions';
 import { Blob, Avatar } from '@/components/ui';
 import { defaultListTitle } from '@/lib/list-title';
 import { CoverField } from '@/components/cover-picker';
+import PhoneInput, { formatPhoneTyping } from '@/components/phone-input';
+import { PickContactsButton } from '@/components/contacts-picker';
 
 const OCC = ['Birthday', 'Holidays', 'Just because', 'New place', "Dinner I'm hosting", 'Secret Santa'];
 const VIS = [['public', 'Public', 'On your profile. Anyone you share it with, or who finds it, can give.'], ['private', 'Private', 'Only the people you pick']];
@@ -71,6 +73,7 @@ export default function NewListForm({ me, friends = [] }) {
   const [phones, setPhones] = useState([]);
   const [picking, setPicking] = useState(false);
   const [phone, setPhone] = useState('');
+  const [labels, setLabels] = useState({}); // contact names for numbers picked from the phone's contacts
   const [hasDate, setHasDate] = useState(true);
   const [minDate, setMinDate] = useState(undefined);
   useEffect(() => setMinDate(localToday()), []);
@@ -128,7 +131,7 @@ export default function NewListForm({ me, friends = [] }) {
             {surprise ? (
               <div className="pop" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <label htmlFor="theirphone" style={{ fontWeight: 700, fontSize: 15 }}>Their number <span style={{ fontWeight: 400, fontSize: 13 }}>(optional)</span></label>
-                <input id="theirphone" name="recipientPhone" inputMode="tel" autoComplete="off" placeholder="(917) 555-0100" className="dot" style={{ height: 48, border: '2px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontSize: 18, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
+                <PhoneInput id="theirphone" name="recipientPhone" autoComplete="off" placeholder="(917) 555-0100" className="dot" style={{ height: 48, border: '2px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontSize: 18, padding: '0 14px', borderRadius: 0, width: '100%', boxSizing: 'border-box' }} />
                 <span style={{ fontSize: 13, lineHeight: 1.4 }}>So we can keep it from them: this number can't open the list, even with the link, until you send it. Never texted before then.</span>
               </div>
             ) : null}
@@ -161,7 +164,7 @@ export default function NewListForm({ me, friends = [] }) {
         {phones.map((p, i) => <input key={i} type="hidden" name="collabPhone" value={p} />)}
         <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
           {collabs.map((c) => <Chip key={c.id} user={c} onRemove={() => setCollabs((x) => x.filter((y) => y.id !== c.id))} />)}
-          {phones.map((p, i) => <Chip key={p + i} user={{ name: p, color: '#D7D7DC', seed: 50 + i }} onRemove={() => setPhones((x) => x.filter((_, j) => j !== i))} />)}
+          {phones.map((p, i) => <Chip key={p + i} user={{ name: labels[p] || p, color: '#D7D7DC', seed: 50 + i }} onRemove={() => setPhones((x) => x.filter((_, j) => j !== i))} />)}
           <button type="button" onClick={() => setPicking((p) => !p)} aria-expanded={picking} style={{ border: '1.5px dashed var(--edge, #000000)', background: picking ? 'var(--surface, #FFFFFF)' : 'transparent', fontFamily: 'inherit', fontSize: 14, height: 40, padding: '0 14px', borderRadius: 999, cursor: 'pointer', color: 'var(--ink, #000000)' }}>{collabs.length + phones.length ? '+ Add more' : '+ Add'}</button>
         </div>
         {picking ? (
@@ -171,9 +174,15 @@ export default function NewListForm({ me, friends = [] }) {
                 <Avatar user={f} size={36} /><span style={{ flexGrow: 1, fontSize: 15, fontWeight: 700 }}>{f.name}</span><Plus />
               </button>
             )) : <span style={{ fontSize: 13, color: 'var(--muted, #4A4A4A)', padding: '10px 0', borderBottom: '1px solid var(--line, #000000)' }}>{friends.length ? 'Everyone is on it.' : 'No friends on insidejoke yet. Add them by number.'}</span>}
+            <PickContactsButton style={{ marginTop: 12 }} onPick={(cs) => {
+              const add = cs.map((c) => ({ p: formatPhoneTyping(c.phone), name: c.name }));
+              setPhones((x) => x.concat(add.map((a) => a.p).filter((p) => !x.includes(p))));
+              setLabels((l) => ({ ...l, ...Object.fromEntries(add.filter((a) => a.name).map((a) => [a.p, a.name])) }));
+              setPicking(false);
+            }} />
             <label htmlFor="collabphone" style={{ fontWeight: 800, fontSize: 13, marginTop: 12 }}>Or a phone number</label>
             <div style={{ display: 'flex', gap: 8, marginTop: 6 }}>
-              <input id="collabphone" name="collabPhone" value={phone} onChange={(e) => setPhone(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addPhone(); } }} inputMode="tel" placeholder="(917) 555-0100" className="dot" style={{ flexGrow: 1, minWidth: 0, height: 44, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontSize: 17, padding: '0 12px', borderRadius: 0 }} />
+              <PhoneInput id="collabphone" name="collabPhone" value={phone} onChange={setPhone} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addPhone(); } }} placeholder="(917) 555-0100" className="dot" style={{ flexGrow: 1, minWidth: 0, height: 44, border: '1.5px solid var(--line, #000000)', background: 'var(--surface, #FFFFFF)', fontSize: 17, padding: '0 12px', borderRadius: 0 }} />
               <button type="button" onClick={addPhone} style={{ border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, height: 44, padding: '0 16px', borderRadius: 999, cursor: 'pointer' }}>Add</button>
             </div>
             <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)', marginTop: 6 }}>They get a text with the invite.</span>

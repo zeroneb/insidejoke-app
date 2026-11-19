@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { coverFor, listKind } from '@/lib/cover';
 import { CoverArt } from '@/components/cover-art';
 import ListProgress from '@/components/list-progress';
+import { FitText } from '@/components/fit';
 import { Blob, Avatar, ItemSketch, Halftone, shortName, TeamRow } from '@/components/ui';
 
 export function firstName(u) {
@@ -69,7 +70,9 @@ export default function FriendList({ list, owner, items, me, team = [] }) {
               <Link href={`/l/${slug}/share`} aria-label="Share list" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="1.62" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3v13" /><path d="M7 8l5-5 5 5" /><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5" /></svg></Link>
             ) : <span style={{ width: 44 }} />}
           </header>
-          <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: people.length ? people : [name], photo: list.photo || null, handle: owner?.handle || null }} />
+          <div className="cover-hero" style={{ background: coverGround(design).background }}><div className="cover-fit">
+            <CoverDesign design={design} title={list.title} fluid ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: people.length ? people : [name], photo: list.photo || null, handle: owner?.handle || null }} />
+          </div></div>
           <div style={{ padding: '10px 20px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
             <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: 'var(--ink, #000000)', minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
             <span className="dot" style={{ fontSize: 14, flexShrink: 0 }}>{items.length} {items.length === 1 ? 'THING' : 'THINGS'} · {covered} COVERED</span>
@@ -89,8 +92,9 @@ export default function FriendList({ list, owner, items, me, team = [] }) {
           <defs><path id="fl-arc" d="M135 135 m-112 0 a112 112 0 1 1 224 0 a112 112 0 1 1 -224 0" /></defs>
           <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 15, fill: cv.art === 'circle' ? cv.circle : cv.title }}><textPath href="#fl-arc">{ring.repeat(ring.length < 34 ? 4 : 2)}</textPath></text>
         </svg>
-        <h1 className="fl-title" style={{ position: 'absolute', left: 40, right: 40, top: long ? 150 : 140, margin: 0, textAlign: 'center', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}>
-          <TitleWords title={list.title} size={long ? 38 : 50} width={290} />
+        {/* The title sits inside the ring of words (ring radius 112, centered 197px down): it shrinks to stay inside. */}
+        <h1 style={{ position: 'absolute', left: 'calc(50% - 102px)', top: 95, width: 204, height: 204, margin: 0, color: cv.title, fontWeight: 400, lineHeight: 0.92 }}>
+          <FitText shape="circle" style={{ width: '100%', height: '100%' }} innerStyle={{ textAlign: 'center' }} deps={[list.title]}><TitleWords title={list.title} size={long ? 38 : 50} width={290} balance={10} /></FitText>
         </h1>
         <div style={{ position: 'absolute', left: 20, right: 20, bottom: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
           <Link href={profile} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 15, textDecoration: 'none', color: cv.chrome, minHeight: 44, minWidth: 0 }}><Avatar user={owner} size={30} owner /><span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{owner?.name || 'A friend'}</span></Link>
@@ -152,7 +156,7 @@ export default function FriendList({ list, owner, items, me, team = [] }) {
                   <span style={{ fontSize: 13 }}>{storeLine(it)}</span>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 'auto' }}>
                     <div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'var(--surface2, #D7D7DC)', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? 'var(--lt, #2E9B47)' : 'var(--dk, #13286B)', animationDelay: `${0.2 * (i + 1)}s` }} /></div>
-                    <span style={{ flexShrink: 0, fontSize: 12, fontWeight: 500 }}>{wishLabel(it)}</span>
+                    <span style={{ flexShrink: 0, fontSize: 14, fontWeight: 800, color: 'var(--ink, #000000)' }}>{wishLabel(it)}</span>
                   </div>
                 </div>
               </Link>

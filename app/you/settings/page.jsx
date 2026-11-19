@@ -24,9 +24,9 @@ function Switch({ k, on, label }) {
 }
 
 const TEXTS = [
-  ['notify_covered', 'When a wish is covered', 'The moment something on a list is fully paid for.'],
-  ['notify_share', 'When a friend shares a list', 'A new list from one of your friends.'],
-  ['notify_reminders', 'Reminders before dates', 'A nudge a week before birthdays and dates you saved.']
+  ['notify_covered', 'When a wish is covered', 'Right when something is fully paid for.'],
+  ['notify_share', 'When a friend shares a list', 'A friend’s new list.'],
+  ['notify_reminders', 'Reminders before dates', 'A week before dates you saved.']
 ];
 
 // "Card ••4242" -> ["Card", "••4242"] so the digits sit in Doto.
@@ -64,14 +64,14 @@ export default async function SettingsPage({ searchParams }) {
           <h2 id="h-phone" className="a1-cap" style={{ margin: '0 0 10px' }}>Phone number</h2>
           <PhoneChange shown={spacedPhone(me.phone)} />
           <p className="a1-s" role={sp?.phone === 'changed' ? 'status' : undefined} style={{ margin: 0, padding: '10px 0 0', borderTop: '1px solid var(--line, #000000)' }}>
-            {sp?.phone === 'changed' ? <span style={{ background: 'var(--lt, #D4FA4F)', color: 'var(--ink, #000)', padding: '2px 6px' }}>Number switched. Log in with it from now on.</span> : 'We text a code to the new number before anything switches.'}
+            {sp?.phone === 'changed' ? <span style={{ background: 'var(--lt, #D4FA4F)', color: 'var(--ink, #000)', padding: '2px 6px' }}>Number switched. Log in with it from now on.</span> : 'We text the new number a code first.'}
           </p>
         </section>
 
         <section aria-labelledby="h-thanks" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <h2 id="h-thanks" className="a1-cap" style={{ margin: '0 0 10px' }}>Thank-yous</h2>
           <div className="a1-row">
-            <span className="a1-lab"><span className="a1-t">Weekly thank-you digest</span><span className="a1-s">One text on Sunday listing everyone who treated you that week, so you can thank them in one go.</span></span>
+            <span className="a1-lab"><span className="a1-t">Weekly thank-you digest</span><span className="a1-s">One Sunday text with everyone who treated you, to thank them all at once.</span></span>
             <Switch k="weekly_thanks" on={!!me.weekly_thanks} label="Weekly thank-you digest" />
           </div>
           <Link href="/you/thanks" className="a1-link" style={{ borderTop: '1px solid var(--line, #000000)', fontSize: 14 }}><span>See last week’s digest</span><Chevron /></Link>
@@ -81,11 +81,11 @@ export default async function SettingsPage({ searchParams }) {
         <section aria-labelledby="h-money" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
           <h2 id="h-money" className="a1-cap" style={{ margin: '0 0 10px' }}>Money</h2>
           <div className="a1-row">
-            <span className="a1-lab"><span className="a1-t">Payouts go to</span>{out ? <span style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 15 }}>{splitLabel(out.label)[0]} <span className="dot" style={{ fontSize: 16 }}>{splitLabel(out.label)[1]}</span></span> : <span className="a1-s">Not set up yet. You add it the first time you cash out.</span>}</span>
+            <span className="a1-lab"><span className="a1-t">Payouts go to</span>{out ? <span style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 15 }}>{splitLabel(out.label)[0]} <span className="dot" style={{ fontSize: 16 }}>{splitLabel(out.label)[1]}</span></span> : <span className="a1-s">Set up when you first cash out.</span>}</span>
             <Link href="/wallet/payout" className="a1-ghost">{out ? 'Change' : 'Set up'}</Link>
           </div>
           <div className="a1-row">
-            <span className="a1-lab"><span className="a1-t">You give with</span>{pay ? <span style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 15 }}>{splitLabel(pay.label)[0]} <span className="dot" style={{ fontSize: 16 }}>{splitLabel(pay.label)[1]}</span></span> : <span className="a1-s">Added the first time you give.</span>}</span>
+            <span className="a1-lab"><span className="a1-t">You give with</span>{pay ? <span style={{ display: 'flex', alignItems: 'baseline', gap: 6, fontSize: 15 }}>{splitLabel(pay.label)[0]} <span className="dot" style={{ fontSize: 16 }}>{splitLabel(pay.label)[1]}</span></span> : <span className="a1-s">Added when you first give.</span>}</span>
             <Link href="/you/payment" className="a1-ghost">{pay ? 'Change' : 'Add'}</Link>
           </div>
           <Link href="/wallet" className="a1-link" style={{ borderTop: '1px solid var(--line, #000000)', borderBottom: '1px solid var(--line, #000000)', fontSize: 14 }}><span>Balance and cash out</span><Chevron /></Link>
@@ -99,7 +99,7 @@ export default async function SettingsPage({ searchParams }) {
               <Switch k={k} on={me[k] !== 0} label={t} />
             </div>
           ))}
-          <p className="a1-s" style={{ margin: 0, padding: '10px 0 0', borderTop: '1px solid var(--line, #000000)' }}>We only text. No email, no push, never more than a few a week.</p>
+          <p className="a1-s" style={{ margin: 0, padding: '10px 0 0', borderTop: '1px solid var(--line, #000000)' }}>Texts only, a few a week at most.</p>
         </section>
 
         <section aria-labelledby="h-look" style={{ padding: '32px 20px 0', display: 'flex', flexDirection: 'column' }}>
@@ -113,7 +113,7 @@ export default async function SettingsPage({ searchParams }) {
                 return <button key={k} name="value" value={k} role="radio" aria-checked={on ? 'true' : 'false'} className={on ? 'theme-on' : ''} style={{ flex: '1 1 0', height: 44, border: '1.5px solid var(--inv-bg, #000000)', marginLeft: i ? -1.5 : 0, borderRadius: i === 0 ? '999px 0 0 999px' : i === 2 ? '0 999px 999px 0' : 0, background: on ? 'var(--inv-bg, #000000)' : 'transparent', color: on ? 'var(--inv-fg, #FFFFFF)' : 'var(--ink, #000000)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer' }}>{label}</button>;
               })}
             </form>
-            <p className="a1-s" style={{ margin: '0 0 14px' }}>{me.theme === 'dark' ? 'Dark grounds, same colors on your lists. Easier on the eyes at night.' : me.theme === 'auto' ? 'Follows your phone: light by day, dark when your phone switches.' : 'The classic light gray ground.'}</p>
+            <p className="a1-s" style={{ margin: '0 0 14px' }}>{me.theme === 'dark' ? 'Easier on the eyes at night.' : me.theme === 'auto' ? 'Follows your phone’s setting.' : 'The classic light look.'}</p>
           </div>
         </section>
 
@@ -126,7 +126,7 @@ export default async function SettingsPage({ searchParams }) {
               <button name="value" value="1" role="radio" aria-checked={pub ? 'true' : 'false'} style={radio(pub, true)}>Anyone with the link</button>
               <button name="value" value="0" role="radio" aria-checked={pub ? 'false' : 'true'} style={radio(!pub, false)}>Friends only</button>
             </form>
-            <p className="a1-s" style={{ margin: '0 0 14px' }}>{pub ? 'Anyone you send your link to can open your profile and give from your public lists, no account needed.' : 'Only your friends on insidejoke can open your profile. Shared links still work for the list you shared.'}</p>
+            <p className="a1-s" style={{ margin: '0 0 14px' }}>{pub ? 'Anyone with your link can see your public lists and give. No account needed.' : 'Only friends can open your profile. Lists you share still open.'}</p>
           </div>
           <div style={{ borderTop: '1px solid var(--line, #000000)' }} />
         </section>
@@ -139,7 +139,7 @@ export default async function SettingsPage({ searchParams }) {
             <form action={deleteAccount} className="a1up" role="group" aria-label="Delete account" style={{ width: '100%', boxSizing: 'border-box', border: '1.5px solid #E2452B', padding: '18px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
               <input type="hidden" name="confirm" value="delete" />
               <span className="wide" style={{ fontSize: 11, letterSpacing: '0.18em', color: '#E2452B' }}>Delete account</span>
-              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.3 }}>This removes your lists, your history and your friends’ notes. Anything not cashed out is lost.</p>
+              <p style={{ margin: 0, fontSize: 17, lineHeight: 1.3 }}>Your lists, history and friends’ notes go. Anything not cashed out is lost.</p>
               <Link href="/wallet" style={{ fontSize: 14, fontWeight: 700, textDecoration: 'underline', textUnderlineOffset: 3, minHeight: 44, display: 'inline-flex', alignItems: 'center' }}>Cash out first</Link>
               <button style={{ height: 52, border: 0, borderRadius: 999, background: 'var(--dk, #E2452B)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 16, cursor: 'pointer' }}>Delete for good</button>
             </form>

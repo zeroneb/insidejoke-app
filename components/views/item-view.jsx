@@ -96,7 +96,7 @@ export default async function ItemView({ slug, itemId }) {
         <div aria-label="Give" style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
           {!it.unlimited ? (
             <>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'var(--surface2, #D7D7DC)', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? 'var(--lt, #2E9B47)' : 'var(--dk, #5546A0)' }} /></div><span className="dot" style={{ fontSize: 16 }}>{it.pct}%</span></div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}><div style={{ flexGrow: 1, height: 10, borderRadius: 999, background: 'var(--surface2, #D7D7DC)', overflow: 'hidden' }}><div className="grow" style={{ width: `${it.pct}%`, height: '100%', borderRadius: 999, background: it.covered ? 'var(--lt, #2E9B47)' : 'var(--dk, #5546A0)' }} /></div><span style={{ flexShrink: 0, fontWeight: 800, fontSize: 18, fontVariantNumeric: 'tabular-nums', color: 'var(--ink, #000000)' }}>{it.pct}% <span style={{ fontSize: 13, fontWeight: 600 }}>covered</span></span></div>
               <span style={{ fontSize: 14, color: 'var(--sub, #3A3A3A)' }}><b style={{ color: 'var(--ink, #000000)' }}>{lead}</b> {it.covered ? 'Thank you, everyone.' : it.givers ? `${fr(it.givers)} ${it.givers === 1 ? 'is' : 'are'} in.${isOwner ? '' : ' Join them.'}` : 'Be the first to give.'}</span>
             </>
           ) : (

@@ -3,7 +3,7 @@
 // open every cover with ✦ Change cover, upload a photo, or tap the pencil to edit any words on the cover.
 import { useEffect, useMemo, useRef, useState } from 'react';
 import CoverDesign from '@/components/cover-design';
-import { COVERS, suggest, swatch, slotsFor, startDesign } from '@/lib/cover-designs';
+import { COVERS, suggest, swatch, slotsFor, startDesign, coverGround } from '@/lib/cover-designs';
 import { saveListDesign } from '@/lib/actions';
 
 // NAVY: text, icons, rings (flips light in dark mode). NAVY_BG: a navy fill, stays navy with white text.
@@ -253,12 +253,15 @@ export function ListCover({ slug, design: saved, title, ctx, treat }) {
     setDesign({ key: 'photo', pal: 0, s: { y: '50' } });
     setEdit(true);
   };
+  // On iPad and laptop the cover keeps about a phone's size, centered on a band of its own ground color (.cover-hero).
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="cover-hero" style={{ background: coverGround(design).background }}>
+    <div className="cover-fit">
       <CoverDesign design={design} title={name} ctx={fullCtx} fluid />
       <button type="button" aria-label="Edit cover" onClick={() => setEdit(true)} style={pencilBtn}><Pencil /></button>
       {!treat ? <button type="button" onClick={() => setSheet(true)} style={changeBtn}>✦ Change cover</button> : null}
       {sheet ? <CoverSheet title={name} ctx={fullCtx} flags={{}} current={design.key} onClose={() => setSheet(false)} onUpload={upload} onPick={(k) => { setSheet(false); save(startDesign(k, name), name, null); }} /> : null}
+    </div>
       {edit ? <CoverEditor design={design} title={name} ctx={fullCtx} done="Save cover" pending={pending} onClose={() => { setEdit(false); setDesign(committed); setPhotoFile(null); }} onDone={async (d, t) => { if (await save(d, t)) setEdit(false); }} /> : null}
     </div>
   );
