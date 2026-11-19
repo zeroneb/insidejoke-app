@@ -5,12 +5,13 @@ import { CoverArt } from '@/components/cover-art';
 import { parse as parseDesign } from '@/lib/cover-designs';
 import { ListCover } from '@/components/cover-picker';
 import { ChangeCover } from '@/components/cover-photo';
-import { Blob, Avatar, shortNoun, Halftone } from '@/components/ui';
+import { Blob, Avatar, shortNoun, Halftone, TeamRow } from '@/components/ui';
 import ListProgress from '@/components/list-progress';
 import { tileInk, hostOf } from '@/components/friend-list';
 import { unpinBlastAction } from '@/lib/actions-a4';
 import { dismissNudge } from '@/lib/actions';
 import { setListArchived } from '@/lib/actions-a2';
+
 
 // Title as on the boards: everything but the last word, then the last word in semibold on its own line.
 // List cover title: everything but the last word in tight sans, the last word in wide caps.
@@ -89,6 +90,8 @@ export function LegacyCover({ list, items, archived, status, left, right, childr
 export default function OwnerList({ list, items, me, blast = null, team = [] }) {
   // Names on covers that show the team (Bouquet): you first, then everyone making it with you.
   const people = ['You', ...team.filter((u) => u.id !== me?.id && u.role !== 'viewer').map((u) => String(u.name || '').trim().split(/\s+/)[0] || 'A friend')];
+  // Everyone building it, each linking to their profile (collabs only).
+  const crew = team.filter((u) => u.role !== 'viewer').map((u) => ({ id: u.id, name: u.name, color: u.color, seed: u.seed, photo: u.photo }));
   const slug = list.slug;
   const archived = list.status === 'archived';
   const vis = list.surprise ? 'Surprise' : list.visibility === 'private' ? 'Private' : 'Public';
@@ -122,6 +125,8 @@ export default function OwnerList({ list, items, me, blast = null, team = [] }) 
           {archived ? <form action={setListArchived} style={{ position: 'relative', margin: '10px 0 0', padding: '0 20px' }}><input type="hidden" name="slug" value={slug} /><input type="hidden" name="archive" value="0" /><button style={{ height: 40, padding: '0 16px', border: '2px solid var(--edge, #000000)', borderRadius: 999, background: 'var(--surface, #FFFFFF)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, cursor: 'pointer', color: 'var(--ink, #000)' }}>Unarchive</button></form> : null}
         </LegacyCover>
       )}
+
+      {crew.length > 1 ? <TeamRow t={{ id: list.id, team: crew }} viewerId={me?.id} names style={{ padding: '6px 20px 0' }} /> : null}
 
       {blast ? (
         <section aria-label="Pinned text blast" style={{ margin: '16px 20px 0', background: 'var(--dk, #13286B)', color: 'var(--inv-fg, #FFFFFF)', padding: '14px 16px', display: 'flex', gap: 12, alignItems: 'flex-start' }}>

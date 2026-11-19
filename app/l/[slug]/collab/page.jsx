@@ -44,7 +44,7 @@ export default async function CollabPage({ params }) {
 
       <section style={{ padding: '22px 20px 0', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', rowGap: 6 }}>
         {[...team.filter((m) => m.id === me.id), ...others].map((m, i) => (
-          <span key={m.id} className="a4-chip" style={{ marginLeft: i ? -2 : 0, background: m.id === me.id ? 'transparent' : undefined }}>{m.id === me.id ? 'You' : firstName(m)}</span>
+          <Link key={m.id} href={`/u/${m.id}`} aria-label={m.id === me.id ? 'Your profile' : `${m.name || 'A friend'}’s profile`} className="a4-chip" style={{ marginLeft: i ? -2 : 0, background: m.id === me.id ? 'transparent' : undefined, textDecoration: 'none' }}>{m.id === me.id ? 'You' : firstName(m)}</Link>
         ))}
         <Link href={`/l/${slug}/invite`} className="a4-chip" style={{ border: `2px dashed ${RED}`, padding: '10px 18px', marginLeft: -2 }}>+ Invite</Link>
       </section>

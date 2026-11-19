@@ -42,11 +42,14 @@ export default async function SharedPage({ params, searchParams }) {
         <TallTitle text={list.title} size={84} style={{ paddingTop: 20 }} />
       </div>
       <p style={{ margin: '12px 20px 0', textAlign: 'center', fontSize: 14, color: DEEP }}>{editor ? 'Built together.' : `Built together by ${by}.`} Every item shows who added it.</p>
-      {editor ? null : (
-        <section style={{ padding: '14px 20px 0', display: 'flex', justifyContent: 'center' }}>
-          {team.slice(0, 6).map((m, i) => <span key={m.id} style={{ marginLeft: i ? -6 : 0 }}><Who user={m} me={me} size={34} /></span>)}
-        </section>
-      )}
+      <section aria-label="Made together by" style={{ padding: '14px 20px 0', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: 4 }}>
+        {team.map((m) => (
+          <Link key={m.id} href={`/u/${m.id}`} aria-label={me && m.id === me.id ? 'Your profile' : `${m.name || 'A friend'}’s profile`} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, minWidth: 44, minHeight: 44, padding: '0 4px', textDecoration: 'none', color: DEEP }}>
+            <Who user={m} me={me} size={34} />
+            <span style={{ fontSize: 12, fontWeight: 700 }}>{me && m.id === me.id ? 'You' : firstName(m)}</span>
+          </Link>
+        ))}
+      </section>
 
       <section style={{ padding: '20px 20px 0', display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 8 }}>

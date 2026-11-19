@@ -44,7 +44,7 @@ export default async function YouPage() {
           <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Friends see your name, bio and public lists. Your number stays private, in Settings.</span>
         </ProfileHero>
 
-        <Stats label="Your numbers" cells={[[stats.lists, stats.lists === 1 ? 'list' : 'lists'], [stats.friends, stats.friends === 1 ? 'friend' : 'friends'], [stats.covered, stats.covered === 1 ? 'thing covered' : 'things covered']]} />
+        <Stats label="Your numbers" cells={[[stats.lists, stats.lists === 1 ? 'list' : 'lists'], [stats.friends, stats.friends === 1 ? 'friend' : 'friends', '/friends?view=list'], [stats.covered, stats.covered === 1 ? 'thing covered' : 'things covered']]} />
 
         <section style={{ padding: '28px 20px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>

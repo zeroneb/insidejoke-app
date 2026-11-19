@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { all, get } from '@/lib/db';
 import { itemsFor } from '@/lib/lists';
-import { Blob, FaceSm } from '@/components/ui';
+import { Blob, TeamRow } from '@/components/ui';
 import CoverDesign from '@/components/cover-design';
 import { parse as parseDesign } from '@/lib/cover-designs';
 
@@ -37,20 +37,8 @@ export async function tileData(list, viewerId) {
   return { ...list, kind, count: items.length, covered, wishCount: wishes.length, sent, pct, givers, team, others, people, fresh };
 }
 
-// Under a tile on profiles: the collaborators' faces, each one a link to that person's profile.
-// Lives outside the tile's own link (a link can't sit inside another link).
-export function TeamRow({ t, viewerId }) {
-  if (!t.team?.length) return null;
-  return (
-    <div aria-label="Made together by" style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', paddingTop: 6 }}>
-      {t.team.map((u) => (
-        <Link key={u.id} href={`/u/${u.id}`} title={u.id === viewerId ? 'You' : u.name} aria-label={u.id === viewerId ? 'Your profile' : `${u.name}’s profile`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 44, minHeight: 44, textDecoration: 'none' }}>
-          <FaceSm user={u} size={32} uid={`tm${t.id.replace(/[^a-z0-9]/gi, '')}${u.id.replace(/[^a-z0-9]/gi, '')}`} />
-        </Link>
-      ))}
-    </div>
-  );
-}
+// TeamRow lives in ui.jsx (no database imports), so list pages that client components import can use it.
+export { TeamRow };
 
 // A tile plus its team row, for profile grids.
 export function TeamTile({ t, viewerId, ...rest }) {
