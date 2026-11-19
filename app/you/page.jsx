@@ -7,7 +7,7 @@ import { currentUser } from '@/lib/auth';
 import { logOut, switchAccount } from '@/lib/actions';
 import { profileStats, publicListsOf } from '@/lib/lists';
 import { TeamTile, tileData } from '@/components/list-tile';
-import { ProfileHero, Stats, Chevron, monthYear, spacedPhone } from '@/components/profile-hero';
+import { ProfileHero, Stats, Chevron, monthYear } from '@/components/profile-hero';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'You · insidejoke' };
@@ -40,9 +40,8 @@ export default async function YouPage() {
         </header>
 
         <ProfileHero user={me} owner ring={`insidejoke since ${monthYear(me.created_at)}`} uid="you">
-          <span className="dot" style={{ fontSize: 16, letterSpacing: '0.04em' }}>{spacedPhone(me.phone)}</span>
           <Link href="/you/settings" style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 8, border: '1.5px solid var(--edge, #000000)', background: 'transparent', textDecoration: 'none', fontWeight: 800, fontSize: 15, height: 44, padding: '0 18px', boxSizing: 'border-box', borderRadius: 999 }}><Gear />Edit profile &amp; settings</Link>
-          <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Friends see your name, bio and public lists. Only you see your number.</span>
+          <span style={{ fontSize: 12, color: 'var(--muted, #4A4A4A)' }}>Friends see your name, bio and public lists. Your number stays private, in Settings.</span>
         </ProfileHero>
 
         <Stats label="Your numbers" cells={[[stats.lists, stats.lists === 1 ? 'list' : 'lists'], [stats.friends, stats.friends === 1 ? 'friend' : 'friends'], [stats.covered, stats.covered === 1 ? 'thing covered' : 'things covered']]} />

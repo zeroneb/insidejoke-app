@@ -17,6 +17,6 @@ export async function GET(req) {
   const it = list ? await itemById(md.item_id || '') : null;
   if (md.user_id !== me.id || !list || !it || it.list_id !== list.id) redirect('/home');
   if (!['succeeded', 'processing'].includes(pi.status)) redirect(`/l/${list.slug}/i/${it.id}/give?declined=1`);
-  const gid = await recordGift({ me, list, it, cents: pi.amount, units: parseInt(md.units || '0', 10) || 0, note: md.note || '', visibility: md.visibility === 'private' ? 'private' : 'public', res: { ref: pi.id, paymentIntentId: pi.id } });
+  const gid = await recordGift({ me, list, it, cents: pi.amount, units: parseInt(md.units || '0', 10) || 0, note: md.note || '', visibility: md.visibility === 'private' ? 'private' : 'public', res: { ref: pi.id, paymentIntentId: pi.id, pending: pi.status === 'processing' } });
   redirect(`/l/${list.slug}/sent/${gid}`);
 }

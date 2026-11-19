@@ -6,7 +6,7 @@ import { all, get } from '@/lib/db';
 import { usd } from '@/components/wallet-ui';
 import { decideReviewAction } from '@/lib/actions-review';
 import { financials, byGiftType } from '@/lib/finance';
-import { syncDisputes, disputesForAdmin, isOpen } from '@/lib/disputes';
+import { syncDisputes, disputesForAdmin, debtsForAdmin, isOpen } from '@/lib/disputes';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Admin · insidejoke', robots: { index: false } };
@@ -102,13 +102,22 @@ export default async function AdminPage({ searchParams }) {
   const topViewed = await ev("SELECT l.title, l.slug, COUNT(*) AS n FROM app_events e JOIN lists l ON l.id = e.ref WHERE e.kind = 'list_view' AND e.at > ? GROUP BY l.title, l.slug ORDER BY n DESC LIMIT 5", wk);
   const outbound = await ev("SELECT detail, COUNT(*) AS n FROM app_events WHERE kind = 'outbound' AND at > ? GROUP BY detail ORDER BY n DESC LIMIT 8", wk);
   const signups = await ev("SELECT detail, COUNT(*) AS n FROM app_events WHERE kind = 'signup' AND at > ? GROUP BY detail", wk);
-  const feed = (await ev(`SELECT * FROM (
-      SELECT u.created_at AS at, 'joined' AS what, u.id AS uid, u.name AS who, '' AS thing FROM users u WHERE ${REAL}
-      UNION ALL SELECT l.created_at, 'made a list', u.id, u.name, l.title FROM lists l JOIN users u ON u.id = l.owner_id WHERE ${REAL}
-      UNION ALL SELECT i.created_at, 'added', u.id, u.name, i.name FROM items i JOIN lists l ON l.id = i.list_id JOIN users u ON u.id = l.owner_id WHERE ${REAL}
-      UNION ALL SELECT c.created_at, 'gave toward', u.id, u.name, i.name FROM contributions c JOIN items i ON i.id = c.item_id JOIN users u ON u.id = c.giver_id WHERE ${REAL}
-      UNION ALL SELECT p.created_at, 'cashed out', u.id, u.name, '' FROM payouts p JOIN users u ON u.id = p.user_id WHERE ${REAL}
-    ) x ORDER BY at DESC LIMIT 30`));
+  // Everything people did, newest first. Gifts say what kind (chip-in, whole gift, treat), for whom, and how much,
+  // and the latest ones always show, even on a day of many new wishes.
+  const gifts15 = await ev(`SELECT c.created_at AS at,
+      (CASE WHEN c.gift_type = 'treat' OR i.quantity = 0 THEN 'treated ' || COALESCE(NULLIF(o.name, ''), 'someone') || ' to'
+            WHEN c.gift_type = 'direct' THEN 'gave ' || COALESCE(NULLIF(o.name, ''), 'someone')
+            ELSE 'chipped in for ' || COALESCE(NULLIF(o.name, ''), 'someone') || ' on' END) AS what,
+      u.id AS uid, u.name AS who, COALESCE(i.name, 'a gift') AS thing, c.amount_cents AS cents, 'g' || c.id AS k
+    FROM contributions c LEFT JOIN items i ON i.id = c.item_id JOIN users u ON u.id = c.giver_id LEFT JOIN lists l ON l.id = c.list_id LEFT JOIN users o ON o.id = l.owner_id
+    WHERE ${REAL} ORDER BY c.created_at DESC LIMIT 15`);
+  const others = await ev(`SELECT * FROM (
+      SELECT u.created_at AS at, 'joined' AS what, u.id AS uid, u.name AS who, '' AS thing, NULL::bigint AS cents, 'u' || u.id AS k FROM users u WHERE ${REAL}
+      UNION ALL SELECT l.created_at, 'made a list', u.id, u.name, l.title, NULL, 'l' || l.id FROM lists l JOIN users u ON u.id = l.owner_id WHERE ${REAL}
+      UNION ALL SELECT i.created_at, 'added', u.id, u.name, i.name, NULL, 'i' || i.id FROM items i JOIN lists l ON l.id = i.list_id JOIN users u ON u.id = l.owner_id WHERE ${REAL}
+      UNION ALL SELECT p.created_at, 'cashed out', u.id, u.name, '', p.net_cents, 'p' || p.id FROM payouts p JOIN users u ON u.id = p.user_id WHERE ${REAL}
+    ) x ORDER BY at DESC LIMIT 30`);
+  const feed = [...gifts15, ...others].sort((a, b) => Number(b.at) - Number(a.at)).slice(0, 45);
   const cnt = (rows, key) => Number(rows.find((r) => r.detail === key || r.status === key)?.n || 0);
   const when = (t) => new Date(Number(t)).toLocaleString('en-US', { timeZone: TZ, month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
@@ -129,6 +138,7 @@ export default async function AdminPage({ searchParams }) {
   const sinceMs = range === '30' ? Date.now() - 30 * DAY : 0;
   try { await syncDisputes(); } catch {}
   const disputes = await disputesForAdmin();
+  const debts = await debtsForAdmin();
   const fin = await financials({ sinceMs });
   const types = await byGiftType({ sinceMs });
   const reviews = await all(`SELECT r.*, l.title, l.slug, u.id AS uid, u.name, u.phone FROM cashout_reviews r JOIN lists l ON l.id = r.list_id JOIN users u ON u.id = r.user_id WHERE r.status = 'pending' ORDER BY r.created_at ASC`);
@@ -170,7 +180,7 @@ export default async function AdminPage({ searchParams }) {
           {disputes.map((d) => (
             <div key={d.id} style={{ ...card, background: isOpen(d.status) ? 'var(--lt, #FFE3DE)' : 'var(--surface, #fff)', gap: 6 }}>
               <span style={{ fontWeight: 800, fontSize: 16 }}>{usd(Number(d.amount_cents))} · <Who id={d.giver_id} name={d.giver} fallback="a giver" /> → <Who id={d.receiver_id} name={d.receiver} fallback="receiver" /> · <a href={`/l/${d.slug}`} style={{ color: 'var(--ink, #000)' }}>{d.title}</a></span>
-              <span style={{ fontSize: 14 }}>{String(d.status).replace(/_/g, ' ')}{d.reason ? ` · ${String(d.reason).replace(/_/g, ' ')}` : ''}{d.paid_out ? ' · already cashed out (comes off their next cash-out)' : ' · taken out of their wallet'}</span>
+              <span style={{ fontSize: 14 }}>{String(d.status).replace(/_/g, ' ')}{d.reason ? ` · ${String(d.reason).replace(/_/g, ' ')}` : ''}{d.paid_out ? ` · ${Number(d.owed_cents) && Number(d.owed_cents) < Number(d.amount_cents) ? `${usd(Number(d.owed_cents))} ` : ''}already cashed out (comes off their next cash-out)` : ' · taken out of their wallet'}</span>
               <span style={small}>Giver {d.giver_phone || ''}{d.giver_since ? ` · on insidejoke since ${new Date(Number(d.giver_since)).toLocaleDateString('en-US', { timeZone: TZ, month: 'short', day: 'numeric', year: 'numeric' })}` : ''}{d.note ? ` · note: “${d.note}”` : ''}</span>
               {isOpen(d.status) ? <a href={`https://dashboard.stripe.com/disputes/${d.id}`} target="_blank" rel="noreferrer" style={{ alignSelf: 'flex-start', border: '1.5px solid var(--edge, #000)', borderRadius: 999, padding: '8px 14px', fontWeight: 800, fontSize: 14, color: 'var(--ink, #000)', textDecoration: 'none' }}>Respond in Stripe</a> : null}
             </div>
@@ -192,8 +202,15 @@ export default async function AdminPage({ searchParams }) {
           <div style={card}><span style={small}>Processing costs</span><span style={big}>{usd(fin.processing)}</span><span style={small}>{fin.processingEst ? 'Partly estimated · ' : ''}{usd(fin.recovered)} passed on at cash-out</span></div>
           <div style={card}><span style={small}>Cash-outs</span><span style={big}>{usd(fin.cashouts.cents)}</span><span style={small}>{fin.cashouts.n} sent · {usd(fin.payoutCosts)} payout costs (est.)</span></div>
           <div style={card}><span style={small}>Failed payments & refunds</span><span style={big}>{usd(fin.failed.removedCents)}</span><span style={small}>{fin.failed.removedN} removed · {fin.failed.disputes} disputes ({usd(fin.failed.disputeCost)} cost) · {fin.failed.payFails} failed payments · {fin.failed.payoutFails} failed cash-outs</span></div>
+          <div style={{ ...card, background: fin.debts.cents ? 'var(--lt, #FFE3DE)' : 'var(--surface, #fff)' }}><span style={small}>Owed back by receivers</span><span style={big}>{fin.debts.cents ? `−${usd(fin.debts.cents)}` : usd(0)}</span><span style={small}>{fin.debts.n} {fin.debts.n === 1 ? 'person' : 'people'} · disputes & refunds after cash-out · {usd(fin.debts.lostAfterCashout)} taken back, {usd(fin.debts.recovered)} recovered or won</span></div>
           <div style={{ ...card, background: fin.net < 0 ? 'var(--lt, #FFE3DE)' : 'var(--lt, #E6F98A)' }}><span style={small}>Net contribution</span><span style={big}>{usd(fin.net)}</span><span style={small}>Revenue minus processing, payout and account fees, on cashed-out money</span></div>
         </div>
+        {debts.length ? (
+          <div style={{ ...card, gap: 6 }}>
+            <span style={{ fontWeight: 800, fontSize: 14 }}>Negative balances · comes off their next cash-out</span>
+            {debts.map((d) => <span key={d.id} style={{ fontSize: 14 }}><Who id={d.id} name={d.name} /> · <b style={{ color: '#C0261A' }}>−{usd(Number(d.debt_cents))}</b>{d.since ? <span style={small}> · since {when(d.since)}</span> : null}</span>)}
+          </div>
+        ) : null}
         {fin.processingPending ? <span style={small}>{usd(fin.processingPending)} of processing is on gifts not cashed out yet. It's passed on to the receiver when they cash out.</span> : null}
         <div style={{ ...card, padding: 0, overflowX: 'auto' }}>
           <table style={{ borderCollapse: 'collapse', width: '100%', minWidth: 560, fontSize: 14 }}>
@@ -264,7 +281,7 @@ export default async function AdminPage({ searchParams }) {
       <section style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         <h2 style={{ margin: 0, fontSize: 18 }}>Recent activity</h2>
         <div style={{ background: 'var(--surface, #fff)', border: '1px solid var(--line, #000)', fontSize: 13 }}>
-          {feed.length ? feed.map((f, i) => <div key={i} style={{ padding: '7px 10px', borderTop: i ? '1px solid var(--line, #ddd)' : 0 }}><span style={{ color: 'var(--muted, #4A4A4A)' }}>{when(f.at)}</span> · <Who id={f.uid} name={f.who} bold /> {f.what} {f.thing ? <i>{String(f.thing).slice(0, 60)}</i> : null}</div>) : <div style={{ padding: 10, ...small }}>Nothing yet.</div>}
+          {feed.length ? feed.map((f, i) => <div key={f.k || i} style={{ padding: '7px 10px', borderTop: i ? '1px solid var(--line, #ddd)' : 0 }}><span style={{ color: 'var(--muted, #4A4A4A)' }}>{when(f.at)}</span> · <Who id={f.uid} name={f.who} bold /> {f.what} {f.thing ? <i>{String(f.thing).slice(0, 60)}</i> : null}{f.cents != null ? <b> · {usd(Number(f.cents))}</b> : null}</div>) : <div style={{ padding: 10, ...small }}>Nothing yet.</div>}
         </div>
       </section>
 
