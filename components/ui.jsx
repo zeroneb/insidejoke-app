@@ -226,3 +226,20 @@ export function shortNoun(name = '') {
   return (words.pop() || 'gift').toLowerCase();
 }
 export const isPluralNoun = (w) => /[^s]s$/.test(w) && !/(ss|us|is)$/.test(w);
+
+// Under a tile on profiles: the collaborators' faces, each one a link to that person's profile.
+// Lives outside the tile's own link (a link can't sit inside another link).
+// names: also the first name next to each face (list pages).
+export function TeamRow({ t, viewerId, names = false, style }) {
+  if (!t.team?.length) return null;
+  return (
+    <div aria-label="Made together by" style={{ display: 'flex', alignItems: 'center', gap: names ? 10 : 6, flexWrap: 'wrap', paddingTop: 6, ...style }}>
+      {t.team.map((u) => (
+        <Link key={u.id} href={`/u/${u.id}`} title={u.id === viewerId ? 'You' : u.name} aria-label={u.id === viewerId ? 'Your profile' : `${u.name}’s profile`} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, minWidth: 44, minHeight: 44, textDecoration: 'none', color: 'var(--ink, #000000)' }}>
+          <FaceSm user={u} size={32} uid={`tm${t.id.replace(/[^a-z0-9]/gi, '')}${u.id.replace(/[^a-z0-9]/gi, '')}`} />
+          {names ? <span style={{ fontSize: 14, fontWeight: 700 }}>{u.id === viewerId ? 'You' : ((u.name || '').trim().split(/\s+/)[0] || 'A friend')}</span> : null}
+        </Link>
+      ))}
+    </div>
+  );
+}

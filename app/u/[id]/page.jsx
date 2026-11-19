@@ -39,7 +39,8 @@ export default async function FriendProfile({ params }) {
   const name = first(them.name);
   // Friends-only profiles: non-friends see the hero and nothing else.
   const locked = !self && !friend && them.profile_public === 0;
-  const lists = locked ? [] : await publicListsOf(them.id, friend || self ? me.id : null);
+  // Private collabs still show to the people building them, friends or not (publicListsOf checks membership).
+  const lists = locked ? [] : await publicListsOf(them.id, me?.id || null);
   // The founder (ADMIN_PHONES) also sees this person's private lists, tagged Private. Nobody else does.
   const admin = !self && isAdmin(me);
   if (admin) {

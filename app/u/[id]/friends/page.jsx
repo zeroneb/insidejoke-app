@@ -25,7 +25,7 @@ export default async function ProfileFriends({ params }) {
   if (!them || them.phone.startsWith('deleted:')) notFound();
   const me = await currentUser();
   if (!me) redirect(`/signup?next=/u/${them.id}/friends`);
-  if (me.id === them.id) redirect('/friends');
+  if (me.id === them.id) redirect('/friends?view=list');
   const friend = !!(await get("SELECT 1 FROM friends WHERE user_id = ? AND friend_id = ? AND status = 'friends'", me.id, them.id));
   if (them.profile_public === 0 && !friend && !isAdmin(me)) redirect(`/u/${them.id}`);
   const name = first(them.name);
