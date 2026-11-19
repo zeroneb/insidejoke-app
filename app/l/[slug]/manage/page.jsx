@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { coverGround } from '@/lib/cover-designs';
 import { Avatar } from '@/components/ui';
-import { membersOf } from '@/lib/collab';
+import { membersOf, teamOf } from '@/lib/collab';
 import { removeMember } from '@/lib/actions-a4';
 import { redirect, notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
@@ -33,6 +33,9 @@ export default async function ManagePage({ params, searchParams }) {
   // The same cover the list page shows: the picked design, else the classic cover for its kind.
   const design = parseDesign(list.design);
   const cv = coverFor(list, listKind(list, items));
+  // Names on covers that show the team (Bouquet), exactly as the list page draws them.
+  const team = await teamOf(list);
+  const coverPeople = ['You', ...team.filter((u) => u.id !== me.id && u.role !== 'viewer').map((u) => String(u.name || '').trim().split(/\s+/)[0] || 'A friend')];
   const status = archived ? 'Archived · friends can no longer see this list' : `${list.visibility === 'private' ? 'Only people you pick' : 'Friends can see'} · ${items.length} ${items.length === 1 ? 'thing' : 'things'}`;
   const back = (c) => <Link href={`/l/${slug}`} aria-label="Back" className="iconbtn"><svg aria-hidden="true" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke={c} strokeWidth="1.73" strokeLinecap="round"><path d="M15 6l-6 6 6 6" /></svg></Link>;
   const archiveBtn = (edge, ink) => (
@@ -52,7 +55,7 @@ export default async function ManagePage({ params, searchParams }) {
             {archiveBtn('var(--edge, #000000)', 'var(--ink, #000000)')}
           </header>
           <div style={archived ? { filter: 'grayscale(1)', opacity: 0.7 } : undefined}>
-            <ListCover slug={slug} design={design} title={list.title} treat={design.key === 'treat'} ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: ['You'], photo: list.photo || null, handle: me?.handle || null }} />
+            <ListCover slug={slug} design={design} title={list.title} treat={design.key === 'treat'} ctx={{ visibility: list.visibility, recipient: list.recipient_name || null, people: coverPeople, photo: list.photo || null, handle: me?.handle || null }} />
           </div>
           <p style={{ margin: '14px 0 0', padding: '0 20px', fontWeight: 800, fontSize: 14 }}>{status}</p>
         </>
