@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { redirect, notFound } from 'next/navigation';
 import { currentUser } from '@/lib/auth';
-import { listBySlug, itemById } from '@/lib/lists';
+import { listBySlug, itemById, ensureItemPhoto } from '@/lib/lists';
 import { EditItemForm } from '@/components/add-item-form';
 import { isMember } from '@/lib/collab';
 
@@ -15,7 +15,8 @@ export default async function EditItemPage({ params }) {
   const me = await currentUser();
   if (!me) redirect(`/signup?next=/l/${slug}/i/${itemId}/edit`);
   if (list.owner_id !== me.id && !(await isMember(list.id, me.id))) redirect(`/l/${slug}/i/${itemId}`);
-  const it = await itemById(itemId);
+  // Same as the item page: a link saved without a photo gets one more (background) try at its photo.
+  const it = await ensureItemPhoto(await itemById(itemId));
   if (!it || it.list_id !== list.id) notFound();
   const added = new Date(Number(it.created_at)).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   const contributed = it.givers > 0;
