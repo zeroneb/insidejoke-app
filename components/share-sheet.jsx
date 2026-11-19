@@ -4,6 +4,7 @@
 import { useActionState, useEffect, useState } from 'react';
 import { shareByText } from '@/lib/actions';
 import { Blob } from '@/components/ui';
+import PhoneInput from '@/components/phone-input';
 import CoverDesign from '@/components/cover-design';
 
 const fmt = (p) => { const d = String(p || '').replace(/\D/g, ''); return d.length === 11 && d[0] === '1' ? `(${d.slice(1, 4)}) ${d.slice(4, 7)}-${d.slice(7)}` : p; };
@@ -63,7 +64,7 @@ export default function ShareSheet({ slug, title, url, profileUrl, ownerFirst, k
                 <label htmlFor="tonum" style={{ fontWeight: 800, fontSize: 14 }}>Their number</label>
                 {!sent ? (
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <input id="tonum" name="to" placeholder="(917) 555-0100" inputMode="tel" autoComplete="tel" required className="a2-input dot" style={{ flexGrow: 1, minWidth: 0, fontSize: 18 }} />
+                    <PhoneInput id="tonum" name="to" placeholder="(917) 555-0100" required className="a2-input dot" style={{ flexGrow: 1, minWidth: 0, fontSize: 18 }} />
                     <button disabled={pending} style={{ flexShrink: 0, border: 0, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', fontFamily: 'inherit', fontWeight: 700, fontSize: 15, height: 50, padding: '0 20px', borderRadius: 999, cursor: 'pointer', opacity: pending ? 0.5 : 1 }}>{pending ? 'Sending…' : 'Send'}</button>
                   </div>
                 ) : (

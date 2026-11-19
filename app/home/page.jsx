@@ -75,7 +75,7 @@ export default async function HomePage() {
       <section style={{ padding: '26px 16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 4px' }}>
           <h2 className="serif" style={{ margin: 0, fontWeight: 400, fontSize: 34, lineHeight: 1 }}>My <span style={{ fontWeight: 600 }}>lists</span></h2>
-          <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 700, fontSize: 17, textDecoration: 'none', minHeight: 48, padding: '0 4px' }}><svg aria-hidden="true" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--ink, #000000)" strokeWidth="2.1" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
+          <Link href="/lists/new" style={{ display: 'flex', alignItems: 'center', gap: 8, fontWeight: 800, fontSize: 18, textDecoration: 'none', height: 52, padding: '0 22px 0 16px', borderRadius: 999, background: 'var(--inv-bg, #000000)', color: 'var(--inv-fg, #FFFFFF)', flexShrink: 0 }}><svg aria-hidden="true" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--inv-fg, #FFFFFF)" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14" /><path d="M5 12h14" /></svg>New list</Link>
         </div>
         <div className="home-grid tile-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: 10 }}>
           {tiles.map((t) => <TeamTile key={t.id} t={t} viewerId={me.id} i={idx(t.kind)} variant="home" />)}

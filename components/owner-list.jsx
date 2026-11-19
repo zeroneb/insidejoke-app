@@ -7,6 +7,7 @@ import { ListCover } from '@/components/cover-picker';
 import { ChangeCover } from '@/components/cover-photo';
 import { Blob, Avatar, shortNoun, Halftone } from '@/components/ui';
 import ListProgress from '@/components/list-progress';
+import { FitText } from '@/components/fit';
 import { tileInk, hostOf } from '@/components/friend-list';
 import { unpinBlastAction } from '@/lib/actions-a4';
 import { dismissNudge } from '@/lib/actions';
@@ -16,13 +17,27 @@ import { setListArchived } from '@/lib/actions-a2';
 // List cover title: everything but the last word in tight sans, the last word in wide caps.
 // The caps shrink for long words so they stay on the cover.
 const CAPS_W = 0.86; // Archivo wide 800, width per letter in em
-export function TitleWords({ title, size = 50, width = 300 }) {
+// balance: long first words go onto two or three even lines (for titles inside a circle).
+function balanced(ws, max) {
+  const len = ws.join(' ').length;
+  const n = Math.min(ws.length, Math.max(1, Math.ceil(len / max)), 3);
+  const out = [];
+  let cur = [];
+  for (const w of ws) {
+    if (cur.length && (cur.join(' ') + ' ' + w).length > len / n + 3 && out.length < n - 1) { out.push(cur.join(' ')); cur = []; }
+    cur.push(w);
+  }
+  if (cur.length) out.push(cur.join(' '));
+  return out;
+}
+export function TitleWords({ title, size = 50, width = 300, balance = 0 }) {
   const words = String(title || '').trim().split(/\s+/).filter(Boolean);
   const last = words.pop() || '';
+  const head = balance && words.join(' ').length > balance ? balanced(words, balance) : [words.join(' ')];
   const capSize = Math.max(22, Math.min(Math.round(size * 0.8), Math.floor(width / (Math.max(1, last.length) * CAPS_W))));
   return (
     <>
-      {words.length ? <span style={{ display: 'block', fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: size * 1.08, letterSpacing: '-0.045em', lineHeight: 0.95 }}>{words.join(' ')}</span> : null}
+      {words.length ? head.map((l, i) => <span key={i} style={{ display: 'block', fontFamily: "'Inter Tight', sans-serif", fontWeight: 400, fontSize: size * 1.08, letterSpacing: '-0.045em', lineHeight: 0.95 }}>{l}</span>) : null}
       <span className="wide" style={{ display: 'block', fontSize: capSize, letterSpacing: '0.01em', lineHeight: 1, marginTop: words.length ? 4 : 0 }}>{last}</span>
     </>
   );
@@ -41,7 +56,11 @@ export function ItemRow({ it, sub, href, right, children, border = true }) {
     <>
       <span style={{ position: 'relative', width: 54, height: 54, flexShrink: 0, background: it.color, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>{it.photo ? <Halftone src={it.photo} /> : null}<span className="dot" style={{ fontSize: tag.length > 6 ? 11 : 13, color: tileInk(it.color), textAlign: 'center', lineHeight: 1 }}>{tag}</span></span>
       <span style={{ display: 'flex', flexDirection: 'column', gap: 3, flexGrow: 1, minWidth: 0 }}><span style={{ fontWeight: 800, fontSize: 15 }}>{it.name}</span><span style={{ fontSize: 12 }}>{sub}</span></span>
-      <span className="dot" style={{ fontSize: 16, flexShrink: 0 }}>{it.unlimited ? `×${it.timesTreated}` : it.covered ? 'DONE' : `${it.pct}%`}</span>
+      {/* How far along, easy to read at a glance: solid weight, larger, full ink. */}
+      <span style={{ flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.05 }}>
+        <span style={{ fontWeight: 800, fontSize: 19, letterSpacing: '-0.01em', fontVariantNumeric: 'tabular-nums' }}>{it.unlimited ? `×${it.timesTreated}` : it.covered ? 'Done' : `${it.pct}%`}</span>
+        {it.covered && !it.unlimited ? null : <span style={{ fontSize: 12, fontWeight: 600 }}>{it.unlimited ? 'given' : 'covered'}</span>}
+      </span>
     </>
   );
   const row = { display: 'flex', gap: 12, alignItems: 'center', padding: '12px 0', textDecoration: 'none', color: 'var(--ink, #000000)' };
@@ -79,7 +98,7 @@ export function LegacyCover({ list, items, archived, status, left, right, childr
         <text style={{ fontFamily: "'EB Garamond', serif", fontSize: 16, fill: cv.text }}><textPath href="#ol-arc">{ringText.repeat(ringText.length < 34 ? 4 : 2)}</textPath></text>
       </svg>
       <Blob seed={5 + (cv.k % 4) * 22} color={cv.blob} width={320} height={190} style={{ left: -24, top: 64 }} />
-      <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}><TitleWords title={list.title} size={long ? 40 : 50} /></h1>
+      <h1 style={{ position: 'relative', margin: '40px 0 0', padding: '0 60px 0 20px', color: cv.title, fontWeight: 400, lineHeight: 0.92 }}><FitText style={{ justifyContent: 'flex-start', maxWidth: 290 }} innerStyle={{ transformOrigin: 'left center' }} deps={[list.title]}><TitleWords title={list.title} size={long ? 40 : 50} balance={14} /></FitText></h1>
       <p style={{ position: 'relative', margin: '16px 0 0', padding: '0 20px', color: archived ? 'var(--inv-fg, #FFFFFF)' : cv.title, fontWeight: 800, fontSize: 14 }}>{status}</p>
       {children}
     </section>

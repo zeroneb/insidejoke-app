@@ -11,6 +11,7 @@ import { parse as parseDesign } from '@/lib/cover-designs';
 
 import { OWN, TREAT, coverIndex } from '@/lib/cover';
 import { Cake, Bouquet, PhotoShape } from '@/components/cover-art';
+import { FitText } from '@/components/fit';
 const VIS = { public: 'Public', private: 'Private', friends: 'Friends' };
 
 // Everything a tile needs, computed once per list.
@@ -69,11 +70,12 @@ function SerifTitle({ title, color, size }) {
   const words = title.trim().split(/\s+/);
   const last = words.pop() || '';
   const caps = Math.max(13, Math.min(Math.round(size * 0.85), Math.floor(150 / (Math.max(1, last.length) * 0.86))));
+  // Always inside the tile: if a long name still runs wide, the words shrink to fit (FitText).
   return (
-    <span style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color, lineHeight: 0.95, marginTop: size > 26 ? -10 : -6, maxWidth: '100%' }}>
+    <FitText style={{ position: 'relative', alignSelf: 'stretch', flex: '1 1 0', margin: `${size > 26 ? -10 : -6}px 0 0` }} innerStyle={{ textAlign: 'center', color, lineHeight: 0.95 }} deps={[title]}>
       {words.length ? <span style={{ display: 'block', fontFamily: "'Inter Tight', sans-serif", fontSize: Math.min(size * 1.05, Math.floor(size * 12 / Math.max(12, words.join(' ').length))), letterSpacing: '-0.045em' }}>{words.join(' ')}</span> : null}
       <span className="wide" style={{ display: 'block', fontSize: caps, letterSpacing: '0.01em', marginTop: 2 }}>{last}</span>
-    </span>
+    </FitText>
   );
 }
 
@@ -111,7 +113,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
         {t.photo ? <PhotoShape src={t.photo} size={150} color="#FFFFFF" style={{ right: -36, top: 40 }} /> : null}
         <Bouquet ink="#E2452B" style={{ right: -4, top: 34 }} w={116} h={158} sparkle />
         <span style={{ ...plainCap, letterSpacing: '0.08em', textTransform: 'uppercase', fontStyle: 'italic' }}>Collab ✦ Collab</span>
-        <span style={{ position: 'relative', fontFamily: "'Archivo', sans-serif", fontStretch: '62%', fontWeight: 900, fontSize: 36, lineHeight: 0.88, textTransform: 'uppercase', maxWidth: '70%', overflowWrap: 'anywhere' }}>{t.title}</span>
+        <FitText style={{ position: 'relative', flex: '1 1 0', alignSelf: 'stretch', justifyContent: 'flex-start', margin: '6px 0' }} innerStyle={{ whiteSpace: 'normal', width: '70%', fontFamily: "'Archivo', sans-serif", fontStretch: '62%', fontWeight: 900, fontSize: 36, lineHeight: 0.88, textTransform: 'uppercase', overflowWrap: 'anywhere', transformOrigin: 'left center' }} deps={[t.title]}>{t.title}</FitText>
         <span style={{ position: 'relative', display: 'flex' }}>
           {names.map((n, k) => <span key={k} style={{ border: '1.5px solid #E2452B', borderRadius: 999, padding: '5px 12px', fontWeight: 800, fontSize: 13, marginLeft: k ? -1.5 : 0 }}>{n}</span>)}
         </span>
@@ -127,7 +129,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
         {t.photo ? <PhotoShape src={t.photo} size={150} color="#E7B48A" style={{ right: -40, bottom: -30 }} /> : null}
         <Cake style={{ right: 2, bottom: 32 }} w={104} h={122} sparkle />
         <span style={{ ...plainCap, color: 'var(--warm-ink, #8A4E20)' }}>Surprise · hidden from {who}</span>
-        <span className="wide" style={{ position: 'relative', marginTop: 8, fontSize: 21, letterSpacing: '0.06em', lineHeight: 1.05, maxWidth: '90%', overflowWrap: 'anywhere' }}>{t.title}</span>
+        <FitText className="wide" style={{ position: 'relative', margin: '8px 0 6px', flex: '1 1 0', alignItems: 'flex-start', justifyContent: 'flex-start' }} innerStyle={{ whiteSpace: 'normal', width: '90%', fontSize: 21, letterSpacing: '0.06em', lineHeight: 1.05, overflowWrap: 'anywhere', transformOrigin: 'left top' }} deps={[t.title]}>{t.title}</FitText>
         <span style={{ position: 'relative', marginTop: 'auto', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', color: 'var(--warm-ink, #8A4E20)' }}><span style={{ fontSize: 11, fontWeight: 700 }}>with {t.givers} {t.givers === 1 ? 'friend' : 'friends'}</span><span className="dot" style={{ fontSize: 16 }}>{t.pct}%</span></span>
       </Link>
     );
@@ -141,9 +143,9 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
       return (
         <Link href={href} aria-label={`${t.title}, ${vis}, unlimited, ${t.count} treats`} style={{ ...base, justifyContent: 'space-between', background: c.bg, color: c.ink }}>
           {t.photo ? <PhotoShape src={t.photo} shape="diamond" size={84} color={c.dia} style={{ left: 40, top: 46 }} />
-            : <div aria-hidden="true" style={{ position: 'absolute', left: 40, top: 46, width: 84, height: 84, background: c.dia, transform: 'rotate(45deg)' }} />}
+            : <div aria-hidden="true" className="spinslow" style={{ position: 'absolute', left: 40, top: 46, width: 84, height: 84, background: c.dia, transform: 'rotate(45deg)' }} />}
           <span style={plainCap}>{vis} · unlimited</span>
-          <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color: c.title, fontSize: 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
+          <FitText className="dot" style={{ position: 'relative', alignSelf: 'stretch', flex: '1 1 0', margin: '4px 0' }} innerStyle={{ textAlign: 'center', color: c.title, fontSize: 26, lineHeight: 0.95, whiteSpace: 'pre' }} deps={[t.title]}>{lines.join('\n')}</FitText>
           <span style={plainCap}>{foot ? foot[0] : `${t.count} ${t.count === 1 ? 'treat' : 'treats'}`}</span>
         </Link>
       );
@@ -154,7 +156,7 @@ export function ListTile({ t, i = 0, big = true, variant, foot }) {
         {t.photo ? <PhotoShape src={t.photo} shape="diamond" size={home ? 96 : 86} color={c.dia} style={{ left: home ? 34 : 44, top: 54 }} />
           : <div aria-hidden="true" className="spinslow" style={{ position: 'absolute', left: home ? 34 : 44, top: 54, width: home ? 96 : 86, height: home ? 96 : 86, background: c.dia, transform: 'rotate(45deg)' }} />}
         {home ? <span style={plainCap}>{vis} · unlimited</span> : <span className="wide" style={CAP}>{vis} · unlimited</span>}
-        <span className="dot" style={{ position: 'relative', alignSelf: 'center', textAlign: 'center', color: c.title, fontSize: home ? 30 : 26, lineHeight: 0.95, whiteSpace: 'pre-line' }}>{lines.join('\n')}</span>
+        <FitText className="dot" style={{ position: 'relative', alignSelf: 'stretch', flex: '1 1 0', margin: '4px 0' }} innerStyle={{ textAlign: 'center', color: c.title, fontSize: home ? 30 : 26, lineHeight: 0.95, whiteSpace: 'pre' }} deps={[t.title]}>{lines.join('\n')}</FitText>
         {home ? (
           <span aria-hidden="true" style={{ position: 'relative', display: 'flex', gap: 1 }}>
             {['a1', 'a2', 'a3'].map((k) => <svg key={k} className={k} width="14" height="16" viewBox="0 0 30 34"><path d="M0 0 L30 17 L0 34 Z" fill="var(--ink, #000000)" /></svg>)}

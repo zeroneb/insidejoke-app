@@ -3,6 +3,8 @@
 import { useActionState, useEffect, useRef, useState, startTransition } from 'react';
 import { inviteMembers, setSurpriseMode, sendBlast, chooseHandoff, thankGroup } from '@/lib/actions-a4';
 import { requestCode, confirmCode } from '@/lib/actions';
+import PhoneInput, { formatPhoneList, formatPhoneTyping } from '@/components/phone-input';
+import { PickContactsButton } from '@/components/contacts-picker';
 
 const RED = '#E2452B';
 const RUST_C = '#C8743A';
@@ -10,12 +12,15 @@ const RUST_C = '#C8743A';
 // Collab: "Invite by text" box with the iMessage preview.
 export function InviteBox({ slug, preview }) {
   const [state, action, pending] = useActionState(inviteMembers, null);
+  const [num, setNum] = useState('');
+  useEffect(() => { if (state?.ok) setNum(''); }, [state]);
   return (
     <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       <input type="hidden" name="slug" value={slug} />
+      <PickContactsButton multiple={false} label="Pick from contacts" onPick={(cs) => setNum(formatPhoneTyping(cs[0].phone))} style={{ borderColor: RED }} />
       <div style={{ display: 'flex', gap: 8 }}>
         <label htmlFor="phones" className="sr">Phone number</label>
-        <input id="phones" name="phones" inputMode="tel" autoComplete="tel" placeholder="(917) 555-0148" required style={{ flexGrow: 1, minWidth: 0, height: 48, border: '2px solid var(--line, #000)', borderRadius: 0, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 17, padding: '0 12px', background: 'var(--surface, #fff)', color: 'var(--ink, #000)' }} />
+        <PhoneInput id="phones" name="phones" value={num} onChange={setNum} placeholder="(917) 555-0148" required style={{ flexGrow: 1, minWidth: 0, height: 48, border: '2px solid var(--line, #000)', borderRadius: 0, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 17, padding: '0 12px', background: 'var(--surface, #fff)', color: 'var(--ink, #000)' }} />
         <button disabled={pending} style={{ flexShrink: 0, height: 48, border: 0, background: RED, color: 'var(--inv-fg, #fff)', fontFamily: 'inherit', fontWeight: 800, fontSize: 14, padding: '0 16px', cursor: 'pointer' }}>{pending ? 'Sending…' : 'Send invite'}</button>
       </div>
       {state?.error ? <div className="err">{state.error}</div> : null}
@@ -79,10 +84,11 @@ export function ContactPicker({ slug, friends, link, name, surprise }) {
         {shown.length === 0 ? <p className="a4-pick" style={{ margin: 0, fontSize: 14 }}>{friends.length ? 'No friend by that name.' : 'No friends on insidejoke yet. Text them below.'}</p> : null}
         {shown.map((f) => <Row key={f.id} f={f} />)}
         <h2 className="wide" style={{ margin: '18px 0 6px', fontSize: 13, letterSpacing: '0.16em' }}>Invite by text</h2>
+        <PickContactsButton label="Pick from contacts" style={{ margin: '4px 0 10px', borderColor: RED }} onPick={(cs) => setTyped((t) => formatPhoneList([t.trim().replace(/[,;]\s*$/, ''), ...cs.map((c) => c.phone)].filter(Boolean).join(', ')))} />
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderTop: `1.5px solid ${RED}` }}>
           <span aria-hidden="true" style={{ width: 42, height: 42, flexShrink: 0, borderRadius: '50%', border: `2px dashed ${RED}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, color: RED }}>+</span>
           <label htmlFor="phones" className="sr">Phone numbers</label>
-          <input id="phones" name="phones" value={typed} onChange={(e) => setTyped(e.target.value)} inputMode="tel" placeholder="(917) 555-0193, (646) 555-0117" style={{ flexGrow: 1, minWidth: 0, border: 0, borderBottom: '1.5px solid var(--line, #000)', background: 'transparent', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 16, padding: '8px 0', color: 'var(--ink, #000)', outline: 'none' }} />
+          <input id="phones" name="phones" value={typed} onChange={(e) => { const el = e.target; setTyped(el.selectionStart === el.value.length ? formatPhoneList(el.value) : el.value); }} onBlur={(e) => setTyped(formatPhoneList(e.target.value))} type="tel" inputMode="tel" placeholder="(917) 555-0193, (646) 555-0117" style={{ flexGrow: 1, minWidth: 0, border: 0, borderBottom: '1.5px solid var(--line, #000)', background: 'transparent', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 16, padding: '8px 0', color: 'var(--ink, #000)', outline: 'none' }} />
         </div>
       </section>
       <div style={{ marginTop: 24, padding: '22px 16px 28px', display: 'flex', flexDirection: 'column', gap: 10, borderTop: `1.5px solid ${RED}` }}>
@@ -140,7 +146,7 @@ export function JoinSignup({ next, title, invite, children }) {
           <label className="sr" htmlFor="jname">Your name</label>
           <input id="jname" name="name" defaultValue={s1?.name || ''} placeholder="Your name" autoComplete="given-name" required style={{ height: 52, border: '2px solid var(--line, #000)', background: 'var(--surface, #fff)', fontFamily: 'inherit', fontSize: 17, padding: '0 14px', color: 'var(--ink, #000)', borderRadius: 0 }} />
           <label className="sr" htmlFor="jphone">Phone number</label>
-          <input id="jphone" name="phone" inputMode="tel" autoComplete="tel" placeholder="(917) 555-0148" required style={{ height: 52, border: '2px solid var(--line, #000)', background: 'var(--surface, #fff)', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 20, padding: '0 14px', color: 'var(--ink, #000)', borderRadius: 0 }} />
+          <PhoneInput id="jphone" name="phone" placeholder="(917) 555-0148" required style={{ height: 52, border: '2px solid var(--line, #000)', background: 'var(--surface, #fff)', fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 20, padding: '0 14px', color: 'var(--ink, #000)', borderRadius: 0 }} />
           {s1?.error ? <div className="err">{s1.error}</div> : null}
           <button className="a4-btn" disabled={p1} style={{ marginTop: 10 }}>{p1 ? 'Sending…' : 'Text me a code'}</button>
           <span style={{ textAlign: 'center', fontSize: 12, color: 'var(--warm-ink, #8A2414)' }}>No password. Your number is your account.</span>
@@ -232,7 +238,7 @@ export function HandoffForm({ slug, team, meId, name, list }) {
         {pick === 'surprise' ? (
           <div className="pop" style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: '2px 4px 6px', color: 'var(--ink, #000)' }}>
             <label htmlFor="rphone" style={{ fontSize: 13, fontWeight: 700, color: RED }}>{name}'s number</label>
-            <input id="rphone" name="phone" inputMode="tel" autoComplete="off" defaultValue={list.recipient_phone || ''} placeholder="(646) 555-0192" style={{ ...inputStyle, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18 }} />
+            <PhoneInput id="rphone" name="phone" autoComplete="off" defaultValue={list.recipient_phone || ''} placeholder="(646) 555-0192" style={{ ...inputStyle, fontFamily: "'Doto', monospace", fontWeight: 900, fontSize: 18 }} />
             <span style={{ fontSize: 13, fontWeight: 700, color: RED }}>When does it go out?</span>
             <div style={{ display: 'flex', gap: 8 }}>
               {[['now', 'Right away'], ['date', 'On a day']].map(([k, l]) => (
